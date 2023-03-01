@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "832863065756",
+    "project_id": "fluttartur",
+    "storage_bucket": "fluttartur.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832863065756:android:aa80776119ff27f3e4bf59",
+        "android_client_info": {
+          "package_name": "com.example.fluttartur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832863065756-4d09o8hb8kha0dh6b2ups7r7i35u27qd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmE7MYlgRWO0o2c3gbaXWo1lC-W18uX8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832863065756-4d09o8hb8kha0dh6b2ups7r7i35u27qd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
