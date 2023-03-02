@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttartur/data/room.dart';
 
-class ShoutboxDataSource {
-  const ShoutboxDataSource({required FirebaseFirestore firestore})
+class RoomsDataSource {
+  const RoomsDataSource({required FirebaseFirestore firestore})
       : _firestore = firestore;
 
   final FirebaseFirestore _firestore;
