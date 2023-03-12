@@ -21,6 +21,7 @@ class RoomsDataSource {
       .map((m) => m.docs.map(Room.fromSnapshot).toList());
 
   void getRoomByID(String id) async {
+    if (id.isEmpty) return;
     final room = await _firestore.collection("rooms").doc(id).get();
     if (room.exists) {
       // TODO dolaczenie do pokoju w firebase
