@@ -47,6 +47,10 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 49, 49, 49),
+        title: const Text("Start"),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -99,6 +103,7 @@ class _StartPageState extends State<StartPage> {
                 ),
                 onPressed: () {
                   Navigator.push(
+                    // TODO Replacement
                     context,
                     MaterialPageRoute(
                         builder: (context) => const LobbyHostPage()),

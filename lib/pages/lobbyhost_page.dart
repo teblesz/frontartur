@@ -22,7 +22,7 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 49, 49, 49),
+        backgroundColor: const Color.fromARGB(255, 49, 49, 49),
         title: const Text('Pokój'),
       ),
       body: Container(
