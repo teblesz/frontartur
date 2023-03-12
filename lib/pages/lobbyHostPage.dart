@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:fluttartur/data/room.dart';
 import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttartur/pages/courtPage.dart';
+
+// TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 
 class LobbyHostPage extends StatefulWidget {
   const LobbyHostPage({super.key});
@@ -19,6 +22,7 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 49, 49, 49),
         title: const Text('Pokój'),
       ),
       body: Container(
@@ -59,7 +63,7 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
             ),
             const SizedBox(height: 15),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 OutlinedButton(
                   style: TextButton.styleFrom(
@@ -79,7 +83,13 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
                     foregroundColor: Colors.white,
                     backgroundColor: const Color.fromARGB(255, 16, 70, 114),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CourtPage()),
+                    );
+                  },
                   child: const Text('Rozpocznij grę'),
                 ),
               ],
