@@ -18,6 +18,9 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: const Text('Pokój'),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -25,21 +28,63 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              OutlinedButton(
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                  foregroundColor: Colors.white,
-                  backgroundColor: const Color.fromARGB(255, 43, 97, 141),
-                ),
-                onPressed: () {},
-                child: const Text('welcome in pokój'),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: const <Widget>[
+                  Card(
+                    color: Color.fromARGB(193, 255, 255, 255),
+                    child: ListTile(
+                      title: Text('player1'),
+                      trailing: Icon(Icons.more_vert),
+                    ),
+                  ),
+                  Card(
+                    color: Color.fromARGB(193, 255, 255, 255),
+                    child: ListTile(
+                      title: Text('player2'),
+                      trailing: Icon(Icons.more_vert),
+                    ),
+                  ),
+                  Card(
+                    color: Color.fromARGB(193, 255, 255, 255),
+                    child: ListTile(
+                      title: Text('player3'),
+                      trailing: Icon(Icons.more_vert),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20),
+                    padding: const EdgeInsets.all(5),
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 43, 97, 141),
+                  ),
+                  onPressed: () {},
+                  child: const Text('Zdefiniuj role'),
+                ),
+                const SizedBox(width: 15),
+                OutlinedButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20),
+                    padding: const EdgeInsets.all(5),
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 16, 70, 114),
+                  ),
+                  onPressed: () {},
+                  child: const Text('Rozpocznij grę'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
