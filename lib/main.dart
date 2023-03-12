@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttartur/firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'package:fluttartur/data/rooms_data_source.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,24 +32,28 @@ class _AppState extends State<_App> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: FutureBuilder(
-          future: _initialization,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.done:
-                return widget.app;
-              default:
-                return const ColoredBox(
-                  color: Colors.green,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.red,
-                    ),
-                  ),
-                );
-            }
-          }),
-    );
+    return Provider(
+        create: (_) => RoomsDataSource(
+              firestore: FirebaseFirestore.instance,
+            ),
+        child: MaterialApp(
+          home: FutureBuilder(
+              future: _initialization,
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.done:
+                    return widget.app;
+                  default:
+                    return const ColoredBox(
+                      color: Colors.green,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.red,
+                        ),
+                      ),
+                    );
+                }
+              }),
+        ));
   }
 }
