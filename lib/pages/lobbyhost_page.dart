@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:fluttartur/data/room.dart';
 import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttartur/pages/courtPage.dart';
+import 'package:fluttartur/pages/court_page.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 
@@ -28,7 +28,7 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/courtiers.png"),
+            image: AssetImage("images/startpagebg.jpg"),
             fit: BoxFit.cover,
           ),
         ),

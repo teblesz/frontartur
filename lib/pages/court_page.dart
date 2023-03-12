@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:fluttartur/data/room.dart';
 import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttartur/pages/missionPage.dart';
+import 'package:fluttartur/pages/mission_page.dart';
 
 class CourtPage extends StatefulWidget {
   const CourtPage({super.key});
@@ -21,7 +21,7 @@ class _CourtPageState extends State<CourtPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 49, 49, 49),
-        title: const Text("Dwór króla"),
+        title: const Text("Dwór"),
       ),
       body: Container(
         decoration: const BoxDecoration(

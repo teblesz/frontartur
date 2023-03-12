@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:fluttartur/data/room.dart';
 import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttartur/pages/lobbyHostPage.dart';
+import 'package:fluttartur/pages/lobbyhost_page.dart';
 
 // TODO stateless?
 class StartPage extends StatefulWidget {
