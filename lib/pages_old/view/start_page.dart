@@ -5,11 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:fluttartur/data/room.dart';
 import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttartur/pages/lobbyhost_page.dart';
+import 'package:fluttartur/pages_old/view/lobbyhost_page.dart';
 
-// TODO stateless?
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
+
+  static Page<void> page() => const MaterialPage<void>(child: StartPage());
 
   @override
   State<StartPage> createState() => _StartPageState();

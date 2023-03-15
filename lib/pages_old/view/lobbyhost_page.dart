@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:fluttartur/data/room.dart';
 import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttartur/pages/court_page.dart';
+import 'package:fluttartur/pages_old/view/court_page.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 
