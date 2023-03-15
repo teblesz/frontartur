@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:fluttartur/data/room.dart';
 import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttartur/pages/mission_page.dart';
+import 'package:fluttartur/pages_old/view/mission_page.dart';
 
 class CourtPage extends StatefulWidget {
   const CourtPage({super.key});
