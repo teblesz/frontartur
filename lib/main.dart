@@ -1,59 +1,17 @@
-import 'package:fluttartur/pages/start_page.dart';
-import 'package:flutter/material.dart';
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttartur/firebase_options.dart';
-import 'package:provider/provider.dart';
-import 'package:fluttartur/data/rooms_data_source.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fluttartur/app/app.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = const AppBlocObserver();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
 
-  const app = StartPage();
-  runApp(const _App(app: app));
-}
+  final authenticationRepository = AuthenticationRepository();
+  await authenticationRepository.user.first;
 
-class _App extends StatefulWidget {
-  const _App({
-    Key? key,
-    required this.app,
-  }) : super(key: key);
-
-  final Widget app;
-
-  @override
-  State<_App> createState() => _AppState();
-}
-
-class _AppState extends State<_App> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return Provider(
-        create: (_) => RoomsDataSource(
-              firestore: FirebaseFirestore.instance,
-            ),
-        child: MaterialApp(
-          home: FutureBuilder(
-              future: _initialization,
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.done:
-                    return widget.app;
-                  default:
-                    return const ColoredBox(
-                      color: Colors.green,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.red,
-                        ),
-                      ),
-                    );
-                }
-              }),
-        ));
-  }
+  runApp(App(authenticationRepository: authenticationRepository));
 }

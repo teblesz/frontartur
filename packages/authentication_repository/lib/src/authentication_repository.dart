@@ -7,6 +7,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
+//TODO logowanie przez github
+// TODO logowanie Email link (passwordless sign-in)
+// TODO logowanie anonimowe (!!!)
+
 /// {@template sign_up_with_email_and_password_failure}
 /// Thrown if during the sign up process if a failure occurs.
 /// {@endtemplate}
