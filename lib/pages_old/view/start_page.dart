@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttartur/data/room.dart';
-import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/lobbyhost_page.dart';
+import 'package:data_repository/data_repository.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});

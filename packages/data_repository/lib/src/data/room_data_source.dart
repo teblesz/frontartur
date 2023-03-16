@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttartur/data/room.dart';
+import 'package:data_repository/src/models/models.dart';
 
 class RoomsDataSource {
   const RoomsDataSource({required FirebaseFirestore firestore})
