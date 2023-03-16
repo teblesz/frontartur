@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
-
+// TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
 class LobbyHostForm extends StatelessWidget {
   const LobbyHostForm({super.key});
 
