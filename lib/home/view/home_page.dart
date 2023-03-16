@@ -8,6 +8,8 @@ import 'package:fluttartur/home/home.dart';
 // TODO pozostałe page do glownego bloca i pododawac na appbarze przyciski zakoncz gre co daja blocowy event
 // TODO animacja przesuwania tła przez pierwsze 3 ekrany
 // TODO dołączanie do lobby przez kod QR
+// TODO przycisk do wychodzenia z gry
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
