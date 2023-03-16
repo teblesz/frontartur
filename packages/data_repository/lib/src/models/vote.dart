@@ -1,0 +1,4 @@
+enum Vote {
+  positive,
+  negative,
+}

@@ -1,3 +1,4 @@
+import 'models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Room {
@@ -8,6 +9,10 @@ class Room {
 
   final String id;
   final String name;
+  List<Player>? players;
+  List<Map<Player, Vote>>? commonVotes; // TODO ilosc glosowan na NIE
+  List<Squad>? squads;
+  RoomConfiguration? roomConfiguration;
 
   static Room fromSnapshot(
           QueryDocumentSnapshot<Map<String, dynamic>> snapshot) =>
