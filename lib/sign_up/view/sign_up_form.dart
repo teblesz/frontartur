@@ -21,18 +21,29 @@ class SignUpForm extends StatelessWidget {
         }
       },
       child: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _EmailInput(),
-            const SizedBox(height: 8),
-            _PasswordInput(),
-            const SizedBox(height: 8),
-            _ConfirmPasswordInput(),
-            const SizedBox(height: 8),
-            _SignUpButton(),
-          ],
+        alignment: const Alignment(0, -2 / 3),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
+                    children: [
+                      _EmailInput(),
+                      const SizedBox(height: 8),
+                      _PasswordInput(),
+                      const SizedBox(height: 8),
+                      _ConfirmPasswordInput(),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              _SignUpButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -119,16 +130,13 @@ class _SignUpButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 key: const Key('signUpForm_continue_raisedButton'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  backgroundColor: Colors.orangeAccent,
-                ),
                 onPressed: state.status.isValidated
                     ? () => context.read<SignUpCubit>().signUpFormSubmitted()
                     : null,
-                child: const Text('SIGN UP'),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Stwórz konto', style: TextStyle(fontSize: 20)),
+                ),
               );
       },
     );
