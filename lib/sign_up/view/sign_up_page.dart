@@ -17,6 +17,7 @@ class SignUpPage extends StatelessWidget {
         Positioned.fill(
           child: Image.asset(
             "images/startpagebg.jpg",
+            alignment: AlignmentDirectional.centerStart,
             fit: BoxFit.cover,
           ),
         ),

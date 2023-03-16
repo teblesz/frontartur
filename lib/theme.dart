@@ -32,8 +32,15 @@ final theme = ThemeData(
       disabledForegroundColor: const Color.fromARGB(200, 215, 215, 215),
     ),
   ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: Colors.white,
+      disabledForegroundColor: const Color.fromARGB(200, 215, 215, 215),
+    ),
+  ),
+
   cardTheme: const CardTheme(
-    color: Color.fromARGB(160, 50, 50, 50),
+    color: Color.fromARGB(180, 50, 50, 50),
   ),
   inputDecorationTheme: const InputDecorationTheme(
     floatingLabelStyle: TextStyle(color: Color.fromARGB(200, 215, 215, 215)),
