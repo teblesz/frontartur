@@ -19,10 +19,9 @@ class HomeForm extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             Text(user.email ?? ''),
-            const SizedBox(height: 4),
-            Text(user.name ?? ''),
+            const SizedBox(height: 8),
             SizedBox(
               width: 250,
               child: Card(
