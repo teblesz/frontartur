@@ -5,14 +5,14 @@ enum ConfirmPasswordValidationError { invalid }
 class SignUpState extends Equatable {
   const SignUpState({
     this.email = const Email.pure(),
-    this.password = const Password.pure(),
+    this.password = const PasswordOnSignup.pure(),
     this.confirmedPassword = const ConfirmedPassword.pure(),
     this.status = FormzStatus.pure,
     this.errorMessage,
   });
 
   final Email email;
-  final Password password;
+  final PasswordOnSignup password;
   final ConfirmedPassword confirmedPassword;
   final FormzStatus status;
   final String? errorMessage;
@@ -22,7 +22,7 @@ class SignUpState extends Equatable {
 
   SignUpState copyWith({
     Email? email,
-    Password? password,
+    PasswordOnSignup? password,
     ConfirmedPassword? confirmedPassword,
     FormzStatus? status,
     String? errorMessage,

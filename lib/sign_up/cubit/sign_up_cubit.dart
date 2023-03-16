@@ -26,7 +26,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   }
 
   void passwordChanged(String value) {
-    final password = Password.dirty(value);
+    final password = PasswordOnSignup.dirty(value);
     final confirmedPassword = ConfirmedPassword.dirty(
       password: password.value,
       value: state.confirmedPassword.value,

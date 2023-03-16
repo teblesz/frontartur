@@ -3,13 +3,13 @@ part of 'login_cubit.dart';
 class LoginState extends Equatable {
   const LoginState({
     this.email = const Email.pure(),
-    this.password = const Password.pure(),
+    this.password = const PasswordOnLogin.pure(),
     this.status = FormzStatus.pure,
     this.errorMessage,
   });
 
   final Email email;
-  final Password password;
+  final PasswordOnLogin password;
   final FormzStatus status;
   final String? errorMessage;
 
@@ -18,7 +18,7 @@ class LoginState extends Equatable {
 
   LoginState copyWith({
     Email? email,
-    Password? password,
+    PasswordOnLogin? password,
     FormzStatus? status,
     String? errorMessage,
   }) {

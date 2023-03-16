@@ -1,20 +1,20 @@
 import 'package:formz/formz.dart';
 
-/// Validation errors for the [Password] [FormzInput].
+/// Validation errors for the [passwordOnLogin] [FormzInput].
 enum PasswordValidationError {
   /// Generic invalid error.
   invalid
 }
 
-/// {@template password}
-/// Form input for an password input.
+/// {@template passwordOnSignup}
+/// Form input for an passwordOnLogin input.
 /// {@endtemplate}
-class Password extends FormzInput<String, PasswordValidationError> {
-  /// {@macro password}
-  const Password.pure() : super.pure('');
+class PasswordOnSignup extends FormzInput<String, PasswordValidationError> {
+  /// {@macro passwordOnSignup}
+  const PasswordOnSignup.pure() : super.pure('');
 
-  /// {@macro password}
-  const Password.dirty([super.value = '']) : super.dirty();
+  /// {@macro passwordOnSignup}
+  const PasswordOnSignup.dirty([super.value = '']) : super.dirty();
 
   static final _passwordRegExp =
       RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
@@ -24,5 +24,21 @@ class Password extends FormzInput<String, PasswordValidationError> {
     return _passwordRegExp.hasMatch(value ?? '')
         ? null
         : PasswordValidationError.invalid;
+  }
+}
+
+/// {@template passwordOnLogin}
+/// Form input for an passwordOnLogin input.
+/// {@endtemplate}
+class PasswordOnLogin extends FormzInput<String, PasswordValidationError> {
+  /// {@macro passwordOnLogin}
+  const PasswordOnLogin.pure() : super.pure('');
+
+  /// {@macro passwordOnLogin}
+  const PasswordOnLogin.dirty([super.value = '']) : super.dirty();
+
+  @override
+  PasswordValidationError? validator(String? value) {
+    return (value ?? '').isNotEmpty ? null : PasswordValidationError.invalid;
   }
 }

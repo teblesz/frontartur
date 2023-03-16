@@ -22,7 +22,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void passwordChanged(String value) {
-    final password = Password.dirty(value);
+    final password = PasswordOnLogin.dirty(value);
     emit(
       state.copyWith(
         password: password,
