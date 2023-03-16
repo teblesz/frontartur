@@ -11,18 +11,21 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         actions: <Widget>[
-          IconButton(
-            key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app),
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: theme.colorScheme.onSurface,
+            ),
             onPressed: () {
               context.read<AppBloc>().add(const AppLogoutRequested());
             },
+            child: const Text("Log out"),
           )
         ],
       ),
@@ -57,21 +60,19 @@ class HomePage extends StatelessWidget {
                   },
                 ),
               ),
-              ElevatedButton(
-                style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 30),
-                    backgroundColor: const Color.fromARGB(255, 16, 70, 114),
-                    padding: const EdgeInsets.all(10)),
+              FilledButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 30)),
                 onPressed: () {},
-                child: const Text('Dołącz'),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Dołącz'),
+                ),
               ),
               const SizedBox(height: 15),
-              OutlinedButton(
+              FilledButton.tonal(
                 style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                  foregroundColor: Colors.white,
-                  backgroundColor: const Color.fromARGB(255, 43, 97, 141),
-                ),
+                    textStyle: const TextStyle(fontSize: 20)),
                 onPressed: () {},
                 child: const Text('Stwórz pokój'),
               ),
