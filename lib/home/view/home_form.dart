@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
-import 'package:fluttartur/pages_old/pages_old.dart';
+import 'package:fluttartur/lobby/lobby.dart';
 
 class HomeForm extends StatelessWidget {
   const HomeForm({
