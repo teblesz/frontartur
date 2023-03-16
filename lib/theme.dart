@@ -42,10 +42,14 @@ final theme = ThemeData(
   cardTheme: const CardTheme(
     color: Color.fromARGB(180, 50, 50, 50),
   ),
+
   inputDecorationTheme: const InputDecorationTheme(
     floatingLabelStyle: TextStyle(color: Color.fromARGB(200, 215, 215, 215)),
     focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Color.fromARGB(200, 215, 215, 215)),
     ),
+  ),
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: Color.fromARGB(200, 215, 215, 215),
   ),
 );
