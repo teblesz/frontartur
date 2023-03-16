@@ -4,6 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/login/login.dart';
 import 'package:fluttartur/lobby/lobby.dart';
 
+// tutaj zostało stracone 12 godzin na dojście co jest nie tak z Hero.
+// nie działał zupełnie bo w app.dart nie było observera
+// teraz nie działa na dole stacka, bo https://github.com/flutter/flutter/issues/17627
+//    :(
 class LobbyHostPage extends StatelessWidget {
   const LobbyHostPage({super.key});
 

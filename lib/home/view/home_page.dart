@@ -18,9 +18,13 @@ class HomePage extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Positioned.fill(
-          child: Image.asset(
-            "images/startpagebg.jpg",
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: 'startpagebg',
+            child: Image.asset(
+              "images/startpagebg.jpg",
+              alignment: AlignmentDirectional.center,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         Scaffold(
