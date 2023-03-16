@@ -20,13 +20,10 @@ class LobbyHostPage extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Positioned.fill(
-          child: Hero(
-            tag: 'startpagebg',
-            child: Image.asset(
-              "images/startpagebg.jpg",
-              alignment: AlignmentDirectional.centerEnd,
-              fit: BoxFit.cover,
-            ),
+          child: Image.asset(
+            "images/startpagebg.jpg",
+            alignment: AlignmentDirectional.centerEnd,
+            fit: BoxFit.cover,
           ),
         ),
         Scaffold(
