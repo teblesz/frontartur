@@ -1,10 +1,8 @@
-import 'player.dart';
-import 'vote.dart';
+import 'member.dart';
 
 class Squad {
   String? id;
   int? missionNumber;
-  List<Player>? players;
-  Map<Player, Vote>? secretVotes;
+  List<Member>? members;
   bool? wasSuccessfull;
 }
