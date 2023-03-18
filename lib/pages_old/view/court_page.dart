@@ -5,14 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/mission_page.dart';
 
-class CourtPage extends StatefulWidget {
+class CourtPage extends StatelessWidget {
   const CourtPage({super.key});
 
-  @override
-  State<CourtPage> createState() => _CourtPageState();
-}
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const CourtPage());
+  }
 
-class _CourtPageState extends State<CourtPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

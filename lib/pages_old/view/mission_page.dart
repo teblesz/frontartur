@@ -4,14 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
-class MissionPage extends StatefulWidget {
+class MissionPage extends StatelessWidget {
   const MissionPage({super.key});
 
-  @override
-  State<MissionPage> createState() => _MissionPageState();
-}
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const MissionPage());
+  }
 
-class _MissionPageState extends State<MissionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

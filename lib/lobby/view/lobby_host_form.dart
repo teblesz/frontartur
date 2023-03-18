@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttartur/pages_old/view/mission_page.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
@@ -36,7 +37,7 @@ class _StartGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
-      onPressed: () {},
+      onPressed: () => Navigator.of(context).push<void>(CourtPage.route()),
       child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
     );
   }
