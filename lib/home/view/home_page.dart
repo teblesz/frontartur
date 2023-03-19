@@ -1,7 +1,9 @@
+import 'package:fluttartur/home/cubit/room_id_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; //TODO move somewhere more propper?
 
 // TODO internalizacja, komunikacja z firestore, nawigacja
 // TODO text theme, anonimowe logowanie, nicki
@@ -32,7 +34,10 @@ class HomePage extends StatelessWidget {
             title: const Text('Home'),
             actions: <Widget>[_LogOutButton()],
           ),
-          body: const HomeForm(),
+          body: BlocProvider(
+            create: (_) => RoomIdCubit(FirebaseFirestore.instance),
+            child: const HomeForm(),
+          ),
         ),
       ],
     );

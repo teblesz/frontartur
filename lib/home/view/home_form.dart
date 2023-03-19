@@ -1,14 +1,14 @@
 import 'package:authentication_repository/src/models/user.dart';
+import 'package:fluttartur/home/cubit/room_id_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/lobby/lobby.dart';
+import 'package:formz/formz.dart';
 
 class HomeForm extends StatelessWidget {
-  const HomeForm({
-    super.key,
-  });
+  const HomeForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +46,8 @@ class _RoomIdInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: (value) => {},
-      keyboardType: TextInputType.number,
+      onChanged: (roomId) => context.read<RoomIdCubit>().roomIdChanged(roomId),
+      //keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
         labelText: 'ID pokoju',
@@ -60,12 +60,21 @@ class _RoomIdInput extends StatelessWidget {
 class _JoinRoomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: () {},
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text('Dołącz', style: TextStyle(fontSize: 25)),
-      ),
+    return BlocBuilder<RoomIdCubit, RoomIdState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        return state.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : FilledButton(
+                onPressed: state.status.isValidated
+                    ? () => context.read<RoomIdCubit>().joinRoomWithRoomId()
+                    : null,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Dołącz', style: TextStyle(fontSize: 25)),
+                ),
+              );
+      },
     );
   }
 }

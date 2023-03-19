@@ -1,28 +1,30 @@
 import 'models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// TODO unique room name (kahoot-like) https://stackoverflow.com/questions/47543251/firestore-unique-index-or-unique-constraint
+
 class Room {
+  late String id;
+  late List<String> characters;
+  List<Player>? players;
+  Map<Player, Vote>? commonVotes; // TODO lista, ilosc glosowan na NIE
+  List<Squad>? squads;
+
   Room({
     required this.id,
-    required this.name,
+    required this.characters,
+    this.players,
+    this.commonVotes,
+    this.squads,
   });
 
-  final String id;
-  final String name;
-  List<Player>? players;
-  List<Map<Player, Vote>>? commonVotes; // TODO ilosc glosowan na NIE
-  List<Squad>? squads;
-  RoomConfiguration? roomConfiguration;
-
-  static Room fromSnapshot(
-          QueryDocumentSnapshot<Map<String, dynamic>> snapshot) =>
-      Room(
-        id: snapshot.data()['id'],
-        name: snapshot.data()['name'],
-      );
-
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-      };
+  factory Room.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data();
+    return Room(
+      id: doc.id,
+      characters: data?['characters'] is Iterable
+          ? List.from(data?['characters'])
+          : List.empty(),
+    );
+  }
 }
