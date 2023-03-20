@@ -1,4 +1,4 @@
 library data_repository;
 
-export 'src/data/data.dart';
+export 'src/data_repository.dart';
 export 'src/models/models.dart';

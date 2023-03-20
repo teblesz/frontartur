@@ -5,6 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/mission_page.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
+import 'package:data_repository/data_repository.dart';
+import 'package:fluttartur/home/cubit/home_cubit.dart';
+
+import 'package:data_repository/src/models/models.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 // TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
@@ -15,6 +19,16 @@ class LobbyHostForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        StreamBuilder<Room>(
+          //TODO lepiej to?
+          stream: context.read<DataRepository>().streamRoom(),
+          builder: (context, snapshot) {
+            var data = snapshot.data;
+            return data == null
+                ? const CircularProgressIndicator()
+                : Text(data.id);
+          },
+        ),
         Expanded(
           child: _PlayerListView(),
         ),
@@ -56,28 +70,27 @@ class _RolesDefButton extends StatelessWidget {
 class _PlayerListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      scrollDirection: Axis.vertical,
-      children: const <Widget>[
-        Card(
-          child: ListTile(
-            title: Text('player1'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('player2'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('player3'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-      ],
+    return StreamBuilder<List<Player>>(
+      //TODO lepiej to?
+      stream: context.read<DataRepository>().streamPlayersList(),
+      builder: (context, snapshot) {
+        var players = snapshot.data;
+        return players == null
+            ? const CircularProgressIndicator()
+            : ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  ...players.map(
+                    (player) => Card(
+                      child: ListTile(
+                        title: Text(player.nick),
+                        trailing: const Icon(Icons.more_vert),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+      },
     );
   }
 }
