@@ -1,14 +1,14 @@
 import 'package:authentication_repository/src/models/user.dart';
+import 'package:fluttartur/home/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/lobby/lobby.dart';
+import 'package:formz/formz.dart';
 
 class HomeForm extends StatelessWidget {
-  const HomeForm({
-    super.key,
-  });
+  const HomeForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +46,8 @@ class _RoomIdInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: (value) => {},
-      keyboardType: TextInputType.number,
+      onChanged: (roomId) => context.read<HomeCubit>().roomIdChanged(roomId),
+      //keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
         labelText: 'ID pokoju',
@@ -60,12 +60,27 @@ class _RoomIdInput extends StatelessWidget {
 class _JoinRoomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: () {},
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text('Dołącz', style: TextStyle(fontSize: 25)),
-      ),
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        return state.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : FilledButton(
+                onPressed: !state.status.isValidated
+                    ? null
+                    : () {
+                        // TODO move this state to bloc
+                        // TODO move this to routes
+                        context.read<HomeCubit>().joinRoom().then((value) =>
+                            Navigator.of(context)
+                                .push<void>(LobbyHostPage.route()));
+                      },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Dołącz', style: TextStyle(fontSize: 25)),
+                ),
+              );
+      },
     );
   }
 }
@@ -73,8 +88,14 @@ class _JoinRoomButton extends StatelessWidget {
 class _CreateRoomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO add state which gives CircularProgressIndicator here
     return FilledButton.tonal(
-      onPressed: () => Navigator.of(context).push<void>(LobbyHostPage.route()),
+      onPressed: () {
+        // TODO move this state to bloc
+        // TODO move this to routes
+        context.read<HomeCubit>().createRoom().then(
+            (value) => Navigator.of(context).push<void>(LobbyHostPage.route()));
+      },
       child: const Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
     );
   }

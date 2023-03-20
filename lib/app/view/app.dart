@@ -4,14 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/theme.dart';
+import 'package:data_repository/data_repository.dart';
+import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
   const App({
     super.key,
     required AuthenticationRepository authenticationRepository,
-  }) : _authenticationRepository = authenticationRepository;
+    required DataRepository dataRepository,
+  })  : _authenticationRepository = authenticationRepository,
+        _dataRepository = dataRepository;
 
   final AuthenticationRepository _authenticationRepository;
+  final DataRepository _dataRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,11 @@ class App extends StatelessWidget {
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
         ),
-        child: const AppView(),
+        child: Provider<DataRepository>(
+          create: (_) =>
+              _dataRepository, // TODO !!! should go to Bloc, 'being in room' should mimic 'being authenticated' behaviour
+          child: const AppView(),
+        ),
       ),
     );
   }

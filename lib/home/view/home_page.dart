@@ -1,13 +1,17 @@
+import 'package:fluttartur/home/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
+import 'package:data_repository/data_repository.dart';
 
-// TODO internalizacja, komunikacja z firestore, nawigacja
-// TODO text theme, anonimowe logowanie, nicki
-// TODO pozostałe page do glownego bloca i pododawac na appbarze przyciski zakoncz gre co daja blocowy event
-// TODO animacja przesuwania tła przez pierwsze 3 ekrany
+// TODO !!! app-wide bloc with info about being in a room
+// TODO internalizacja
+// TODO anonimowe logowanie, nicki
+// TODO animacje
 // TODO dołączanie do lobby przez kod QR
+// TODO przycisk do wychodzenia z gry
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -30,7 +34,10 @@ class HomePage extends StatelessWidget {
             title: const Text('Home'),
             actions: <Widget>[_LogOutButton()],
           ),
-          body: const HomeForm(),
+          body: BlocProvider(
+            create: (_) => HomeCubit(context.read<DataRepository>()),
+            child: const HomeForm(),
+          ),
         ),
       ],
     );
