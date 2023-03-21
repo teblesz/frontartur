@@ -46,7 +46,7 @@ class AppView extends StatelessWidget {
       home: FlowBuilder<AppStatus>(
         state: context.select((AppBloc bloc) => bloc.state.status),
         onGeneratePages: onGenerateAppViewPages,
-        observers: [HeroController()],
+        observers: [HeroController()], // TODO not necessary now
       ),
     );
   }

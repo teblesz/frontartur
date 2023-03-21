@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
+//TODO misje maja zmieniajace sie tła
+
 class MissionPage extends StatelessWidget {
   const MissionPage({super.key});
 

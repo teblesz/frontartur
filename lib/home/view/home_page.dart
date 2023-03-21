@@ -6,11 +6,13 @@ import 'package:fluttartur/home/home.dart';
 import 'package:data_repository/data_repository.dart';
 
 // TODO !!! app-wide bloc with info about being in a room
+// TODO przycisk do wychodzenia z gry
+// TODO rozdzielic datarepo na dwie klasy roomdatarepo i ingamedatarepo
+
 // TODO internalizacja
 // TODO anonimowe logowanie, nicki
 // TODO animacje
 // TODO dołączanie do lobby przez kod QR
-// TODO przycisk do wychodzenia z gry
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
