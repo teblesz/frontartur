@@ -12,8 +12,8 @@ import 'package:data_repository/src/models/models.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 // TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
-class LobbyHostForm extends StatelessWidget {
-  const LobbyHostForm({super.key});
+class MatchupHostForm extends StatelessWidget {
+  const MatchupHostForm({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -27,8 +27,7 @@ class App extends StatelessWidget {
           authenticationRepository: _authenticationRepository,
         ),
         child: Provider<DataRepository>(
-          create: (_) =>
-              _dataRepository, // TODO !!! should go to Bloc, 'being in room' should mimic 'being authenticated' behaviour
+          create: (_) => _dataRepository,
           child: const AppView(),
         ),
       ),

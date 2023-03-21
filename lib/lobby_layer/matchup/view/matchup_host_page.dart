@@ -8,12 +8,14 @@ import 'package:fluttartur/lobby_layer/matchup/matchup.dart';
 // nie działał zupełnie bo w app.dart nie było observera
 // teraz nie działa na dole stacka, bo https://github.com/flutter/flutter/issues/17627
 //    :(
-class LobbyHostPage extends StatelessWidget {
-  const LobbyHostPage({super.key});
+class MatchupHostPage extends StatelessWidget {
+  const MatchupHostPage({super.key});
+
+  static Page<void> page() => const MaterialPage<void>(child: LoginPage());
 
   static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const LobbyHostPage());
-  }
+    return MaterialPageRoute<void>(builder: (_) => const MatchupHostPage());
+  } //TODO remove those routes
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,8 @@ class LobbyHostPage extends StatelessWidget {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: const Text('Lobby')),
-          body: const LobbyHostForm(),
+          appBar: AppBar(title: const Text('Matchup')),
+          body: const MatchupHostForm(),
         ),
       ],
     );
