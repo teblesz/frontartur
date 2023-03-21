@@ -2,19 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttartur/data/room.dart';
-import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/mission_page.dart';
 
-class CourtPage extends StatefulWidget {
+class CourtPage extends StatelessWidget {
   const CourtPage({super.key});
 
-  @override
-  State<CourtPage> createState() => _CourtPageState();
-}
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const CourtPage());
+  }
 
-class _CourtPageState extends State<CourtPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

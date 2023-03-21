@@ -2,21 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttartur/data/room.dart';
-import 'package:fluttartur/data/rooms_data_source.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 
-class LobbyHostPage extends StatefulWidget {
+class LobbyHostPage extends StatelessWidget {
   const LobbyHostPage({super.key});
 
-  @override
-  State<LobbyHostPage> createState() => _LobbyHostPageState();
-}
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const LobbyHostPage());
+  }
 
-class _LobbyHostPageState extends State<LobbyHostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +26,7 @@ class _LobbyHostPageState extends State<LobbyHostPage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("images/startpagebg.jpg"),
+            alignment: AlignmentDirectional.centerEnd,
             fit: BoxFit.cover,
           ),
         ),
