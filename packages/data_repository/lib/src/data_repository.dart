@@ -37,20 +37,20 @@ class DataRepository {
   final CacheClient _cache;
   final FirebaseFirestore _firestore;
 
-  static const roomDocIdCacheKey = '__room__id_cache_key__';
+  static const roomCacheKey = '__room__id_cache_key__';
 
-  RoomDocId get currentRoomDocId {
-    // TODO change Room to something smaller (RoomId..?)
-    return _cache.read<RoomDocId>(key: roomDocIdCacheKey) ?? RoomDocId.empty;
+  Room get currentRoom {
+    // TODO maybe change Room to something smaller (RoomId..?)
+    return _cache.read<Room>(key: roomCacheKey) ?? Room.empty;
   }
 
   Stream<Room> streamRoom() {
     return _firestore
         .collection('rooms')
-        .doc(currentRoomDocId.value)
+        .doc(currentRoom.id)
         .snapshots()
         .map((snap) {
-      _cache.write(key: roomDocIdCacheKey, value: RoomDocId(snap.id));
+      _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
       return Room.fromFirestore(snap);
     });
   }
@@ -58,7 +58,7 @@ class DataRepository {
   Stream<List<Player>> streamPlayersList() {
     return _firestore
         .collection('rooms')
-        .doc(currentRoomDocId.value)
+        .doc(currentRoom.id)
         .collection('players')
         .snapshots()
         .map((list) =>
@@ -69,8 +69,9 @@ class DataRepository {
   Future<void> createRoom({required Player player}) async {
     final roomRef =
         await _firestore.collection('rooms').add(Room.empty.toFirestore());
-    // can get room id directly from documentReference
-    _cache.write(key: roomDocIdCacheKey, value: RoomDocId(roomRef.id));
+
+    final snap = await roomRef.get();
+    _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
 
     //join created room
     roomRef.collection('players').add(player.toFirestore());
@@ -87,6 +88,7 @@ class DataRepository {
 
     roomRef.collection('players').add(player.toFirestore());
 
-    _cache.write(key: roomDocIdCacheKey, value: RoomDocId(roomRef.id));
+    final snap = await roomRef.get();
+    _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
   }
 }

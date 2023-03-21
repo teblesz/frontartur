@@ -8,17 +8,17 @@ enum LobbyStatus {
 class LobbyState extends Equatable {
   const LobbyState._({
     required this.status,
-    this.roomDocId = RoomDocId.empty,
+    this.room = Room.empty,
   });
 
-  const LobbyState.hostingRoom(RoomDocId roomDocId)
-      : this._(status: LobbyStatus.withoutRoom, roomDocId: roomDocId);
+  const LobbyState.hostingRoom(Room room)
+      : this._(status: LobbyStatus.withoutRoom, room: room);
 
   const LobbyState.withoutRoom() : this._(status: LobbyStatus.withoutRoom);
 
   final LobbyStatus status;
-  final RoomDocId roomDocId;
+  final Room room;
 
   @override
-  List<Object> get props => [status, roomDocId];
+  List<Object> get props => [status, room];
 }

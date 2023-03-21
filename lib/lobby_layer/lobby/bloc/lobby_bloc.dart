@@ -10,24 +10,23 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   LobbyBloc({required DataRepository dataRepository})
       : _dataRepository = dataRepository,
         super(
-          dataRepository.currentRoomDocId.isNotEmpty
-              ? LobbyState.hostingRoom(dataRepository.currentRoomDocId)
+          dataRepository.currentRoom.isNotEmpty
+              ? LobbyState.hostingRoom(dataRepository.currentRoom)
               : const LobbyState.withoutRoom(),
         ) {
     on<LobbyLeaveRoomRequested>(_onLeaveRoomRequested);
-    _roomDocIdSubscription = _dataRepository.streamRoom().listen(
-          (roomDocId) => add(_LobbyRoomDocIdChanged(roomDocId)),
+    _roomSubscription = _dataRepository.streamRoom().listen(
+          (room) => add(_LobbyRoomChanged(room)),
         );
   }
 
   final DataRepository _dataRepository;
-  late final StreamSubscription<RoomDocId> _roomDocIdSubscription;
+  late final StreamSubscription<Room> _roomSubscription;
 
-  void _onRoomDocIdChanged(
-      _LobbyRoomDocIdChanged event, Emitter<LobbyState> emit) {
+  void _onRoomChanged(_LobbyRoomChanged event, Emitter<LobbyState> emit) {
     emit(
-      event.roomDocId.isNotEmpty
-          ? LobbyState.authenticated(event.roomDocId)
+      event.room.isNotEmpty
+          ? LobbyState.authenticated(event.room)
           : const LobbyState.unauthenticated(),
     );
   }
@@ -39,7 +38,7 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
 
   @override
   Future<void> close() {
-    _roomDocIdSubscription.cancel();
+    _roomSubscription.cancel();
     return super.close();
   }
 }
