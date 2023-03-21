@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/mission_page.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:fluttartur/home/cubit/home_cubit.dart';
+import 'package:fluttartur/lobby_layer/home/cubit/home_cubit.dart';
 
 import 'package:data_repository/src/models/models.dart';
 

@@ -1,10 +1,8 @@
-import 'package:authentication_repository/src/models/user.dart';
-import 'package:fluttartur/home/cubit/home_cubit.dart';
+import 'package:fluttartur/lobby_layer/home/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttartur/app/app.dart';
-import 'package:fluttartur/home/home.dart';
-import 'package:fluttartur/lobby/lobby.dart';
+import 'package:fluttartur/app_layer/app/app.dart';
+import 'package:fluttartur/lobby_layer/matchup/matchup.dart';
 import 'package:formz/formz.dart';
 
 class HomeForm extends StatelessWidget {
