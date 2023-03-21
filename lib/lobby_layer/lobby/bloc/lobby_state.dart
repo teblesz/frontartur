@@ -1,25 +1,24 @@
-// part of 'lobby_bloc.dart';
+part of 'lobby_bloc.dart';
 
-// enum LobbyStatus {
-//   authenticated,
-//   unauthenticated,
-// }
+enum LobbyStatus {
+  withoutRoom,
+  hostingRoom,
+}
 
-// class LobbyState extends Equatable {
-//   const LobbyState._({
-//     required this.status,
-//     this.user = User.empty,
-//   });
+class LobbyState extends Equatable {
+  const LobbyState._({
+    required this.status,
+    this.roomDocId = RoomDocId.empty,
+  });
 
-//   const LobbyState.authenticated(User user)
-//       : this._(status: LobbyStatus.authenticated, user: user);
+  const LobbyState.hostingRoom(RoomDocId roomDocId)
+      : this._(status: LobbyStatus.withoutRoom, roomDocId: roomDocId);
 
-//   const LobbyState.unauthenticated()
-//       : this._(status: LobbyStatus.unauthenticated);
+  const LobbyState.withoutRoom() : this._(status: LobbyStatus.withoutRoom);
 
-//   final LobbyStatus status;
-//   final User user;
+  final LobbyStatus status;
+  final RoomDocId roomDocId;
 
-//   @override
-//   List<Object> get props => [status, user];
-// }
+  @override
+  List<Object> get props => [status, roomDocId];
+}

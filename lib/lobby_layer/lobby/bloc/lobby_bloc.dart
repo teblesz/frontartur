@@ -1,46 +1,45 @@
-// import 'dart:async';
+import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:data_repository/data_repository.dart';
+import 'package:equatable/equatable.dart';
 
-// import 'package:authentication_repository/authentication_repository.dart';
-// import 'package:bloc/bloc.dart';
-// import 'package:equatable/equatable.dart';
+part 'lobby_event.dart';
+part 'lobby_state.dart';
 
-// part 'lobby_event.dart';
-// part 'lobby_state.dart';
+class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
+  LobbyBloc({required DataRepository dataRepository})
+      : _dataRepository = dataRepository,
+        super(
+          dataRepository.currentRoomDocId.isNotEmpty
+              ? LobbyState.hostingRoom(dataRepository.currentRoomDocId)
+              : const LobbyState.withoutRoom(),
+        ) {
+    on<LobbyLeaveRoomRequested>(_onLeaveRoomRequested);
+    _roomDocIdSubscription = _dataRepository.streamRoom().listen(
+          (roomDocId) => add(_LobbyRoomDocIdChanged(roomDocId)),
+        );
+  }
 
-// class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
-//   LobbyBloc({required AuthenticationRepository authenticationRepository})
-//       : _authenticationRepository = authenticationRepository,
-//         super(
-//           authenticationRepository.currentUser.isNotEmpty
-//               ? LobbyState.authenticated(authenticationRepository.currentUser)
-//               : const LobbyState.unauthenticated(),
-//         ) {
-//     on<_LobbyUserChanged>(_onUserChanged);
-//     on<LobbyLogoutRequested>(_onLogoutRequested);
-//     _userSubscription = _authenticationRepository.user.listen(
-//       (user) => add(_LobbyUserChanged(user)),
-//     );
-//   }
+  final DataRepository _dataRepository;
+  late final StreamSubscription<RoomDocId> _roomDocIdSubscription;
 
-//   final AuthenticationRepository _authenticationRepository;
-//   late final StreamSubscription<User> _userSubscription;
+  void _onRoomDocIdChanged(
+      _LobbyRoomDocIdChanged event, Emitter<LobbyState> emit) {
+    emit(
+      event.roomDocId.isNotEmpty
+          ? LobbyState.authenticated(event.roomDocId)
+          : const LobbyState.unauthenticated(),
+    );
+  }
 
-//   void _onUserChanged(_LobbyUserChanged event, Emitter<LobbyState> emit) {
-//     emit(
-//       event.user.isNotEmpty
-//           ? LobbyState.authenticated(event.user)
-//           : const LobbyState.unauthenticated(),
-//     );
-//   }
+  void _onLeaveRoomRequested(
+      LobbyLeaveRoomRequested event, Emitter<LobbyState> emit) {
+    unawaited(_dataRepository.logOut());
+  }
 
-//   void _onLogoutRequested(
-//       LobbyLogoutRequested event, Emitter<LobbyState> emit) {
-//     unawaited(_authenticationRepository.logOut());
-//   }
-
-//   @override
-//   Future<void> close() {
-//     _userSubscription.cancel();
-//     return super.close();
-//   }
-// }
+  @override
+  Future<void> close() {
+    _roomDocIdSubscription.cancel();
+    return super.close();
+  }
+}
