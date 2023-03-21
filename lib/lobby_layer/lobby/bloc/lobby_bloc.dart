@@ -14,6 +14,7 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
               ? LobbyState.hostingRoom(dataRepository.currentRoom)
               : const LobbyState.withoutRoom(),
         ) {
+    on<_LobbyRoomChanged>(_onRoomChanged);
     on<LobbyLeaveRoomRequested>(_onLeaveRoomRequested);
     _roomSubscription = _dataRepository.streamRoom().listen(
           (room) => add(_LobbyRoomChanged(room)),
@@ -26,14 +27,14 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
   void _onRoomChanged(_LobbyRoomChanged event, Emitter<LobbyState> emit) {
     emit(
       event.room.isNotEmpty
-          ? LobbyState.authenticated(event.room)
-          : const LobbyState.unauthenticated(),
+          ? LobbyState.hostingRoom(event.room)
+          : const LobbyState.withoutRoom(),
     );
   }
 
   void _onLeaveRoomRequested(
       LobbyLeaveRoomRequested event, Emitter<LobbyState> emit) {
-    unawaited(_dataRepository.logOut());
+    _dataRepository.leaveRoom();
   }
 
   @override

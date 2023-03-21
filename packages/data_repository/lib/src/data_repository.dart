@@ -86,9 +86,15 @@ class DataRepository {
 
     if (!roomSnap.exists) throw GetRoomByIdFailure();
 
+    // TODO !!! first check if users player was already present (accidental leave etc)
     roomRef.collection('players').add(player.toFirestore());
 
     final snap = await roomRef.get();
     _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
+  }
+
+  void leaveRoom() {
+    //dont change database
+    _cache.write(key: roomCacheKey, value: Room.empty);
   }
 }
