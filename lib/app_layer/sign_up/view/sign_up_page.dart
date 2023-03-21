@@ -1,12 +1,14 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttartur/login/login.dart';
+import 'package:fluttartur/app_layer/sign_up/sign_up.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
-  static Page<void> page() => const MaterialPage<void>(child: LoginPage());
+  static Route<void> route() {
+    return MaterialPageRoute<void>(builder: (_) => const SignUpPage());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +23,11 @@ class LoginPage extends StatelessWidget {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: const Text('Login')),
-          body: BlocProvider(
-            create: (_) => LoginCubit(context.read<AuthenticationRepository>()),
-            child: const LoginForm(),
+          appBar: AppBar(title: const Text('Sign Up')),
+          body: BlocProvider<SignUpCubit>(
+            create: (_) =>
+                SignUpCubit(context.read<AuthenticationRepository>()),
+            child: const SignUpForm(),
           ),
         ),
       ],

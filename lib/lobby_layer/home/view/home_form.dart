@@ -1,10 +1,8 @@
-import 'package:authentication_repository/src/models/user.dart';
-import 'package:fluttartur/home/cubit/home_cubit.dart';
+import 'package:fluttartur/lobby_layer/home/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttartur/app/app.dart';
-import 'package:fluttartur/home/home.dart';
-import 'package:fluttartur/lobby/lobby.dart';
+import 'package:fluttartur/app_layer/app/app.dart';
+import 'package:fluttartur/lobby_layer/matchup/matchup.dart';
 import 'package:formz/formz.dart';
 
 class HomeForm extends StatelessWidget {
@@ -73,7 +71,7 @@ class _JoinRoomButton extends StatelessWidget {
                         // TODO move this to routes
                         context.read<HomeCubit>().joinRoom().then((value) =>
                             Navigator.of(context)
-                                .push<void>(LobbyHostPage.route()));
+                                .push<void>(MatchupHostPage.route()));
                       },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -93,8 +91,8 @@ class _CreateRoomButton extends StatelessWidget {
       onPressed: () {
         // TODO move this state to bloc
         // TODO move this to routes
-        context.read<HomeCubit>().createRoom().then(
-            (value) => Navigator.of(context).push<void>(LobbyHostPage.route()));
+        context.read<HomeCubit>().createRoom().then((value) =>
+            Navigator.of(context).push<void>(MatchupHostPage.route()));
       },
       child: const Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
     );

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 //TODO misje maja zmieniajace sie tła
+// QUEST xd
 
 class MissionPage extends StatelessWidget {
   const MissionPage({super.key});

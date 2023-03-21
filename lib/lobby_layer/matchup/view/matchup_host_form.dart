@@ -6,14 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:fluttartur/pages_old/view/mission_page.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:fluttartur/home/cubit/home_cubit.dart';
+import 'package:fluttartur/lobby_layer/home/cubit/home_cubit.dart';
 
 import 'package:data_repository/src/models/models.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 // TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
-class LobbyHostForm extends StatelessWidget {
-  const LobbyHostForm({super.key});
+class MatchupHostForm extends StatelessWidget {
+  const MatchupHostForm({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttartur/app/app.dart';
+import 'package:fluttartur/app_layer/app/app.dart';
 import 'package:fluttartur/theme.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +27,7 @@ class App extends StatelessWidget {
           authenticationRepository: _authenticationRepository,
         ),
         child: Provider<DataRepository>(
-          create: (_) =>
-              _dataRepository, // TODO !!! should go to Bloc, 'being in room' should mimic 'being authenticated' behaviour
+          create: (_) => _dataRepository,
           child: const AppView(),
         ),
       ),
