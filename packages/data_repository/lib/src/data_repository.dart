@@ -27,14 +27,6 @@ class GetRoomByIdFailure implements Exception {
   // final String message;
 }
 
-/// for caching roomid
-class RoomDocId {
-  const RoomDocId(this.value);
-  final String value;
-
-  static RoomDocId empty = const RoomDocId("");
-}
-
 class DataRepository {
   DataRepository({
     CacheClient? cache,
