@@ -14,6 +14,8 @@ import 'package:data_repository/data_repository.dart';
 // TODO animacje
 // TODO dołączanie do lobby przez kod QR
 
+// TODO !!! nicki
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
