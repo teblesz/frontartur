@@ -1,11 +1,11 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
+import 'package:fluttartur/lobby_layer/lobby/bloc/lobby_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app_layer/app/app.dart';
 import 'package:fluttartur/theme.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -20,16 +20,20 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: _authenticationRepository,
-      child: BlocProvider(
-        create: (_) => AppBloc(
-          authenticationRepository: _authenticationRepository,
-        ),
-        child: Provider<DataRepository>(
-          create: (_) => _dataRepository,
-          child: const AppView(),
-        ),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider.value(value: _authenticationRepository),
+        RepositoryProvider.value(value: _dataRepository),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+              create: (_) =>
+                  AppBloc(authenticationRepository: _authenticationRepository)),
+          BlocProvider(
+              create: (_) => LobbyBloc(dataRepository: _dataRepository)),
+        ],
+        child: const AppView(),
       ),
     );
   }
