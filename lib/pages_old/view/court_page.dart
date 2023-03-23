@@ -8,6 +8,8 @@ import 'package:fluttartur/pages_old/view/mission_page.dart';
 class CourtPage extends StatelessWidget {
   const CourtPage({super.key});
 
+  static Page<void> page() => const MaterialPage<void>(child: CourtPage());
+
   static Route<void> route() {
     return MaterialPageRoute<void>(builder: (_) => const CourtPage());
   }

@@ -1,8 +1,6 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttartur/app_layer/login/login.dart';
-import 'package:fluttartur/lobby_layer/matchup/matchup.dart';
+import 'package:fluttartur/login/login.dart';
+import 'package:fluttartur/matchup/matchup.dart';
 
 // tutaj zostały stracone 3 godziny na dojście co jest nie tak z Hero.
 // nie działał zupełnie bo w app.dart nie było observera

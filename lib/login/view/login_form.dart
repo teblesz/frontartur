@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttartur/app_layer/login/login.dart';
-import 'package:fluttartur/app_layer/sign_up/sign_up.dart';
+import 'package:fluttartur/login/login.dart';
+import 'package:fluttartur/sign_up/sign_up.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
 
