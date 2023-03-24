@@ -4,10 +4,10 @@ import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
 import 'package:data_repository/data_repository.dart';
 
-part 'home_state.dart';
+part 'lobby_state.dart';
 
-class HomeCubit extends Cubit<HomeState> {
-  HomeCubit(this._dataRepository) : super(const HomeState());
+class LobbyCubit extends Cubit<LobbyState> {
+  LobbyCubit(this._dataRepository) : super(const LobbyState());
 
   final DataRepository _dataRepository;
 

@@ -1,8 +1,8 @@
-import 'package:fluttartur/home/cubit/home_cubit.dart';
+import 'package:fluttartur/lobby/cubit/lobby_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
-import 'package:fluttartur/home/home.dart';
+import 'package:fluttartur/lobby/lobby.dart';
 import 'package:data_repository/data_repository.dart';
 
 // TODO !!! app-wide bloc with info about being in a room
@@ -16,10 +16,10 @@ import 'package:data_repository/data_repository.dart';
 
 // TODO !!! nicki
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class LobbyPage extends StatelessWidget {
+  const LobbyPage({super.key});
 
-  static Page<void> page() => const MaterialPage<void>(child: HomePage());
+  static Page<void> page() => const MaterialPage<void>(child: LobbyPage());
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +35,12 @@ class HomePage extends StatelessWidget {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: const Text('Home'),
+            title: const Text('Lobby'),
             actions: <Widget>[_LogOutButton()],
           ),
           body: BlocProvider(
-            create: (_) => HomeCubit(context.read<DataRepository>()),
-            child: const HomeForm(),
+            create: (_) => LobbyCubit(context.read<DataRepository>()),
+            child: const LobbyForm(),
           ),
         ),
       ],

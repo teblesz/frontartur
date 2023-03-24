@@ -1,5 +1,5 @@
+import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttartur/login/login.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
@@ -43,7 +43,7 @@ class _LeaveRoomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        context.read<AppBloc>().add(const AppLeaveRoomRequested());
+        context.read<RoomCubit>().leaveRoom();
       },
       child: const Text("Leave Room"),
     );

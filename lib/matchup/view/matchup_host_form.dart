@@ -1,15 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttartur/app/app.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttartur/pages_old/view/mission_page.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:fluttartur/home/cubit/home_cubit.dart';
-
-import 'package:data_repository/src/models/models.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 // TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
@@ -62,10 +54,7 @@ class _RolesDefButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
-      onPressed: () {
-        //TODO remove this
-        context.read<AppBloc>().add(const AppLeaveRoomRequested());
-      },
+      onPressed: () {},
       child: const Text('Zdefiniuj role'),
     );
   }

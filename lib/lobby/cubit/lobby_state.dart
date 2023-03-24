@@ -1,7 +1,7 @@
-part of 'home_cubit.dart';
+part of 'lobby_cubit.dart';
 
-class HomeState extends Equatable {
-  const HomeState({
+class LobbyState extends Equatable {
+  const LobbyState({
     this.roomIdInput = const RoomId.pure(),
     this.status = FormzStatus.pure,
   });
@@ -12,11 +12,11 @@ class HomeState extends Equatable {
   @override
   List<Object> get props => [roomIdInput, status];
 
-  HomeState copyWith({
+  LobbyState copyWith({
     RoomId? roomIdInput,
     FormzStatus? status,
   }) {
-    return HomeState(
+    return LobbyState(
       roomIdInput: roomIdInput ?? this.roomIdInput,
       status: status ?? this.status,
     );

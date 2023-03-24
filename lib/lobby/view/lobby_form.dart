@@ -1,12 +1,11 @@
-import 'package:fluttartur/home/cubit/home_cubit.dart';
+import 'package:fluttartur/lobby/cubit/lobby_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
-import 'package:fluttartur/matchup/matchup.dart';
 import 'package:formz/formz.dart';
 
-class HomeForm extends StatelessWidget {
-  const HomeForm({super.key});
+class LobbyForm extends StatelessWidget {
+  const LobbyForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,7 @@ class _RoomIdInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: (roomId) => context.read<HomeCubit>().roomIdChanged(roomId),
+      onChanged: (roomId) => context.read<LobbyCubit>().roomIdChanged(roomId),
       //keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
@@ -58,7 +57,7 @@ class _RoomIdInput extends StatelessWidget {
 class _JoinRoomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<LobbyCubit, LobbyState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
@@ -67,11 +66,7 @@ class _JoinRoomButton extends StatelessWidget {
                 onPressed: !state.status.isValidated
                     ? null
                     : () {
-                        context.read<HomeCubit>().joinRoom().then(
-                              (_) => context
-                                  .read<AppBloc>()
-                                  .add(const AppEnterRoomReqested()),
-                            );
+                        context.read<LobbyCubit>().joinRoom();
                       },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -91,10 +86,7 @@ class _CreateRoomButton extends StatelessWidget {
       onPressed: () {
         // TODO move this state to bloc
         // TODO move this to routes
-        context.read<HomeCubit>().createRoom().then(
-              (_) => context.read<AppBloc>().add(const AppEnterRoomReqested()),
-            ); //.then((value) =>
-        // Navigator.of(context).push<void>(MatchupHostPage.route()));
+        context.read<LobbyCubit>().createRoom();
       },
       child: const Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
     );
