@@ -18,7 +18,6 @@ class Home extends StatelessWidget {
         return FlowBuilder<RoomStatus>(
           state: context.select((RoomCubit cubit) => cubit.state.status),
           onGeneratePages: onGenerateRoomViewPages,
-          //observers: [HeroController()], // TODO not necessary now
         );
       }),
     );
