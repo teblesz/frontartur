@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttartur/login/login.dart';
 import 'package:fluttartur/matchup/matchup.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttartur/app/app.dart';
 
 // tutaj zostały stracone 3 godziny na dojście co jest nie tak z Hero.
 // nie działał zupełnie bo w app.dart nie było observera
@@ -9,11 +11,8 @@ import 'package:fluttartur/matchup/matchup.dart';
 class MatchupHostPage extends StatelessWidget {
   const MatchupHostPage({super.key});
 
-  static Page<void> page() => const MaterialPage<void>(child: LoginPage());
-
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const MatchupHostPage());
-  } //TODO remove those routes
+  static Page<void> page() =>
+      const MaterialPage<void>(child: MatchupHostPage());
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +27,25 @@ class MatchupHostPage extends StatelessWidget {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: const Text('Matchup')),
+          appBar: AppBar(
+            title: const Text('Matchup'),
+            actions: <Widget>[_LeaveRoomButton()],
+          ),
           body: const MatchupHostForm(),
         ),
       ],
+    );
+  }
+}
+
+class _LeaveRoomButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        context.read<AppBloc>().add(const AppLeaveRoomRequested());
+      },
+      child: const Text("Leave Room"),
     );
   }
 }

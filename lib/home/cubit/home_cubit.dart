@@ -26,7 +26,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       await _dataRepository.joinRoom(
-        roomId: state.roomIdInput.value, //TODO datarep.current etc
+        roomId: state.roomIdInput.value,
         player: const Player(
           id: '33333333',
           userUid: "4444",

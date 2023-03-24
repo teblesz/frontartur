@@ -67,11 +67,11 @@ class _JoinRoomButton extends StatelessWidget {
                 onPressed: !state.status.isValidated
                     ? null
                     : () {
-                        // TODO move this state to bloc
-                        // TODO move this to routes
-                        context.read<HomeCubit>().joinRoom().then((value) =>
-                            Navigator.of(context)
-                                .push<void>(MatchupHostPage.route()));
+                        context.read<HomeCubit>().joinRoom().then(
+                              (_) => context
+                                  .read<AppBloc>()
+                                  .add(const AppEnterRoomReqested()),
+                            );
                       },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -91,8 +91,10 @@ class _CreateRoomButton extends StatelessWidget {
       onPressed: () {
         // TODO move this state to bloc
         // TODO move this to routes
-        context.read<HomeCubit>().createRoom().then((value) =>
-            Navigator.of(context).push<void>(MatchupHostPage.route()));
+        context.read<HomeCubit>().createRoom().then(
+              (_) => context.read<AppBloc>().add(const AppEnterRoomReqested()),
+            ); //.then((value) =>
+        // Navigator.of(context).push<void>(MatchupHostPage.route()));
       },
       child: const Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
     );

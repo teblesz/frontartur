@@ -13,3 +13,11 @@ class _AppUserChanged extends AppEvent {
 
   final User user;
 }
+
+class AppEnterRoomReqested extends AppEvent {
+  const AppEnterRoomReqested();
+}
+
+class AppLeaveRoomRequested extends AppEvent {
+  const AppLeaveRoomRequested();
+}

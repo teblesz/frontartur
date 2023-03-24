@@ -27,6 +27,12 @@ class GetRoomByIdFailure implements Exception {
   // final String message;
 }
 
+class StreamingRoomFailure implements Exception {
+  const StreamingRoomFailure([this.message = 'An unknown exception occurred.']);
+
+  final String message;
+}
+
 class DataRepository {
   DataRepository({
     CacheClient? cache,
@@ -40,11 +46,15 @@ class DataRepository {
   static const roomCacheKey = '__room__id_cache_key__';
 
   Room get currentRoom {
-    // TODO maybe change Room to something smaller (RoomId..?)
     return _cache.read<Room>(key: roomCacheKey) ?? Room.empty;
   }
 
-  Stream<Room> streamRoom() {
+  ///
+  Stream<Room> get room {
+    if (currentRoom.isEmpty) {
+      throw const StreamingRoomFailure(
+          "Current Room is Room.empty (has no ID)");
+    }
     return _firestore
         .collection('rooms')
         .doc(currentRoom.id)

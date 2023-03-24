@@ -17,9 +17,9 @@ class LobbyBloc extends Bloc<LobbyEvent, LobbyState> {
         ) {
     on<_LobbyRoomChanged>(_onRoomChanged);
     on<LobbyLeaveRoomRequested>(_onLeaveRoomRequested);
-    _roomSubscription = _dataRepository.streamRoom().listen(
-          (room) => add(_LobbyRoomChanged(room)),
-        );
+    _roomSubscription = _dataRepository.room.listen(
+      (room) => add(_LobbyRoomChanged(room)),
+    );
   }
 
   final DataRepository _dataRepository;

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttartur/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class MatchupHostForm extends StatelessWidget {
       children: [
         StreamBuilder<Room>(
           //TODO lepiej to?
-          stream: context.read<DataRepository>().streamRoom(),
+          stream: context.read<DataRepository>().room,
           builder: (context, snapshot) {
             var data = snapshot.data;
             return data == null
@@ -61,7 +62,10 @@ class _RolesDefButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
-      onPressed: () {},
+      onPressed: () {
+        //TODO remove this
+        context.read<AppBloc>().add(const AppLeaveRoomRequested());
+      },
       child: const Text('Zdefiniuj role'),
     );
   }
