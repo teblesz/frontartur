@@ -1,3 +1,4 @@
+import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/lobby/cubit/lobby_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,7 +67,9 @@ class _JoinRoomButton extends StatelessWidget {
                 onPressed: !state.status.isValidated
                     ? null
                     : () {
-                        context.read<LobbyCubit>().joinRoom();
+                        context.read<LobbyCubit>().joinRoom().then(
+                              (_) => context.read<RoomCubit>().enterRoom(),
+                            );
                       },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -84,9 +87,9 @@ class _CreateRoomButton extends StatelessWidget {
     // TODO add state which gives CircularProgressIndicator here
     return FilledButton.tonal(
       onPressed: () {
-        // TODO move this state to bloc
-        // TODO move this to routes
-        context.read<LobbyCubit>().createRoom();
+        context.read<LobbyCubit>().createRoom().then(
+              (_) => context.read<RoomCubit>().enterRoom(),
+            );
       },
       child: const Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
     );

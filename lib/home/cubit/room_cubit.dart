@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 
 part 'room_state.dart';
 
+/// cubit responisoble for routing between lobby, matchup and game layers
 class RoomCubit extends Cubit<RoomState> {
   RoomCubit(this._dataRepository) : super(const RoomState());
 
