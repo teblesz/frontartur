@@ -1,5 +1,7 @@
 part of 'room_cubit.dart';
 
+//TODO being host or player
+
 enum RoomStatus {
   /// user is not in any room
   inLobby,

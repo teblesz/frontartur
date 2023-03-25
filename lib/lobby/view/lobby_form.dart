@@ -55,16 +55,19 @@ class _RoomIdInput extends StatelessWidget {
   }
 }
 
+// TODO !!! handle errors  // TODO deactivate when create room is processing
 class _JoinRoomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LobbyCubit, LobbyState>(
-      buildWhen: (previous, current) => previous.status != current.status,
+      buildWhen: (previous, current) =>
+          previous.statusOfJoin != current.statusOfJoin,
       builder: (context, state) {
-        return state.status.isSubmissionInProgress
+        return state.statusOfJoin.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : FilledButton(
-                onPressed: !state.status.isValidated
+                onPressed: !state.statusOfJoin.isValidated ||
+                        state.statusOfCreate.isSubmissionInProgress
                     ? null
                     : () {
                         context.read<LobbyCubit>().joinRoom().then(
@@ -84,14 +87,24 @@ class _JoinRoomButton extends StatelessWidget {
 class _CreateRoomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO add state which gives CircularProgressIndicator here
-    return FilledButton.tonal(
-      onPressed: () {
-        context.read<LobbyCubit>().createRoom().then(
-              (_) => context.read<RoomCubit>().enterRoom(),
-            );
+    return BlocBuilder<LobbyCubit, LobbyState>(
+      buildWhen: (previous, current) =>
+          previous.statusOfCreate != current.statusOfCreate,
+      builder: (context, state) {
+        return state.statusOfCreate.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : FilledButton.tonal(
+                onPressed: () {
+                  context.read<LobbyCubit>().createRoom().then(
+                        (_) => context.read<RoomCubit>().enterRoom(),
+                      );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
+                ),
+              );
       },
-      child: const Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
     );
   }
 }

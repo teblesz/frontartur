@@ -6,6 +6,9 @@ import 'package:data_repository/data_repository.dart';
 
 part 'lobby_state.dart';
 
+// TODO maybe change into full bloc, so it reacts on room changes
+// then problem with room stream in dataRepository needs to be resolved
+
 class LobbyCubit extends Cubit<LobbyState> {
   LobbyCubit(this._dataRepository) : super(const LobbyState());
 
@@ -16,15 +19,16 @@ class LobbyCubit extends Cubit<LobbyState> {
     emit(
       state.copyWith(
         roomIdInput: roomIdInput,
-        status: Formz.validate([roomIdInput]),
+        statusOfJoin: Formz.validate([roomIdInput]),
       ),
     );
   }
 
   Future<void> joinRoom() async {
-    if (!state.status.isValidated) return;
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (!state.statusOfJoin.isValidated) return;
+    emit(state.copyWith(statusOfJoin: FormzStatus.submissionInProgress));
     try {
+      await Future.delayed(Duration(seconds: 1)); //TODO remove
       await _dataRepository.joinRoom(
         roomId: state.roomIdInput.value,
         player: const Player(
@@ -33,15 +37,16 @@ class LobbyCubit extends Cubit<LobbyState> {
           nick: "Testingowy",
         ),
       );
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      emit(state.copyWith(statusOfJoin: FormzStatus.submissionSuccess));
     } catch (_) {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
     }
   }
 
   Future<void> createRoom() async {
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusOfCreate: FormzStatus.submissionInProgress));
     try {
+      await Future.delayed(Duration(seconds: 10)); //TODO remove
       await _dataRepository.createRoom(
         player: const Player(
           id: '000000000',
@@ -49,9 +54,9 @@ class LobbyCubit extends Cubit<LobbyState> {
           nick: "Hostujacy",
         ),
       );
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      emit(state.copyWith(statusOfCreate: FormzStatus.submissionSuccess));
     } catch (_) {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      emit(state.copyWith(statusOfCreate: FormzStatus.submissionFailure));
     }
   }
 }
