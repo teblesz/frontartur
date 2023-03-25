@@ -15,7 +15,7 @@ class MatchupHostForm extends StatelessWidget {
       children: [
         StreamBuilder<Room>(
           //TODO lepiej to?
-          stream: context.read<DataRepository>().room,
+          stream: context.read<DataRepository>().streamRoom(),
           builder: (context, snapshot) {
             var data = snapshot.data;
             return data == null

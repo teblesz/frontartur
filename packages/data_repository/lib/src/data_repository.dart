@@ -1,37 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:data_repository/src/models/models.dart';
-
+import 'package:data_repository/models/models.dart';
 import 'package:cache/cache.dart';
 
+part 'data_failures.dart';
 // TODO unique room name (kahoot-like) https://stackoverflow.com/questions/47543251/firestore-unique-index-or-unique-constraint
-
-class GetRoomByIdFailure implements Exception {
-  // const GetRoomByIdFailure([this.message = 'An unknown exception occurred.']);
-
-  // factory GetRoomByIdFailure.fromCode(String code) {
-  //   switch (code) {
-  //     case 'invalid-id':
-  //       return const GetRoomByIdFailure(
-  //         'Room ID is invalid',
-  //       );
-  //     case 'no-doc-with-id':
-  //       return const GetRoomByIdFailure(
-  //         'No active room with this ID',
-  //       );
-  //     default:
-  //       return const GetRoomByIdFailure();
-  //   }
-  // }
-
-  // /// The associated error message.
-  // final String message;
-}
-
-class StreamingRoomFailure implements Exception {
-  const StreamingRoomFailure([this.message = 'An unknown exception occurred.']);
-
-  final String message;
-}
 
 class DataRepository {
   DataRepository({
@@ -49,8 +21,8 @@ class DataRepository {
     return _cache.read<Room>(key: roomCacheKey) ?? Room.empty;
   }
 
-  ///
-  Stream<Room> get room {
+  /// room stream getter
+  Stream<Room> streamRoom() {
     if (currentRoom.isEmpty) {
       throw const StreamingRoomFailure(
           "Current Room is Room.empty (has no ID)");
@@ -65,6 +37,7 @@ class DataRepository {
     });
   }
 
+  /// player list stream getter
   Stream<List<Player>> streamPlayersList() {
     return _firestore
         .collection('rooms')
