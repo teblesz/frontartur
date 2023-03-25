@@ -6,8 +6,8 @@ import 'package:data_repository/data_repository.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 // TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
-class MatchupHostForm extends StatelessWidget {
-  const MatchupHostForm({super.key});
+class MatchupForm extends StatelessWidget {
+  const MatchupForm({super.key});
 
   @override
   Widget build(BuildContext context) {

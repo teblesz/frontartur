@@ -12,7 +12,7 @@ List<Page<dynamic>> onGenerateRoomViewPages(
     case RoomStatus.inLobby:
       return [LobbyPage.page()];
     case RoomStatus.inMathup:
-      return [MatchupHostPage.page()];
+      return [MatchupPage.page()];
     case RoomStatus.inGame:
       return [GamePage.page()];
   }
