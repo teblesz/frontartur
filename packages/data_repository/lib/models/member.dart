@@ -1,4 +1,4 @@
-import 'package:data_repository/src/models/models.dart';
+import 'package:data_repository/models/models.dart';
 
 class Member {
   const Member({
