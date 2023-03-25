@@ -1,3 +1,4 @@
+import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
@@ -44,7 +45,9 @@ class _StartGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
-      onPressed: () => Navigator.of(context).push<void>(CourtPage.route()),
+      onPressed: () {
+        context.read<RoomCubit>().enterGame();
+      },
       child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
     );
   }

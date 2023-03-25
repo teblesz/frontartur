@@ -5,6 +5,7 @@ import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/lobby/lobby.dart';
 import 'package:data_repository/data_repository.dart';
 
+// TODO move resources to some resources class
 // TODO internalizacja
 // TODO anonimowe logowanie, nicki
 // TODO animacje

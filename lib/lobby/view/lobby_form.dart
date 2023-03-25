@@ -70,6 +70,7 @@ class _JoinRoomButton extends StatelessWidget {
                         state.statusOfCreate.isSubmissionInProgress
                     ? null
                     : () {
+                        // TODO this looks kinda bad - rework
                         context.read<LobbyCubit>().joinRoom().then(
                               (_) => context.read<RoomCubit>().enterRoom(),
                             );
@@ -95,6 +96,7 @@ class _CreateRoomButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : FilledButton.tonal(
                 onPressed: () {
+                  // TODO this looks kinda bad - rework
                   context.read<LobbyCubit>().createRoom().then(
                         (_) => context.read<RoomCubit>().enterRoom(),
                       );
