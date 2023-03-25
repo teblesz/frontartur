@@ -27,3 +27,10 @@ class StreamingRoomFailure implements Exception {
 
   final String message;
 }
+
+class StreamingPlayerFailure implements Exception {
+  const StreamingPlayerFailure(
+      [this.message = 'An unknown exception occurred.']);
+
+  final String message;
+}

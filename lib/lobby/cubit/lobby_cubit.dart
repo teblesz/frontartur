@@ -29,14 +29,7 @@ class LobbyCubit extends Cubit<LobbyState> {
     emit(state.copyWith(statusOfJoin: FormzStatus.submissionInProgress));
     try {
       await Future.delayed(Duration(seconds: 1)); //TODO remove
-      await _dataRepository.joinRoom(
-        roomId: state.roomIdInput.value,
-        player: const Player(
-          id: '33333333',
-          userUid: "4444",
-          nick: "Testingowy",
-        ),
-      );
+      await _dataRepository.joinRoom(roomId: state.roomIdInput.value);
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
@@ -47,13 +40,7 @@ class LobbyCubit extends Cubit<LobbyState> {
     emit(state.copyWith(statusOfCreate: FormzStatus.submissionInProgress));
     try {
       await Future.delayed(Duration(seconds: 1)); //TODO remove
-      await _dataRepository.createRoom(
-        player: const Player(
-          id: '000000000',
-          userUid: "host_id00000000",
-          nick: "Hostujacy",
-        ),
-      );
+      await _dataRepository.createRoom();
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionFailure));
