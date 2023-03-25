@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:fluttartur/home/home.dart';
 
+/// Navigation fork widget
 class Home extends StatelessWidget {
   const Home({super.key});
 
