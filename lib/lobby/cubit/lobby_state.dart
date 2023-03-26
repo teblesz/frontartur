@@ -2,25 +2,25 @@ part of 'lobby_cubit.dart';
 
 class LobbyState extends Equatable {
   const LobbyState({
-    this.roomIdInput = const RoomId.pure(),
+    this.roomId = const RoomId.pure(),
     this.statusOfJoin = FormzStatus.pure,
     this.statusOfCreate = FormzStatus.pure,
   });
 
-  final RoomId roomIdInput;
+  final RoomId roomId;
   final FormzStatus statusOfJoin;
   final FormzStatus statusOfCreate; // workaround
 
   @override
-  List<Object> get props => [roomIdInput, statusOfJoin, statusOfCreate];
+  List<Object> get props => [roomId, statusOfJoin, statusOfCreate];
 
   LobbyState copyWith({
-    RoomId? roomIdInput,
+    RoomId? roomId,
     FormzStatus? statusOfJoin,
     FormzStatus? statusOfCreate,
   }) {
     return LobbyState(
-      roomIdInput: roomIdInput ?? this.roomIdInput,
+      roomId: roomId ?? this.roomId,
       statusOfJoin: statusOfJoin ?? this.statusOfJoin,
       statusOfCreate: statusOfCreate ?? this.statusOfCreate,
     );

@@ -15,11 +15,11 @@ class LobbyCubit extends Cubit<LobbyState> {
   final DataRepository _dataRepository;
 
   void roomIdChanged(String value) {
-    final roomIdInput = RoomId.dirty(value);
+    final roomId = RoomId.dirty(value);
     emit(
       state.copyWith(
-        roomIdInput: roomIdInput,
-        statusOfJoin: Formz.validate([roomIdInput]),
+        roomId: roomId,
+        statusOfJoin: Formz.validate([roomId]),
       ),
     );
   }
@@ -29,7 +29,7 @@ class LobbyCubit extends Cubit<LobbyState> {
     emit(state.copyWith(statusOfJoin: FormzStatus.submissionInProgress));
     try {
       await Future.delayed(Duration(seconds: 1)); //TODO remove
-      await _dataRepository.joinRoom(roomId: state.roomIdInput.value);
+      await _dataRepository.joinRoom(roomId: state.roomId.value);
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
