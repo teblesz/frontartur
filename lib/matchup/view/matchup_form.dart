@@ -2,7 +2,6 @@ import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttartur/pages_old/view/court_page.dart';
 import 'package:data_repository/data_repository.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
@@ -94,7 +93,7 @@ Future<void> showNickDialog(BuildContext context) {
   return showDialog<void>(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text("Enter your nick"),
           content: const TextField(
@@ -106,7 +105,7 @@ Future<void> showNickDialog(BuildContext context) {
             TextButton(
               onPressed: () {
                 context.read<MatchupCubit>().writeinWithNick();
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
               },
               child: const Text("Confirm"),
             )

@@ -100,7 +100,7 @@ class DataRepository {
   }
 
   Future<void> leaveRoom() async {
-    await removePlayer(playerId: currentPlayer.id);
+    //await removePlayer(playerId: currentPlayer.id);
     _cache.write(key: playerCacheKey, value: Player.empty);
     _cache.write(key: roomCacheKey, value: Room.empty);
   }
@@ -118,6 +118,10 @@ class DataRepository {
   }
 
   Future<void> removePlayer({required String playerId}) async {
+    if (currentPlayer.isEmpty) {
+      throw const StreamingPlayerFailure(
+          "Current player is Player.empty (has no ID)");
+    }
     await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
