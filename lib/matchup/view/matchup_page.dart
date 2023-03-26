@@ -1,3 +1,4 @@
+import 'package:data_repository/data_repository.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttartur/matchup/matchup.dart';
@@ -29,8 +30,10 @@ class MatchupPage extends StatelessWidget {
             title: const Text('Matchup'),
             actions: <Widget>[_LeaveRoomButton()],
           ),
-          // TODO cubit here
-          body: const MatchupForm(),
+          body: BlocProvider(
+            create: (_) => MatchupCubit(context.read<DataRepository>()),
+            child: const MatchupForm(),
+          ),
         ),
       ],
     );

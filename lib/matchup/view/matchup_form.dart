@@ -1,4 +1,5 @@
 import 'package:fluttartur/home/home.dart';
+import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttartur/pages_old/view/court_page.dart';
@@ -104,6 +105,7 @@ Future<void> showNickDialog(BuildContext context) {
           actions: [
             TextButton(
               onPressed: () {
+                context.read<MatchupCubit>().writeinWithNick();
                 Navigator.of(context).pop();
               },
               child: const Text("Confirm"),

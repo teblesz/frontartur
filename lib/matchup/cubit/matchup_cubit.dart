@@ -21,7 +21,7 @@ class MatchupCubit extends Cubit<MatchupState> {
     );
   }
 
-  Future<void> logInWithCredentials() async {
+  Future<void> writeinWithNick() async {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
