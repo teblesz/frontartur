@@ -21,11 +21,14 @@ class MatchupCubit extends Cubit<MatchupState> {
     );
   }
 
-  Future<void> writeinWithNick() async {
+  Future<void> writeinPlayerWithUserId(String userId) async {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      //await _dataRepository.smth();
+      await _dataRepository.writeinPlayer(
+        nick: state.nick.value,
+        userId: userId,
+      );
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));

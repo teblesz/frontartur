@@ -1,3 +1,4 @@
+import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,7 @@ class _PlayerListView extends StatelessWidget {
                 children: <Widget>[
                   ...players.map(
                     (player) => Card(
+                      // TODO to separate widget and add rmeoving players
                       child: ListTile(
                         title: Text(player.nick),
                         trailing: const Icon(Icons.more_vert),
@@ -104,7 +106,8 @@ Future<void> showNickDialog(BuildContext context) {
           actions: [
             TextButton(
               onPressed: () {
-                context.read<MatchupCubit>().writeinWithNick();
+                final user = context.select((AppBloc bloc) => bloc.state.user);
+                context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
                 Navigator.of(dialogContext).pop();
               },
               child: const Text("Confirm"),
