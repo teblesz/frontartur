@@ -11,31 +11,29 @@ class MatchupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () => showNickDialog(context));
     return Column(
       children: [
+        Expanded(
+          child: _PlayerListView(),
+        ),
         StreamBuilder<Room>(
-          //TODO lepiej to?
           stream: context.read<DataRepository>().streamRoom(),
           builder: (context, snapshot) {
             var data = snapshot.data;
             return data == null
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator() //TODO kopiwanie
                 : Text(data.id);
           },
         ),
-        Expanded(
-          child: _PlayerListView(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _RolesDefButton(),
+            _StartGameButton(),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _RolesDefButton(),
-              _StartGameButton(),
-            ],
-          ),
-        ),
+        const SizedBox(height: 16)
       ],
     );
   }
@@ -89,4 +87,28 @@ class _PlayerListView extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> showNickDialog(BuildContext context) {
+  return showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Enter your nick"),
+          content: const TextField(
+            decoration: InputDecoration(
+              hintText: "Nick for this game",
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Confirm"),
+            )
+          ],
+        );
+      });
 }
