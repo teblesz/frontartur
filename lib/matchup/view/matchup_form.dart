@@ -13,7 +13,7 @@ class MatchupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () => showNickDialog(context));
+    Future.delayed(Duration.zero, () => _showNickDialog(context));
     return Column(
       children: [
         Expanded(
@@ -78,7 +78,7 @@ class _PlayerListView extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 children: <Widget>[
                   ...players.map(
-                    (player) => PlayerMatchupCard(player: player),
+                    (player) => _PlayerCard(player: player),
                   ),
                 ],
               );
@@ -87,8 +87,8 @@ class _PlayerListView extends StatelessWidget {
   }
 }
 
-class PlayerMatchupCard extends StatelessWidget {
-  const PlayerMatchupCard({
+class _PlayerCard extends StatelessWidget {
+  const _PlayerCard({
     super.key,
     required this.player,
   });
@@ -114,7 +114,7 @@ class PlayerMatchupCard extends StatelessWidget {
   }
 }
 
-Future<void> showNickDialog(BuildContext context) {
+Future<void> _showNickDialog(BuildContext context) {
   return showDialog<void>(
       barrierDismissible: false,
       context: context,
@@ -131,7 +131,8 @@ Future<void> showNickDialog(BuildContext context) {
             TextButton(
               onPressed: () {
                 //simple validation TODO make validation more complex
-                if (context.read<MatchupCubit>().state.status.isInvalid) return;
+                if (!context.read<MatchupCubit>().state.status.isValidated)
+                  return;
                 final user = context.read<AppBloc>().state.user;
                 context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
                 Navigator.of(dialogContext).pop();
