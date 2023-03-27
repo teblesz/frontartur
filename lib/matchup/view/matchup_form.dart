@@ -1,41 +1,41 @@
+import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
+import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter/material.dart';
+import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttartur/pages_old/view/court_page.dart';
 import 'package:data_repository/data_repository.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 // TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
-class MatchupHostForm extends StatelessWidget {
-  const MatchupHostForm({super.key});
+class MatchupForm extends StatelessWidget {
+  const MatchupForm({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () => showNickDialog(context));
     return Column(
       children: [
-        StreamBuilder<Room>(
-          //TODO lepiej to?
-          stream: context.read<DataRepository>().room,
-          builder: (context, snapshot) {
-            var data = snapshot.data;
-            return data == null
-                ? const CircularProgressIndicator()
-                : Text(data.id);
-          },
-        ),
         Expanded(
           child: _PlayerListView(),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _RolesDefButton(),
-              _StartGameButton(),
-            ],
-          ),
+        StreamBuilder<Room>(
+          stream: context.read<DataRepository>().streamRoom(),
+          builder: (context, snapshot) {
+            var data = snapshot.data;
+            return data == null
+                ? const CircularProgressIndicator() //TODO kopiwanie
+                : Text(data.id);
+          },
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _RolesDefButton(),
+            _StartGameButton(),
+          ],
+        ),
+        const SizedBox(height: 16)
       ],
     );
   }
@@ -78,6 +78,7 @@ class _PlayerListView extends StatelessWidget {
                 children: <Widget>[
                   ...players.map(
                     (player) => Card(
+                      // TODO to separate widget and add rmeoving players
                       child: ListTile(
                         title: Text(player.nick),
                         trailing: const Icon(Icons.more_vert),
@@ -89,4 +90,33 @@ class _PlayerListView extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> showNickDialog(BuildContext context) {
+  return showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Enter your nick for this play"),
+          content: TextField(
+            onChanged: (nick) => context.read<MatchupCubit>().nickChanged(nick),
+            decoration: const InputDecoration(
+              labelText: 'Nick',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                //simple validation TODO make validation more complex
+                if (context.read<MatchupCubit>().state.status.isInvalid) return;
+                final user = context.read<AppBloc>().state.user;
+                context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text("Confirm"),
+            )
+          ],
+        );
+      });
 }

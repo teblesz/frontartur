@@ -15,11 +15,11 @@ class LobbyCubit extends Cubit<LobbyState> {
   final DataRepository _dataRepository;
 
   void roomIdChanged(String value) {
-    final roomIdInput = RoomId.dirty(value);
+    final roomId = RoomId.dirty(value);
     emit(
       state.copyWith(
-        roomIdInput: roomIdInput,
-        statusOfJoin: Formz.validate([roomIdInput]),
+        roomId: roomId,
+        statusOfJoin: Formz.validate([roomId]),
       ),
     );
   }
@@ -29,14 +29,7 @@ class LobbyCubit extends Cubit<LobbyState> {
     emit(state.copyWith(statusOfJoin: FormzStatus.submissionInProgress));
     try {
       await Future.delayed(Duration(seconds: 1)); //TODO remove
-      await _dataRepository.joinRoom(
-        roomId: state.roomIdInput.value,
-        player: const Player(
-          id: '33333333',
-          userUid: "4444",
-          nick: "Testingowy",
-        ),
-      );
+      await _dataRepository.joinRoom(roomId: state.roomId.value);
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
@@ -47,13 +40,7 @@ class LobbyCubit extends Cubit<LobbyState> {
     emit(state.copyWith(statusOfCreate: FormzStatus.submissionInProgress));
     try {
       await Future.delayed(Duration(seconds: 1)); //TODO remove
-      await _dataRepository.createRoom(
-        player: const Player(
-          id: '000000000',
-          userUid: "host_id00000000",
-          nick: "Hostujacy",
-        ),
-      );
+      await _dataRepository.createRoom();
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionFailure));

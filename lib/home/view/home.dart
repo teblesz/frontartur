@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:fluttartur/home/home.dart';
 
+// TODO timouts for db actions(such as joining room etc)
+
+/// Navigation fork widget
 class Home extends StatelessWidget {
   const Home({super.key});
 

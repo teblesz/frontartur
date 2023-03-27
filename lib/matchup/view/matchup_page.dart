@@ -1,18 +1,17 @@
+import 'package:data_repository/data_repository.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttartur/app/app.dart';
 
 // tutaj zostały stracone 3 godziny na dojście co jest nie tak z Hero.
 // nie działał zupełnie bo w app.dart nie było observera
 // teraz nie działa na dole stacka, bo https://github.com/flutter/flutter/issues/17627
 //    :(
-class MatchupHostPage extends StatelessWidget {
-  const MatchupHostPage({super.key});
+class MatchupPage extends StatelessWidget {
+  const MatchupPage({super.key});
 
-  static Page<void> page() =>
-      const MaterialPage<void>(child: MatchupHostPage());
+  static Page<void> page() => const MaterialPage<void>(child: MatchupPage());
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +30,10 @@ class MatchupHostPage extends StatelessWidget {
             title: const Text('Matchup'),
             actions: <Widget>[_LeaveRoomButton()],
           ),
-          // TODO cubit here
-          body: const MatchupHostForm(),
+          body: BlocProvider(
+            create: (_) => MatchupCubit(context.read<DataRepository>()),
+            child: const MatchupForm(),
+          ),
         ),
       ],
     );

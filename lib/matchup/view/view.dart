@@ -1,2 +1,2 @@
-export 'matchup_host_page.dart';
-export 'matchup_host_form.dart';
+export 'matchup_page.dart';
+export 'matchup_form.dart';
