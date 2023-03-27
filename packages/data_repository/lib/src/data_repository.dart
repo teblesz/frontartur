@@ -100,7 +100,7 @@ class DataRepository {
   }
 
   Future<void> leaveRoom() async {
-    //await removePlayer(playerId: currentPlayer.id);
+    await removePlayer(playerId: currentPlayer.id);
     _cache.write(key: playerCacheKey, value: Player.empty);
     _cache.write(key: roomCacheKey, value: Room.empty);
   }
