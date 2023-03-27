@@ -1,8 +1,9 @@
+import 'package:fluttartur/game/cubit/game_cubit.dart';
 import 'package:fluttartur/game/view/game_form.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttartur/pages_old/view/mission_page.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:data_repository/data_repository.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -35,8 +36,10 @@ class GamePage extends StatelessWidget {
               ),
             ],
           ),
-          // TODO cubit here
-          body: GameForm(),
+          body: BlocProvider(
+            create: (_) => GameCubit(context.read<DataRepository>()),
+            child: const GameForm(),
+          ),
         ),
       ],
     );
