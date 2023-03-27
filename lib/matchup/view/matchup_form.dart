@@ -98,15 +98,16 @@ Future<void> showNickDialog(BuildContext context) {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text("Enter your nick"),
-          content: const TextField(
-            decoration: InputDecoration(
+          content: TextField(
+            onChanged: (nick) => context.read<MatchupCubit>().nickChanged(nick),
+            decoration: const InputDecoration(
               hintText: "Nick for this game",
             ),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                final user = context.select((AppBloc bloc) => bloc.state.user);
+                final user = context.read<AppBloc>().state.user;
                 context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
                 Navigator.of(dialogContext).pop();
               },
