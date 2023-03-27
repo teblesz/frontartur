@@ -28,14 +28,14 @@ class App extends StatelessWidget {
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
         ),
-        child: const AppView(),
+        child: const _AppView(),
       ),
     );
   }
 }
 
-class AppView extends StatelessWidget {
-  const AppView({super.key});
+class _AppView extends StatelessWidget {
+  const _AppView({super.key});
 
   @override
   Widget build(BuildContext context) {
