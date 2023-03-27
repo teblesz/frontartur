@@ -34,4 +34,8 @@ class MatchupCubit extends Cubit<MatchupState> {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
   }
+
+  Future<void> removePlayer(Player player) async {
+    _dataRepository.removePlayer(playerId: player.id);
+  }
 }

@@ -77,17 +77,38 @@ class _PlayerListView extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 children: <Widget>[
                   ...players.map(
-                    (player) => Card(
-                      // TODO to separate widget and add rmeoving players
-                      child: ListTile(
-                        title: Text(player.nick),
-                        trailing: const Icon(Icons.more_vert),
-                      ),
-                    ),
+                    (player) => PlayerMatchupCard(player: player),
                   ),
                 ],
               );
       },
+    );
+  }
+}
+
+class PlayerMatchupCard extends StatelessWidget {
+  const PlayerMatchupCard({
+    super.key,
+    required this.player,
+  });
+
+  final Player player;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(player.nick),
+        trailing: PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              child: const Text("remove"),
+              onTap: () => context.read<MatchupCubit>().removePlayer(player),
+              // TODO !! farward the info about removal to the removed user's UI
+            )
+          ],
+        ),
+      ),
     );
   }
 }
