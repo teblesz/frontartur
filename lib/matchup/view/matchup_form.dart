@@ -102,7 +102,7 @@ class PlayerMatchupCard extends StatelessWidget {
         trailing: PopupMenuButton(
           itemBuilder: (context) => [
             PopupMenuItem(
-              child: const Text("remove"),
+              child: const Text("Remove"),
               onTap: () => context.read<MatchupCubit>().removePlayer(player),
               // TODO !! farward the info about removal to the removed user's UI
             )
