@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 final theme = ThemeData(
   //textTheme: GoogleFonts.openSansTextTheme(),
+  dialogBackgroundColor: const Color.fromARGB(220, 50, 50, 50),
   colorScheme: const ColorScheme.dark(
     primary: Color.fromARGB(255, 13, 66, 110),
     onPrimary: Colors.white,

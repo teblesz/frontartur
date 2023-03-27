@@ -2,6 +2,7 @@ import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter/material.dart';
+import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
 import 'package:data_repository/data_repository.dart';
 
@@ -97,11 +98,11 @@ Future<void> showNickDialog(BuildContext context) {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Enter your nick"),
+          title: const Text("Enter your nick for this play"),
           content: TextField(
             onChanged: (nick) => context.read<MatchupCubit>().nickChanged(nick),
             decoration: const InputDecoration(
-              hintText: "Nick for this game",
+              labelText: 'Nick',
             ),
           ),
           actions: [
