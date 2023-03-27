@@ -16,7 +16,7 @@ class GamePage extends StatelessWidget {
       children: <Widget>[
         Positioned.fill(
           child: Image.asset(
-            "images/startpagebg.jpg",
+            "images/Accolade.jpg",
             alignment: AlignmentDirectional.center,
             fit: BoxFit.cover,
           ),
