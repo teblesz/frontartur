@@ -47,7 +47,7 @@ class _StartGameButton extends StatelessWidget {
     return FilledButton(
       onPressed: () {
         context.read<RoomCubit>().enterGame();
-        // TODO available only if host, assigns characters and roles
+        // TODO available only if host
       },
       child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
     );
@@ -68,7 +68,7 @@ class _PlayerListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Player>>(
-      //TODO lepiej to?
+      //TODO circle indicator is bugging (stretech vertically)
       stream: context.read<DataRepository>().streamPlayersList(),
       builder: (context, snapshot) {
         var players = snapshot.data;
