@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
 
-part 'matchup_states.dart';
+part 'matchup_state.dart';
 
 class MatchupCubit extends Cubit<MatchupState> {
   MatchupCubit(this._dataRepository) : super(const MatchupState());
