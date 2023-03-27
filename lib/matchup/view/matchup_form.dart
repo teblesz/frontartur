@@ -108,6 +108,8 @@ Future<void> showNickDialog(BuildContext context) {
           actions: [
             TextButton(
               onPressed: () {
+                //simple validation TODO make validation more complex
+                if (context.read<MatchupCubit>().state.status.isInvalid) return;
                 final user = context.read<AppBloc>().state.user;
                 context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
                 Navigator.of(dialogContext).pop();
