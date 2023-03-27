@@ -47,6 +47,7 @@ class _StartGameButton extends StatelessWidget {
     return FilledButton(
       onPressed: () {
         context.read<RoomCubit>().enterGame();
+        // TODO available only if host, assigns characters and roles
       },
       child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
     );
@@ -57,7 +58,7 @@ class _RolesDefButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
-      onPressed: () {},
+      onPressed: () {}, // TODO role def !!!
       child: const Text('Zdefiniuj role'),
     );
   }
