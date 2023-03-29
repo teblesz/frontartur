@@ -110,7 +110,7 @@ class _LoginButton extends StatelessWidget {
                     : null,
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Zaloguj', style: TextStyle(fontSize: 25)),
+                  child: Text('Log in', style: TextStyle(fontSize: 25)),
                 ),
               );
       },
@@ -123,7 +123,7 @@ class _GoogleLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.icon(
       key: const Key('loginForm_googleLogin_raisedButton'),
-      label: const Text('Zaloguj przez Google', style: TextStyle(fontSize: 16)),
+      label: const Text('Log in with Google', style: TextStyle(fontSize: 16)),
       icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
       onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
     );
@@ -136,7 +136,7 @@ class _SignUpButton extends StatelessWidget {
     return FilledButton.tonal(
       key: const Key('loginForm_createAccount_flatButton'),
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
-      child: const Text('Stwórz konto'),
+      child: const Text('Sign up'),
     );
   }
 }

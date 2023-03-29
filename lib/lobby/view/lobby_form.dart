@@ -48,7 +48,7 @@ class _RoomIdInput extends StatelessWidget {
       //keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
-        labelText: 'ID pokoju',
+        labelText: 'room ID',
         helperText: '',
       ),
     );
@@ -77,7 +77,7 @@ class _JoinRoomButton extends StatelessWidget {
                       },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Dołącz', style: TextStyle(fontSize: 25)),
+                  child: Text('Join', style: TextStyle(fontSize: 25)),
                 ),
               );
       },
@@ -104,7 +104,7 @@ class _CreateRoomButton extends StatelessWidget {
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
+                  child: Text('Create room', style: TextStyle(fontSize: 20)),
                 ),
               );
       },

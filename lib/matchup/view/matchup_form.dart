@@ -110,9 +110,8 @@ class _StartGameButton extends StatelessWidget {
     return FilledButton(
       onPressed: () {
         context.read<RoomCubit>().enterGame();
-        // TODO available only if host
       },
-      child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
+      child: const Text('Start game', style: TextStyle(fontSize: 20)),
     );
   }
 }
@@ -122,7 +121,7 @@ class _RolesDefButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.tonal(
       onPressed: null, // TODO role def !!!
-      child: const Text('Zdefiniuj role'),
+      child: const Text('Define roles'),
     );
   }
 }
