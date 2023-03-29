@@ -199,7 +199,7 @@ class _SquadListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Member>>(
-      stream: context.read<DataRepository>().streamMembersList(questNumber: 1),
+      stream: context.read<GameCubit>().streamMembersList(),
       builder: (context, snapshot) {
         var members = snapshot.data;
         return members == null

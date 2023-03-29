@@ -21,11 +21,10 @@ class GameCubit extends Cubit<GameState> {
   //   if (state.questNumber == questNumber &&
   //       state.status != GameStatus.questResults) return true;
   //   return false;
-  // }
+  // } // TODO use above thing in quest results preferably
 
   Stream<QuestStatus> streamQuestResult({required int questNumber}) {
-    //TODO ! exception for 4th
-    //TODO make cleaner
+    //TODO !!! exception for 4th
     return _dataRepository
         .streamMembersList(questNumber: questNumber)
         .map((members) {
@@ -37,5 +36,9 @@ class GameCubit extends Cubit<GameState> {
           ? QuestStatus.defeat
           : QuestStatus.success;
     });
+  }
+
+  Stream<List<Member>> streamMembersList() {
+    return _dataRepository.streamMembersList(questNumber: state.questNumber);
   }
 }
