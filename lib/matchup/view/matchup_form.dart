@@ -70,18 +70,23 @@ class _PlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hostUserId = context.read<DataRepository>().currentRoom.hostUserId;
+    final userId = context.select((AppBloc bloc) => bloc.state.user.id);
     return Card(
       child: ListTile(
         title: Text(player.nick),
-        trailing: PopupMenuButton(
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              child: const Text("Remove"),
-              onTap: () => context.read<MatchupCubit>().removePlayer(player),
-              // TODO !! farward the info about removal to the removed user's UI
-            )
-          ],
-        ),
+        trailing: userId != hostUserId
+            ? null
+            : PopupMenuButton(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: const Text("Remove"),
+                    onTap: () =>
+                        context.read<MatchupCubit>().removePlayer(player),
+                    // TODO !! farward the info about removal to the removed user's UI
+                  )
+                ],
+              ),
       ),
     );
   }
