@@ -52,24 +52,49 @@ class _QuestTile extends StatelessWidget {
 
   final int questNumber;
 
+  Color questTileColor(QuestStatus? result) {
+    switch (result) {
+      case QuestStatus.success:
+        return Colors.green.shade700;
+      case QuestStatus.defeat:
+        return Colors.red.shade700;
+      case QuestStatus.ongoing:
+        return const Color.fromARGB(255, 64, 134, 169);
+      case QuestStatus.upcoming:
+        return const Color.fromARGB(255, 13, 66, 110);
+      case null:
+        return const Color.fromARGB(255, 35, 35, 35);
+    }
+  }
+
+  IconData questTileIconData(QuestStatus? result) {
+    switch (result) {
+      case QuestStatus.success:
+        return Icons.done;
+      case QuestStatus.defeat:
+        return Icons.close;
+      case QuestStatus.ongoing:
+      case QuestStatus.upcoming:
+        return Icons.location_on;
+      case null:
+        return Icons.error_outline;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<bool?>(
+    return StreamBuilder<QuestStatus>(
       stream:
           context.read<GameCubit>().streamQuestResult(questNumber: questNumber),
       builder: (context, snapshot) {
         var result = snapshot.data;
         return CircleAvatar(
           radius: 30,
-          backgroundColor: result == null
-              ? const Color.fromARGB(255, 35, 35, 35)
-              : result == false
-                  ? Colors.red
-                  : Colors.green,
+          backgroundColor: questTileColor(result),
           child: IconButton(
             iconSize: 40,
-            color: const Color.fromARGB(255, 255, 226, 181),
-            icon: const Icon(Icons.location_on),
+            color: Colors.white,
+            icon: Icon(questTileIconData(result)),
             onPressed: () {},
           ),
         );
