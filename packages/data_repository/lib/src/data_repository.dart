@@ -136,7 +136,7 @@ class DataRepository {
   //--------------------------------squad-------------------------------------
   // TODO differenciate squad by voting, not quest
 
-  Stream<List<Member>> streamSquadList({required int questNumber}) {
+  Stream<List<Member>> streamMembersList({required int questNumber}) {
     return _firestore
         .collection('rooms')
         .doc(currentRoom.id)
