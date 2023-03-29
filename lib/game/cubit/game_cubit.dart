@@ -17,15 +17,15 @@ class GameCubit extends Cubit<GameState> {
   // }
 
   Stream<bool?> streamQuestResult({required int questNumber}) {
-    //TODO exception for 4th
+    //TODO ! exception for 4th
     //TODO make cleaner
-
     return _dataRepository
         .streamMembersList(questNumber: questNumber)
         .map((members) {
-      // if (members.any((member) => member.secretVote == null)) {
-      //   return null;
-      // }
+      if (members.isEmpty) return null;
+      if (members.any((member) => member.secretVote == null)) {
+        return null;
+      }
       return !members.any((member) => member.secretVote == false);
     });
   }
