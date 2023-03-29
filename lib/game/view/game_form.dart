@@ -184,7 +184,16 @@ class _PlayerCard extends StatelessWidget {
               player.isLeader
                   ? const Icon(Icons.star)
                   : const SizedBox.shrink(),
-              Text(player.nick, style: const TextStyle(fontSize: 23)),
+              Text(
+                player.nick,
+                style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: player.id ==
+                          context.read<DataRepository>().currentPlayer.id
+                      ? FontWeight.bold
+                      : null,
+                ),
+              ),
             ],
           ),
         ),
@@ -233,7 +242,13 @@ class _MemberCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             member.nick,
-            style: const TextStyle(fontSize: 23),
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: member.playerId ==
+                      context.read<DataRepository>().currentPlayer.id
+                  ? FontWeight.bold
+                  : null,
+            ),
           ),
         ),
       ),
