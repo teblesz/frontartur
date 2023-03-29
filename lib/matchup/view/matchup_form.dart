@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:data_repository/data_repository.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
-// TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
 class MatchupForm extends StatelessWidget {
   const MatchupForm({super.key});
 
@@ -16,17 +15,15 @@ class MatchupForm extends StatelessWidget {
     Future.delayed(Duration.zero, () => _showNickDialog(context));
     return Column(
       children: [
-        Expanded(
-          child: _PlayerListView(),
-        ),
         StreamBuilder<Room>(
           stream: context.read<DataRepository>().streamRoom(),
           builder: (context, snapshot) {
             var data = snapshot.data;
-            return data == null
-                ? const CircularProgressIndicator() //TODO kopiwanie
-                : Text(data.id);
+            return data == null ? const Text('Room is empty') : Text(data.id);
           },
+        ),
+        Expanded(
+          child: _PlayerListView(),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -41,39 +38,15 @@ class MatchupForm extends StatelessWidget {
   }
 }
 
-class _StartGameButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: () {
-        context.read<RoomCubit>().enterGame();
-        // TODO available only if host
-      },
-      child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
-    );
-  }
-}
-
-class _RolesDefButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton.tonal(
-      onPressed: () {}, // TODO role def !!!
-      child: const Text('Zdefiniuj role'),
-    );
-  }
-}
-
 class _PlayerListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Player>>(
-      //TODO circle indicator is bugging (stretech vertically)
       stream: context.read<DataRepository>().streamPlayersList(),
       builder: (context, snapshot) {
         var players = snapshot.data;
         return players == null
-            ? const CircularProgressIndicator()
+            ? const SizedBox.expand()
             : ListView(
                 scrollDirection: Axis.vertical,
                 children: <Widget>[
@@ -110,6 +83,29 @@ class _PlayerCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StartGameButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: () {
+        context.read<RoomCubit>().enterGame();
+        // TODO available only if host
+      },
+      child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
+    );
+  }
+}
+
+class _RolesDefButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.tonal(
+      onPressed: () {}, // TODO role def !!!
+      child: const Text('Zdefiniuj role'),
     );
   }
 }
