@@ -92,12 +92,13 @@ class _CreateRoomButton extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.statusOfCreate != current.statusOfCreate,
       builder: (context, state) {
+        final user = context.select((AppBloc bloc) => bloc.state.user);
         return state.statusOfCreate.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : FilledButton.tonal(
                 onPressed: () {
                   // TODO this looks kinda bad - rework
-                  context.read<LobbyCubit>().createRoom().then(
+                  context.read<LobbyCubit>().createRoom(userId: user.id).then(
                         (_) => context.read<RoomCubit>().enterRoom(),
                       );
                 },

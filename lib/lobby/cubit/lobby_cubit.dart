@@ -36,11 +36,11 @@ class LobbyCubit extends Cubit<LobbyState> {
     }
   }
 
-  Future<void> createRoom() async {
+  Future<void> createRoom({required String userId}) async {
     emit(state.copyWith(statusOfCreate: FormzStatus.submissionInProgress));
     try {
       await Future.delayed(Duration(seconds: 1)); //TODO remove
-      await _dataRepository.createRoom();
+      await _dataRepository.createRoom(userId: userId);
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionFailure));
