@@ -127,7 +127,7 @@ class _RolesDefButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.tonal(
       onPressed: null, // TODO role def !!!
-      child: const Text('Define roles'),
+      child: const Text('Define roles(W.I.P.)'),
     );
   }
 }
