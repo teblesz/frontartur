@@ -41,9 +41,10 @@ class DataRepository {
   }
 
   // TODO add players number limitation on room creation or in firebase rules
-  Future<void> createRoom() async {
-    final roomRef =
-        await _firestore.collection('rooms').add(Room.empty.toFirestore());
+  Future<void> createRoom({required String userId}) async {
+    final roomRef = await _firestore
+        .collection('rooms')
+        .add(Room.init(hostUserId: userId).toFirestore());
 
     final snap = await roomRef.get();
     _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
