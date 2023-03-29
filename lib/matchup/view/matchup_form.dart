@@ -109,6 +109,7 @@ class _StartGameButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: () {
+        // TODO !!!!! forward info to players. make room which is ingame inaccessible
         context.read<RoomCubit>().enterGame();
       },
       child: const Text('Start game', style: TextStyle(fontSize: 20)),
