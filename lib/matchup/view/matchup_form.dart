@@ -15,25 +15,26 @@ class MatchupForm extends StatelessWidget {
     Future.delayed(Duration.zero, () => _showNickDialog(context));
     return Column(
       children: [
-        StreamBuilder<Room>(
-          stream: context.read<DataRepository>().streamRoom(),
-          builder: (context, snapshot) {
-            var data = snapshot.data;
-            return data == null ? const Text('Room is empty') : Text(data.id);
-          },
-        ),
+        _RoomID(),
         Expanded(
           child: _PlayerListView(),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _RolesDefButton(),
-            _StartGameButton(),
-          ],
-        ),
+        _HostButtons(),
         const SizedBox(height: 16)
       ],
+    );
+  }
+}
+
+class _RoomID extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Room>(
+      stream: context.read<DataRepository>().streamRoom(),
+      builder: (context, snapshot) {
+        var data = snapshot.data;
+        return data == null ? const Text('Room is empty') : Text(data.id);
+      },
     );
   }
 }
@@ -62,7 +63,6 @@ class _PlayerListView extends StatelessWidget {
 
 class _PlayerCard extends StatelessWidget {
   const _PlayerCard({
-    super.key,
     required this.player,
   });
 
@@ -87,6 +87,23 @@ class _PlayerCard extends StatelessWidget {
   }
 }
 
+class _HostButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final hostUserId = context.read<DataRepository>().currentRoom.hostUserId;
+    final userId = context.select((AppBloc bloc) => bloc.state.user.id);
+    return userId != hostUserId
+        ? const SizedBox.shrink()
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _RolesDefButton(),
+              _StartGameButton(),
+            ],
+          );
+  }
+}
+
 class _StartGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -104,7 +121,7 @@ class _RolesDefButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
-      onPressed: () {}, // TODO role def !!!
+      onPressed: null, // TODO role def !!!
       child: const Text('Zdefiniuj role'),
     );
   }
@@ -127,8 +144,9 @@ Future<void> _showNickDialog(BuildContext context) {
             TextButton(
               onPressed: () {
                 //simple validation TODO make validation more complex
-                if (!context.read<MatchupCubit>().state.status.isValidated)
+                if (!context.read<MatchupCubit>().state.status.isValidated) {
                   return;
+                }
                 final user = context.read<AppBloc>().state.user;
                 context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
                 Navigator.of(dialogContext).pop();
