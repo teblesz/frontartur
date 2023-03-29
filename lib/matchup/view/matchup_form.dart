@@ -33,7 +33,7 @@ class _RoomID extends StatelessWidget {
       stream: context.read<DataRepository>().streamRoom(),
       builder: (context, snapshot) {
         var data = snapshot.data;
-        return data == null ? const Text('Room is empty') : Text(data.id);
+        return data == null ? const Text('<room is empty>') : Text(data.id);
       },
     );
   }

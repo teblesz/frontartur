@@ -149,7 +149,7 @@ class _PlayerListView extends StatelessWidget {
       builder: (context, snapshot) {
         var players = snapshot.data;
         return players == null
-            ? const Text("Court is empty")
+            ? const Text("<court is empty>")
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -174,9 +174,7 @@ class _PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Add player to squad
-      },
+      onTap: () => context.read<GameCubit>().addMember(player: player),
       child: Card(
         margin: const EdgeInsets.all(1.0),
         child: Padding(
@@ -203,7 +201,7 @@ class _SquadListView extends StatelessWidget {
       builder: (context, snapshot) {
         var members = snapshot.data;
         return members == null
-            ? const Text('Squad is empty')
+            ? const Text('<squad is empty>')
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -228,9 +226,7 @@ class _MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // remove member from squad
-      },
+      onTap: () => context.read<GameCubit>().removeMember(member: member),
       child: Card(
         margin: const EdgeInsets.all(1.0),
         child: Padding(

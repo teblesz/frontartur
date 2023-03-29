@@ -25,7 +25,7 @@ class MatchupCubit extends Cubit<MatchupState> {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      await _dataRepository.writeinPlayer(
+      await _dataRepository.addPlayer(
         nick: state.nick.value,
         userId: userId,
       );

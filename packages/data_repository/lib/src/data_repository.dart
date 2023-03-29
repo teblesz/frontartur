@@ -85,7 +85,7 @@ class DataRepository {
     });
   }
 
-  Future<void> writeinPlayer({
+  Future<void> addPlayer({
     required String userId,
     required String nick,
     bool isLeader = false,
@@ -149,8 +149,48 @@ class DataRepository {
   }
 
   /// add player to squad
+  Future<void> addMember({
+    required int questNumber,
+    required String playerId,
+    required String nick,
+  }) async {
+    await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(questNumber.toString())
+        .collection('members')
+        .add(Member(playerId: playerId, nick: nick).toFirestore());
+  }
 
   /// remove player from squad
+  Future<void> removeMember({
+    required int questNumber,
+    required String memberId,
+  }) async {
+    await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(questNumber.toString())
+        .collection('members')
+        .doc(memberId)
+        .delete();
+  }
 
   /// remove all players from squad
+  Future<void> removeAllMembers({
+    required int questNumber,
+  }) async {
+    final snapshots = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(questNumber.toString())
+        .collection('members')
+        .get();
+    for (var doc in snapshots.docs) {
+      await doc.reference.delete();
+    }
+  }
 }

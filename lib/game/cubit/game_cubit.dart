@@ -38,7 +38,34 @@ class GameCubit extends Cubit<GameState> {
     });
   }
 
+//-------------------------- forwarding ------------------------
   Stream<List<Member>> streamMembersList() {
-    return _dataRepository.streamMembersList(questNumber: state.questNumber);
+    return _dataRepository.streamMembersList(
+      questNumber: state.questNumber,
+    );
+  }
+
+  /// add player to squad
+  Future<void> addMember({required Player player}) async {
+    await _dataRepository.addMember(
+      questNumber: state.questNumber,
+      playerId: player.id,
+      nick: player.nick,
+    );
+  }
+
+  /// remove player from squad
+  Future<void> removeMember({required Member member}) async {
+    await _dataRepository.removeMember(
+      questNumber: state.questNumber,
+      memberId: member.id,
+    );
+  }
+
+  /// remove all players from squad
+  Future<void> removeAllMembers() async {
+    await _dataRepository.removeAllMembers(
+      questNumber: state.questNumber,
+    );
   }
 }

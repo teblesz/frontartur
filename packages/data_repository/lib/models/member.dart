@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 
 class Member extends Equatable {
   const Member({
-    required this.id,
+    this.id = '',
     required this.playerId,
     required this.nick,
     this.secretVote,
@@ -41,7 +41,7 @@ class Member extends Equatable {
 
   Map<String, dynamic> toFirestore() {
     return {
-      "player_uid": playerId,
+      "player_id": playerId,
       "nick": nick,
       if (secretVote != null) "secret_vote": secretVote,
     };

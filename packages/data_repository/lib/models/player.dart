@@ -7,7 +7,7 @@ import 'package:equatable/equatable.dart';
 
 class Player extends Equatable {
   const Player({
-    this.id = '', // TODO as above
+    this.id = '',
     required this.userId,
     required this.nick,
     required this.isLeader,
