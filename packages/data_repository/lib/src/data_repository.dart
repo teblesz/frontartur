@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:data_repository/models/member.dart';
 import 'package:data_repository/models/models.dart';
 import 'package:cache/cache.dart';
 
@@ -46,7 +47,7 @@ class DataRepository {
 
     final snap = await roomRef.get();
     _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
-  }
+  } // TODO should create 1 2 3 4 5 squads
 
   Future<void> joinRoom({required String roomId}) async {
     final roomRef = _firestore.collection('rooms').doc(roomId);
@@ -65,7 +66,7 @@ class DataRepository {
     return _cache.read<Player>(key: playerCacheKey) ?? Player.empty;
   }
 
-  /// room stream getter
+  /// player stream getter
   Stream<Player> streamPlayer() {
     if (currentPlayer.isEmpty) {
       throw const StreamingPlayerFailure(
@@ -86,8 +87,9 @@ class DataRepository {
   Future<void> writeinPlayer({
     required String userId,
     required String nick,
+    bool isLeader = false,
   }) async {
-    var player = Player(userId: userId, nick: nick);
+    var player = Player(userId: userId, nick: nick, isLeader: isLeader);
 
     final playerRef = await _firestore
         .collection('rooms')
@@ -129,4 +131,25 @@ class DataRepository {
         .doc(playerId)
         .delete();
   }
+
+  //--------------------------------squad-------------------------------------
+  // TODO differenciate squad by voting, not quest
+
+  Stream<List<Member>> streamSquadList({required int questNumber}) {
+    return _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(questNumber.toString())
+        .collection('members')
+        .snapshots()
+        .map((list) =>
+            list.docs.map((snap) => Member.fromFirestore(snap)).toList());
+  }
+
+  /// add player to squad
+
+  /// remove player from squad
+
+  /// remove all players from squad
 }

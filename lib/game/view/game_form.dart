@@ -1,7 +1,10 @@
+import 'package:data_repository/data_repository.dart';
+import 'package:data_repository/models/member.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttartur/pages_old/view/mission_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-//TODO rework everything here
+//TODO make player list as one list(table) with highliting
 
 class GameForm extends StatelessWidget {
   const GameForm({super.key});
@@ -11,27 +14,27 @@ class GameForm extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        QuestTiles(),
-        Expanded(child: TeamWrap()),
-        VotingButtons(),
+        _QuestTiles(),
+        Expanded(
+          child: _TeamWrap(),
+        ),
+        //_VotingButtons(), // TODO put on stack
       ],
     );
   }
 }
 
-class QuestTile extends StatelessWidget {
-  const QuestTile({
-    super.key,
-  });
+class _QuestTile extends StatelessWidget {
+  const _QuestTile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 30,
-      backgroundColor: Color.fromARGB(255, 35, 35, 35),
+      backgroundColor: const Color.fromARGB(255, 35, 35, 35),
       child: IconButton(
         iconSize: 40,
-        color: Color.fromARGB(255, 255, 226, 181),
+        color: const Color.fromARGB(255, 255, 226, 181),
         icon: const Icon(Icons.location_on),
         onPressed: () {},
       ),
@@ -39,11 +42,7 @@ class QuestTile extends StatelessWidget {
   }
 }
 
-class QuestTiles extends StatelessWidget {
-  const QuestTiles({
-    super.key,
-  });
-
+class _QuestTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
@@ -53,11 +52,11 @@ class QuestTiles extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const <Widget>[
-            QuestTile(),
-            QuestTile(),
-            QuestTile(),
-            QuestTile(),
-            QuestTile(),
+            _QuestTile(),
+            _QuestTile(),
+            _QuestTile(),
+            _QuestTile(),
+            _QuestTile(),
           ],
         ),
       ),
@@ -65,11 +64,7 @@ class QuestTiles extends StatelessWidget {
   }
 }
 
-class TeamWrap extends StatelessWidget {
-  const TeamWrap({
-    super.key,
-  });
-
+class _TeamWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -78,29 +73,26 @@ class TeamWrap extends StatelessWidget {
         child: Row(
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
-                Text("Dworzanie:",
-                    style: TextStyle(fontSize: 30, color: Colors.white)),
-                PlayerTile(nickname: "Michał"),
-                PlayerTile(nickname: "Jędrek"),
-                PlayerTile(nickname: "Szymon"),
-                PlayerTile(nickname: "Janek"),
-                PlayerTile(nickname: "Maciek"),
-                PlayerTile(nickname: "Kinga"),
-                PlayerTile(nickname: "Piotrek"),
+              children: [
+                const Text("Court:", style: TextStyle(fontSize: 30)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: _PlayerListView(),
+                  ),
+                ),
               ],
             ),
             const Spacer(),
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: const <Widget>[
-                Text("Drużyna:",
-                    style: TextStyle(fontSize: 30, color: Colors.white)),
-                PlayerTile(nickname: "Szymon"),
-                PlayerTile(nickname: "Michał"),
+              children: [
+                const Text("Squad:", style: TextStyle(fontSize: 30)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: _SquadListView(),
+                  ),
+                ),
               ],
             ),
           ],
@@ -110,34 +102,107 @@ class TeamWrap extends StatelessWidget {
   }
 }
 
-class PlayerTile extends StatelessWidget {
-  const PlayerTile({
-    super.key,
-    required this.nickname,
+class _PlayerListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<Player>>(
+      stream: context.read<DataRepository>().streamPlayersList(),
+      builder: (context, snapshot) {
+        var players = snapshot.data;
+        return players == null
+            ? const Text("Court is empty")
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ...players.map(
+                    (player) => _PlayerCard(player: player),
+                  ),
+                ],
+              );
+      },
+    );
+  }
+}
+
+class _PlayerCard extends StatelessWidget {
+  // TODO ! make it a hero widget between two lists
+  const _PlayerCard({
+    required this.player,
   });
 
-  final String nickname;
+  final Player player;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: const Color.fromARGB(160, 213, 213, 213),
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Text(
-          nickname,
-          style: const TextStyle(fontSize: 25),
+    return GestureDetector(
+      onTap: () {
+        // Add player to squad
+      },
+      child: Card(
+        margin: const EdgeInsets.all(1.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            player.nick,
+            style: const TextStyle(fontSize: 23),
+          ),
         ),
       ),
     );
   }
 }
 
-class VotingButtons extends StatelessWidget {
-  const VotingButtons({
-    super.key,
+class _SquadListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<Member>>(
+      stream: context.read<DataRepository>().streamSquadList(questNumber: 1),
+      builder: (context, snapshot) {
+        var members = snapshot.data;
+        return members == null
+            ? const Text('Squad is empty')
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  ...members.map(
+                    (member) => _MemberCard(member: member),
+                  ),
+                ],
+              );
+      },
+    );
+  }
+}
+
+class _MemberCard extends StatelessWidget {
+  // TODO ! make it a hero widget between two lists
+  const _MemberCard({
+    required this.member,
   });
 
+  final Member member;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // remove member from squad
+      },
+      child: Card(
+        margin: const EdgeInsets.all(1.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            member.nick,
+            style: const TextStyle(fontSize: 23),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _VotingButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(

@@ -11,7 +11,7 @@ class Room extends Equatable {
   final String id;
   final List<String>? characters;
   final List<Player>? players;
-  final Map<Player, Vote>? commonVotes; // TODO lista, ilosc glosowan na NIE
+  final Map<Player, bool>? commonVotes; // TODO lista, ilosc na NIE
   final List<Squad>? squads;
 
   const Room({
