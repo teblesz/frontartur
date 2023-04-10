@@ -50,6 +50,8 @@ class _RoomIdInput extends StatelessWidget {
         border: UnderlineInputBorder(),
         labelText: 'room ID',
         helperText: '',
+        //errorText: state.roomId.invalid ? 'invalid room ID' : null, //TODO alike in login
+        // TODO !! add onError to joinRoom below with dialog about room gamestarted
       ),
     );
   }
@@ -70,7 +72,9 @@ class _JoinRoomButton extends StatelessWidget {
                         state.statusOfCreate.isSubmissionInProgress
                     ? null
                     : () {
-                        // TODO this looks kinda bad - rework
+                        // context.read<LobbyCubit>().roomIdChanged(
+                        //     "mlMOv1XpSl1b4ETIVR94"); //TODO !!! remove this
+                        // TODO this looks kinda bad - rework those thens
                         context.read<LobbyCubit>().joinRoom().then(
                               (_) => context.read<RoomCubit>().enterRoom(),
                             );

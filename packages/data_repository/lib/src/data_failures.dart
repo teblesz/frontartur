@@ -34,3 +34,10 @@ class StreamingPlayerFailure implements Exception {
 
   final String message;
 }
+
+class JoiningStartedGameFailure implements Exception {
+  const JoiningStartedGameFailure(
+      [this.message = 'Was trying to join room, which has started game']);
+
+  final String message;
+}

@@ -98,7 +98,7 @@ class _HostButtons extends StatelessWidget {
     final hostUserId = context.read<DataRepository>().currentRoom.hostUserId;
     final userId = context.select((AppBloc bloc) => bloc.state.user.id);
     return userId != hostUserId
-        ? const SizedBox.shrink()
+        ? _EnterGameButton()
         : Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -109,13 +109,34 @@ class _HostButtons extends StatelessWidget {
   }
 }
 
+class _EnterGameButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<bool>(
+      stream: context.read<MatchupCubit>().streamGameStarted(),
+      builder: (context, snapshot) {
+        var gameStarted = snapshot.data;
+        return FilledButton(
+          onPressed: gameStarted == null || gameStarted == false
+              ? null
+              : () => context.read<RoomCubit>().enterGame(),
+          child: const Text('Start game', style: TextStyle(fontSize: 20)),
+        );
+      },
+    );
+  }
+}
+
 class _StartGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: () {
         // TODO !!!!! forward info to players. make room which is ingame inaccessible
-        context.read<RoomCubit>().enterGame();
+        // assign leader, others stream info if there is a leader
+        context.read<MatchupCubit>().initGame().then(
+              (_) => context.read<RoomCubit>().enterGame(),
+            );
       },
       child: const Text('Start game', style: TextStyle(fontSize: 20)),
     );

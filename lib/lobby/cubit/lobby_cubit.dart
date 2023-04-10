@@ -31,6 +31,11 @@ class LobbyCubit extends Cubit<LobbyState> {
       await Future.delayed(Duration(seconds: 1)); //TODO remove
       await _dataRepository.joinRoom(roomId: state.roomId.value);
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionSuccess));
+    }
+    // TODO better handling of possible errors !!!
+    on JoiningStartedGameFailure catch (e) {
+      print(e.message);
+      emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
     } catch (_) {
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
     }

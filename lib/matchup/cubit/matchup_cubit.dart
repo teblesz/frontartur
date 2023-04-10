@@ -38,4 +38,19 @@ class MatchupCubit extends Cubit<MatchupState> {
   Future<void> removePlayer(Player player) async {
     _dataRepository.removePlayer(playerId: player.id);
   }
+
+  /// handles starting game logic
+  Future<void> initGame() async {
+    // TODO!!!
+    // getCharacters();
+    // getPlayers();
+    // assignCharacters();
+    // setFirstLeader();
+    // updatePlayers();
+    // updateGameStarted();
+  }
+
+  Stream<bool> streamGameStarted() {
+    return _dataRepository.streamRoom().map((room) => room.gameStarted);
+  }
 }

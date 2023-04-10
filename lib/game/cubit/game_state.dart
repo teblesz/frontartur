@@ -5,13 +5,19 @@ enum GameStatus {
   initialized,
 
   /// squad is being chosed
+  squadChoice,
+
+  /// squad is being voted on
   squadVoting,
 
   /// chosen squad votes in secret
   questVoting,
 
-  /// one of the teams has won
+  /// quest resolved
   questResults,
+
+  /// one of the teams has won
+  gameResults,
 }
 
 class GameState extends Equatable {

@@ -38,6 +38,10 @@ class GameCubit extends Cubit<GameState> {
     });
   }
 
+  Stream<List<Player>> streamPlayersList() {
+    return _dataRepository.streamPlayersList();
+  }
+
   Stream<List<Member>> streamMembersList() {
     return _dataRepository.streamMembersList(
       questNumber: state.questNumber,

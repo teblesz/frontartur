@@ -57,6 +57,9 @@ class DataRepository {
     if (!roomSnap.exists) throw GetRoomByIdFailure();
 
     final snap = await roomRef.get();
+
+    if (Room.fromFirestore(snap).gameStarted) throw JoiningStartedGameFailure();
+
     _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
   }
 

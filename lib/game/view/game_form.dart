@@ -147,7 +147,7 @@ class _PlayerListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Player>>(
-      stream: context.read<DataRepository>().streamPlayersList(),
+      stream: context.read<GameCubit>().streamPlayersList(),
       builder: (context, snapshot) {
         var players = snapshot.data;
         return players == null
