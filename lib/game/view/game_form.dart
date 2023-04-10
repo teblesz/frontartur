@@ -19,7 +19,7 @@ class GameForm extends StatelessWidget {
         Expanded(
           child: _TeamWrap(),
         ),
-        //_VotingButtons(), // TODO put on stack
+        _TeamChoiceButtons(),
       ],
     );
   }
@@ -109,38 +109,32 @@ class _TeamWrap extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Center(
-        // streamBuilder is here to start streaming player for bussiness logic
-        child: StreamBuilder<Player>(
-          stream: context.read<DataRepository>().streamPlayer(),
-          builder: (context, snapshot) {
-            return Row(
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Court:", style: TextStyle(fontSize: 30)),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: _PlayerListView(),
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Text("Squad:", style: TextStyle(fontSize: 30)),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: _SquadListView(),
-                      ),
-                    ),
-                  ],
+                const Text("Court:", style: TextStyle(fontSize: 30)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: _PlayerListView(),
+                  ),
                 ),
               ],
-            );
-          },
+            ),
+            const Spacer(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Text("Squad:", style: TextStyle(fontSize: 30)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: _SquadListView(),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -256,6 +250,37 @@ class _MemberCard extends StatelessWidget {
                   : null,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TeamChoiceButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // streamBuilder is here to start streaming player for bussiness logic
+    return StreamBuilder<Player>(
+        stream: context.read<DataRepository>().streamPlayer(),
+        builder: (context, snapshot) {
+          return context.read<DataRepository>().currentPlayer.isLeader
+              ? _SubmitTeamButton()
+              : _VotingButtons();
+        });
+  }
+}
+
+class _SubmitTeamButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: () {
+        //TODO
+      },
+      child: const Text(
+        "Submit Team",
+        style: TextStyle(
+          fontSize: 23,
         ),
       ),
     );
