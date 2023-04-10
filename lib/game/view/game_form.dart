@@ -109,32 +109,38 @@ class _TeamWrap extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Center(
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        // streamBuilder is here to start streaming player for bussiness logic
+        child: StreamBuilder<Player>(
+          stream: context.read<DataRepository>().streamPlayer(),
+          builder: (context, snapshot) {
+            return Row(
               children: [
-                const Text("Court:", style: TextStyle(fontSize: 30)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: _PlayerListView(),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Court:", style: TextStyle(fontSize: 30)),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: _PlayerListView(),
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text("Squad:", style: TextStyle(fontSize: 30)),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: _SquadListView(),
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                const Text("Squad:", style: TextStyle(fontSize: 30)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: _SquadListView(),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
