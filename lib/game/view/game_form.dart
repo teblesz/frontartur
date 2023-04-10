@@ -95,7 +95,9 @@ class _QuestTile extends StatelessWidget {
             iconSize: 40,
             color: Colors.white,
             icon: Icon(questTileIconData(result)),
-            onPressed: () {},
+            onPressed: () {
+              // TODO
+            },
           ),
         );
       },
@@ -174,7 +176,9 @@ class _PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<GameCubit>().addMember(player: player),
+      onTap: () => context.read<DataRepository>().currentPlayer.isLeader
+          ? context.read<GameCubit>().addMember(player: player)
+          : null,
       child: Card(
         margin: const EdgeInsets.all(1.0),
         child: Padding(
@@ -235,7 +239,9 @@ class _MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<GameCubit>().removeMember(member: member),
+      onTap: () => context.read<DataRepository>().currentPlayer.isLeader
+          ? context.read<GameCubit>().removeMember(member: member)
+          : null,
       child: Card(
         margin: const EdgeInsets.all(1.0),
         child: Padding(
@@ -275,7 +281,11 @@ class _SubmitTeamButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: () {
-        //TODO
+        // TODO do firestore messaging or have state in room/squad in db
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MissionPage()),
+        );
       },
       child: const Text(
         "Submit Team",

@@ -46,9 +46,6 @@ class GameCubit extends Cubit<GameState> {
 
   /// add player to squad
   Future<void> addMember({required Player player}) async {
-    if (!_dataRepository.currentPlayer.isLeader) {
-      return;
-    }
     await _dataRepository.addMember(
       questNumber: state.questNumber,
       playerId: player.id,
