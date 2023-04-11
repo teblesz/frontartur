@@ -3,6 +3,7 @@ import 'package:data_repository/data_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
+import 'dart:math';
 
 part 'matchup_state.dart';
 
@@ -41,13 +42,32 @@ class MatchupCubit extends Cubit<MatchupState> {
 
   /// handles starting game logic
   Future<void> initGame() async {
-    // TODO!!!
-    // getCharacters();
-    // getPlayers();
-    // assignCharacters();
-    // setFirstLeader();
-    // updatePlayers();
-    // updateGameStarted();
+    await _assignCharacters();
+    await _assignLeader();
+    await _dataRepository.setGameStarted();
+  }
+
+  Future<void> _assignCharacters() async {
+    final numberOfPlayers = await _dataRepository.numberOfPlayers;
+    final characters = _dataRepository.currentRoom.characters.isNotEmpty
+        ? [..._dataRepository.currentRoom.characters] // clone
+        : defaultCharacters(numberOfPlayers);
+    characters.shuffle();
+    await _dataRepository.assignCharacters(characters);
+  }
+
+  Future<void> _assignLeader() async {
+    final numberOfPlayers = await _dataRepository.numberOfPlayers;
+    int leaderIndex = Random().nextInt(numberOfPlayers);
+    await _dataRepository.assignLeader(leaderIndex);
+  }
+
+  List<String> defaultCharacters(numberOfPlayers) {
+    final numberOfEvils = (numberOfPlayers + 2) ~/ 3;
+    return List.generate(
+      numberOfPlayers,
+      (index) => index < numberOfEvils ? 'evil' : 'good',
+    );
   }
 
   Stream<bool> streamGameStarted() {

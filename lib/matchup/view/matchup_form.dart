@@ -119,7 +119,7 @@ class _EnterGameButton extends StatelessWidget {
         return FilledButton(
           onPressed: gameStarted == null || gameStarted == false
               ? null
-              : () => context.read<RoomCubit>().enterGame(),
+              : () => context.read<RoomCubit>().goToGame(),
           child: const Text('Start game', style: TextStyle(fontSize: 20)),
         );
       },
@@ -135,7 +135,7 @@ class _StartGameButton extends StatelessWidget {
         // TODO !!!!! forward info to players. make room which is ingame inaccessible
         // assign leader, others stream info if there is a leader
         context.read<MatchupCubit>().initGame().then(
-              (_) => context.read<RoomCubit>().enterGame(),
+              (_) => context.read<RoomCubit>().goToGame(),
             );
       },
       child: const Text('Start game', style: TextStyle(fontSize: 20)),
@@ -183,3 +183,6 @@ Future<void> _showNickDialog(BuildContext context) {
         );
       });
 }
+
+
+// TODO !! add roles config popup

@@ -8,7 +8,7 @@ class Room extends Equatable {
   final String id;
   final String hostUserId;
   final bool gameStarted;
-  final List<String>? characters;
+  final List<String> characters;
   // final List<Player>? players;
   // final Map<Player, bool>? commonVotes; // TODO lista, ilosc na NIE
   // final List<Squad>? squads;
@@ -17,16 +17,21 @@ class Room extends Equatable {
     required this.id,
     required this.hostUserId,
     required this.gameStarted,
-    this.characters,
+    required this.characters,
   });
 
-  const Room.init({required this.hostUserId})
+  Room.init({required this.hostUserId})
       : id = '',
         gameStarted = false,
-        characters = null;
+        characters = <String>[];
 
   /// Empty room which represents that user is currently not in any room.
-  static const empty = Room(id: '', hostUserId: '', gameStarted: false);
+  static const empty = Room(
+    id: '',
+    hostUserId: '',
+    gameStarted: false,
+    characters: <String>[],
+  );
 
   /// Convenience getter to determine whether the current room is empty.
   bool get isEmpty => this == Room.empty;
@@ -53,7 +58,7 @@ class Room extends Equatable {
     return {
       'host_user_id': hostUserId,
       'game_started': gameStarted,
-      if (characters != null) "characters": characters,
+      "characters": characters,
     };
   }
 }

@@ -1,9 +1,7 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-//TODO divide models and DTOs
+//TODO divide models and DTOs (?)
 
 class Player extends Equatable {
   const Player({

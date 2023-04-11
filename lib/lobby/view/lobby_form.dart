@@ -71,13 +71,18 @@ class _JoinRoomButton extends StatelessWidget {
                 onPressed: !state.statusOfJoin.isValidated ||
                         state.statusOfCreate.isSubmissionInProgress
                     ? null
-                    : () {
+                    : () async {
                         // context.read<LobbyCubit>().roomIdChanged(
                         //     "mlMOv1XpSl1b4ETIVR94"); //TODO !!! remove this
-                        // TODO this looks kinda bad - rework those thens
-                        context.read<LobbyCubit>().joinRoom().then(
-                              (_) => context.read<RoomCubit>().enterRoom(),
-                            );
+                        // TODO  rework those
+                        await context.read<LobbyCubit>().joinRoom();
+                        if (state.statusOfJoin.isValidated) {
+                          // TODO change to have event inside lobbycubit?
+                          context.read<RoomCubit>().goToMatchup();
+                        } else {
+                          print("invalid room ID");
+                          //TODO push popup, or write info somwhere
+                        }
                       },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -101,9 +106,9 @@ class _CreateRoomButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : FilledButton.tonal(
                 onPressed: () {
-                  // TODO this looks kinda bad - rework
+                  // TODO rework this
                   context.read<LobbyCubit>().createRoom(userId: user.id).then(
-                        (_) => context.read<RoomCubit>().enterRoom(),
+                        (_) => context.read<RoomCubit>().goToMatchup(),
                       );
                 },
                 child: const Padding(

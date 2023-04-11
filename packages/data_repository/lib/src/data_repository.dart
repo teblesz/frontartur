@@ -51,19 +51,27 @@ class DataRepository {
   } // TODO should create 1 2 3 4 5 squads
 
   Future<void> joinRoom({required String roomId}) async {
-    final roomRef = _firestore.collection('rooms').doc(roomId);
-    var roomSnap = await roomRef.get();
-
+    final roomSnap = await _firestore.collection('rooms').doc(roomId).get();
     if (!roomSnap.exists) throw GetRoomByIdFailure();
 
-    final snap = await roomRef.get();
+    if (Room.fromFirestore(roomSnap).gameStarted) {
+      throw const JoiningStartedGameFailure();
+    }
 
-    if (Room.fromFirestore(snap).gameStarted) throw JoiningStartedGameFailure();
-
-    _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
+    _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
   }
 
-  //-----------------------------player------------------------------------
+  Future<void> updateRoomCharacters(List<String> characters) async {
+    //TODO
+  }
+
+  Future<void> setGameStarted() async {
+    final roomSnap =
+        await _firestore.collection('rooms').doc(currentRoom.id).get();
+    roomSnap.reference.update({'game_started': true});
+  }
+
+  //-----------------------------user's player----------------------------------
   static const playerCacheKey = '__player_cache_key__';
 
   Player get currentPlayer {
@@ -121,6 +129,44 @@ class DataRepository {
         .snapshots()
         .map((list) =>
             list.docs.map((snap) => Player.fromFirestore(snap)).toList());
+  }
+
+  Future<int> get numberOfPlayers async {
+    final playersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players')
+        .get();
+    return playersSnap.size;
+  }
+
+  Future<void> assignCharacters(List<String> characters) async {
+    final batch = FirebaseFirestore.instance.batch();
+    final playersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players')
+        .get();
+
+    final players = playersSnap.docs;
+    if (players.length != characters.length) {
+      throw const CharacterAndPlayersCountsDoNotMatchFailure();
+    }
+
+    for (int i = 0; i < players.length; i++) {
+      batch.update(players[i].reference, {'character': characters[i]});
+    }
+    await batch.commit();
+  }
+
+  Future<void> assignLeader(leaderIndex) async {
+    final playersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players')
+        .get();
+
+    playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
   }
 
   Future<void> removePlayer({required String playerId}) async {

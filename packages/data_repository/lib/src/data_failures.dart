@@ -37,7 +37,14 @@ class StreamingPlayerFailure implements Exception {
 
 class JoiningStartedGameFailure implements Exception {
   const JoiningStartedGameFailure(
-      [this.message = 'Was trying to join room, which has started game']);
+      [this.message = 'trying to join room which has started game']);
+
+  final String message;
+}
+
+class CharacterAndPlayersCountsDoNotMatchFailure implements Exception {
+  const CharacterAndPlayersCountsDoNotMatchFailure(
+      [this.message = 'lengths of list do not match']);
 
   final String message;
 }

@@ -8,6 +8,7 @@ class MatchupState extends Equatable {
   });
 
   final Nick nick;
+  // TODO add chharacter config status here
   final FormzStatus status;
   final String? errorMessage;
 
