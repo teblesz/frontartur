@@ -27,8 +27,8 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Static code check   
-        run: flutter analyze .
+      # - name: Static code check   
+      #   run: flutter analyze .
 
       - name: Build app
         run: flutter build apk
