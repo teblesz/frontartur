@@ -83,7 +83,7 @@ class _PlayerCard extends StatelessWidget {
                     child: const Text("Remove"),
                     onTap: () =>
                         context.read<MatchupCubit>().removePlayer(player),
-                    // TODO !! farward the info about removal to the removed user's UI
+                    // TODO !!! give the info about removal to the removed user's UI
                   )
                 ],
               ),
