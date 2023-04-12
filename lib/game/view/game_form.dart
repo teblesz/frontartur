@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttartur/pages_old/view/mission_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-//TODO make player list as one list(table) with highliting
-
 class GameForm extends StatelessWidget {
   const GameForm({super.key});
 
@@ -96,7 +94,7 @@ class _QuestTile extends StatelessWidget {
             color: Colors.white,
             icon: Icon(questTileIconData(result)),
             onPressed: () {
-              // TODO
+              // TODO quest info
             },
           ),
         );

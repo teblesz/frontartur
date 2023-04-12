@@ -1,7 +1,5 @@
 part of 'room_cubit.dart';
 
-//TODO being host or player
-
 enum RoomStatus {
   /// user is not in any room
   inLobby,
@@ -15,11 +13,9 @@ enum RoomStatus {
 
 class RoomState extends Equatable {
   const RoomState({
-    //this.room = Room.empty,
     this.status = RoomStatus.inLobby,
   });
 
-  //final Room room;
   final RoomStatus status;
 
   @override
