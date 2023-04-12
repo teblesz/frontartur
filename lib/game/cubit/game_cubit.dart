@@ -24,6 +24,7 @@ class GameCubit extends Cubit<GameState> {
   // } // TODO use above thing in quest results preferably
 
   Stream<QuestStatus> streamQuestResult({required int questNumber}) {
+    //TODO trash this and rework
     //TODO !!! exception for 4th
     return _dataRepository
         .streamMembersList(questNumber: questNumber)
@@ -50,6 +51,9 @@ class GameCubit extends Cubit<GameState> {
 
   /// add player to squad
   Future<void> addMember({required Player player}) async {
+    if (!_dataRepository.currentPlayer.isLeader) return;
+    if (state.status != GameStatus.squadChoice) return;
+
     await _dataRepository.addMember(
       questNumber: state.questNumber,
       playerId: player.id,
@@ -59,16 +63,27 @@ class GameCubit extends Cubit<GameState> {
 
   /// remove player from squad
   Future<void> removeMember({required Member member}) async {
+    if (!_dataRepository.currentPlayer.isLeader) return;
+    if (state.status != GameStatus.squadChoice) return;
+
     await _dataRepository.removeMember(
       questNumber: state.questNumber,
       memberId: member.id,
     );
   }
 
-  /// remove all players from squad
-  Future<void> removeAllMembers() async {
-    await _dataRepository.removeAllMembers(
-      questNumber: state.questNumber,
-    );
+// TODO !!! replace questNUmber with _datarepo.currentsquad.id
+  // TODO change state.questnumber!! subscribtion to mission field
+
+  Future<void> submitSquad() async {
+    await _dataRepository.submitSquad();
   }
+
+  //Subscribtion to isSubmitted
+  // state = squadVOting
+  // doLogic:
+  // Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const MissionPage()),
+  //       );
 }

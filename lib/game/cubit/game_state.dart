@@ -1,9 +1,6 @@
 part of 'game_cubit.dart';
 
 enum GameStatus {
-  /// just started, roles need to be assigned
-  initialized,
-
   /// squad is being chosed
   squadChoice,
 
@@ -22,7 +19,7 @@ enum GameStatus {
 
 class GameState extends Equatable {
   const GameState({
-    this.status = GameStatus.initialized,
+    this.status = GameStatus.squadChoice,
     this.questNumber = 1,
   });
 

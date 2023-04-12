@@ -174,9 +174,7 @@ class _PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<DataRepository>().currentPlayer.isLeader
-          ? context.read<GameCubit>().addMember(player: player)
-          : null,
+      onTap: () => context.read<GameCubit>().addMember(player: player),
       child: Card(
         margin: const EdgeInsets.all(1.0),
         child: Padding(
@@ -237,9 +235,7 @@ class _MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<DataRepository>().currentPlayer.isLeader
-          ? context.read<GameCubit>().removeMember(member: member)
-          : null,
+      onTap: () => context.read<GameCubit>().removeMember(member: member),
       child: Card(
         margin: const EdgeInsets.all(1.0),
         child: Padding(
@@ -278,13 +274,7 @@ class _SubmitTeamButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
-      onPressed: () {
-        // TODO do firestore messaging or have state in room/squad in db
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MissionPage()),
-        );
-      },
+      onPressed: context.read<GameCubit>().submitSquad,
       child: const Text(
         "Submit Team",
         style: TextStyle(
