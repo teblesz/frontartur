@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/models/member.dart';
 import 'package:data_repository/models/models.dart';
@@ -62,7 +64,7 @@ class DataRepository {
   }
 
   Future<void> updateRoomCharacters(List<String> characters) async {
-    //TODO
+    //TODO this feature
   }
 
   Future<void> setGameStarted() async {
@@ -70,6 +72,21 @@ class DataRepository {
         await _firestore.collection('rooms').doc(currentRoom.id).get();
     roomSnap.reference.update({'game_started': true});
   }
+
+  StreamSubscription<DocumentSnapshot>? _gameStartedSubscription;
+
+  void subscribeGameStartedWith(void Function(bool) doLogic) {
+    _gameStartedSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .snapshots()
+        .listen((snap) {
+      final gameStarted = Room.fromFirestore(snap).gameStarted;
+      doLogic(gameStarted);
+    });
+  }
+
+  void unsubscribeGameStarted() => _gameStartedSubscription?.cancel();
 
   //-----------------------------user's player----------------------------------
   static const playerCacheKey = '__player_cache_key__';

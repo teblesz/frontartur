@@ -69,8 +69,4 @@ class MatchupCubit extends Cubit<MatchupState> {
       (index) => index < numberOfEvils ? 'evil' : 'good',
     );
   }
-
-  Stream<bool> streamGameStarted() {
-    return _dataRepository.streamRoom().map((room) => room.gameStarted);
-  }
 }

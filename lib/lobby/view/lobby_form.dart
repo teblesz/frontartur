@@ -74,10 +74,10 @@ class _JoinRoomButton extends StatelessWidget {
                     : () async {
                         // context.read<LobbyCubit>().roomIdChanged(
                         //     "mlMOv1XpSl1b4ETIVR94"); //TODO !!! remove this
-                        // TODO  rework those
+                        // TODO  rework this thing
                         await context.read<LobbyCubit>().joinRoom();
                         if (state.statusOfJoin.isValidated) {
-                          // TODO change to have event inside lobbycubit?
+                          // TODO !!! change to have event sent to inside lobbycubit
                           context.read<RoomCubit>().goToMatchup();
                         } else {
                           print("invalid room ID");

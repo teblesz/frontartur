@@ -12,16 +12,21 @@ class RoomCubit extends Cubit<RoomState> {
 
   /// directs to game pages
   void goToGame() {
+    _dataRepository.unsubscribeGameStarted();
     emit(state.copyWith(status: RoomStatus.inGame));
   }
 
   /// directs to matchup page
   void goToMatchup() {
     emit(state.copyWith(status: RoomStatus.inMathup));
+    _dataRepository.subscribeGameStartedWith((gameStarted) {
+      if (gameStarted) goToGame();
+    });
   }
 
   /// directs back to lobby
   void leaveRoom() {
+    _dataRepository.unsubscribeGameStarted();
     _dataRepository.leaveRoom();
     emit(state.copyWith(status: RoomStatus.inLobby));
   }

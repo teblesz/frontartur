@@ -98,7 +98,7 @@ class _HostButtons extends StatelessWidget {
     final hostUserId = context.read<DataRepository>().currentRoom.hostUserId;
     final userId = context.select((AppBloc bloc) => bloc.state.user.id);
     return userId != hostUserId
-        ? _EnterGameButton()
+        ? const SizedBox.shrink()
         : Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -106,25 +106,6 @@ class _HostButtons extends StatelessWidget {
               _StartGameButton(),
             ],
           );
-  }
-}
-
-// should make this into listening for events in cubit
-class _EnterGameButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<bool>(
-      stream: context.read<MatchupCubit>().streamGameStarted(),
-      builder: (context, snapshot) {
-        var gameStarted = snapshot.data;
-        return FilledButton(
-          onPressed: gameStarted == null || gameStarted == false
-              ? null
-              : () => context.read<RoomCubit>().goToGame(),
-          child: const Text('Start game', style: TextStyle(fontSize: 20)),
-        );
-      },
-    );
   }
 }
 
@@ -148,7 +129,7 @@ class _RolesDefButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
-      onPressed: null, // TODO role def !!!
+      onPressed: null, // TODO role def feature !!!
       child: const Text('Define roles(W.I.P.)'),
     );
   }
@@ -170,7 +151,7 @@ Future<void> _showNickDialog(BuildContext context) {
           actions: [
             TextButton(
               onPressed: () {
-                //simple validation TODO make validation more complex
+                //simple validation TODO ! make validation more complex
                 if (!context.read<MatchupCubit>().state.status.isValidated) {
                   return;
                 }
@@ -184,6 +165,5 @@ Future<void> _showNickDialog(BuildContext context) {
         );
       });
 }
-
 
 // TODO !! add roles config popup
