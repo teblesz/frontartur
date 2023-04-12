@@ -42,9 +42,15 @@ class MatchupCubit extends Cubit<MatchupState> {
 
   /// handles starting game logic
   Future<void> initGame() async {
-    await _assignCharacters();
     await _assignLeader();
-    await _dataRepository.setGameStarted();
+    await _assignCharacters();
+    await _dataRepository.startGame();
+  }
+
+  Future<void> _assignLeader() async {
+    final numberOfPlayers = await _dataRepository.numberOfPlayers;
+    int leaderIndex = Random().nextInt(numberOfPlayers);
+    await _dataRepository.assignLeader(leaderIndex);
   }
 
   Future<void> _assignCharacters() async {
@@ -54,12 +60,6 @@ class MatchupCubit extends Cubit<MatchupState> {
         : defaultCharacters(numberOfPlayers);
     characters.shuffle();
     await _dataRepository.assignCharacters(characters);
-  }
-
-  Future<void> _assignLeader() async {
-    final numberOfPlayers = await _dataRepository.numberOfPlayers;
-    int leaderIndex = Random().nextInt(numberOfPlayers);
-    await _dataRepository.assignLeader(leaderIndex);
   }
 
   List<String> defaultCharacters(numberOfPlayers) {
