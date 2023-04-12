@@ -109,6 +109,7 @@ class _HostButtons extends StatelessWidget {
   }
 }
 
+// should make this into listening for events in cubit
 class _EnterGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -132,7 +133,7 @@ class _StartGameButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: () {
-        // TODO !!!!! forward info to players. make room which is ingame inaccessible
+        // TODO !!!!! forward info to players.
         // assign leader, others stream info if there is a leader
         context.read<MatchupCubit>().initGame().then(
               (_) => context.read<RoomCubit>().goToGame(),
