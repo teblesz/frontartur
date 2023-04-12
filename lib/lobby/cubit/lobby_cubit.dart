@@ -6,9 +6,6 @@ import 'package:data_repository/data_repository.dart';
 
 part 'lobby_state.dart';
 
-// TODO maybe change into full bloc, so it reacts on room changes
-// then problem with room stream in dataRepository needs to be resolved
-
 class LobbyCubit extends Cubit<LobbyState> {
   LobbyCubit(this._dataRepository) : super(const LobbyState());
 

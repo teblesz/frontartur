@@ -1,9 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// TODO unique room name (kahoot-like) https://stackoverflow.com/questions/47543251/firestore-unique-index-or-unique-constraint
-// TODO limitatons on number of records in subcollections
-
 class Room extends Equatable {
   final String id;
   final String hostUserId;

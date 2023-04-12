@@ -8,6 +8,7 @@ import 'package:cache/cache.dart';
 part 'data_failures.dart';
 // TODO unique room name (kahoot-like) https://stackoverflow.com/questions/47543251/firestore-unique-index-or-unique-constraint
 // TODO divide this moloch (mixins?, extension methods?)
+// TODO limit number of players in room
 
 class DataRepository {
   DataRepository({
@@ -50,7 +51,7 @@ class DataRepository {
 
     final snap = await roomRef.get();
     _cache.write(key: roomCacheKey, value: Room.fromFirestore(snap));
-  } // TODO should create 1 2 3 4 5 squads
+  }
 
   Future<void> joinRoom({required String roomId}) async {
     final roomSnap = await _firestore.collection('rooms').doc(roomId).get();
