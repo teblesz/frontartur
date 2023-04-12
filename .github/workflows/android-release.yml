@@ -26,11 +26,11 @@ jobs:
         run: flutter pub get
 
       - name: Static code check
-      - run: flutter format --set-exit-if-changed .
-      - run: flutter analyze .
+        run: flutter format --set-exit-if-changed .
+        run: flutter analyze .
 
       - name: Build app
-      - run: flutter build apk
+        run: flutter build apk
       - uses: actions/upload-artifact@v1
         with:
           name: release-apk
