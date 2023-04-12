@@ -7,58 +7,34 @@ import 'package:provider/provider.dart';
 import 'package:data_repository/data_repository.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
-// TODO przewijanie tła na pierwszym planie w typie pojawia sie i zanika?
 class MatchupForm extends StatelessWidget {
   const MatchupForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () => showNickDialog(context));
+    Future.delayed(Duration.zero, () => _showNickDialog(context));
     return Column(
       children: [
+        _RoomID(),
         Expanded(
           child: _PlayerListView(),
         ),
-        StreamBuilder<Room>(
-          stream: context.read<DataRepository>().streamRoom(),
-          builder: (context, snapshot) {
-            var data = snapshot.data;
-            return data == null
-                ? const CircularProgressIndicator() //TODO kopiwanie
-                : Text(data.id);
-          },
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _RolesDefButton(),
-            _StartGameButton(),
-          ],
-        ),
+        _HostButtons(),
         const SizedBox(height: 16)
       ],
     );
   }
 }
 
-class _StartGameButton extends StatelessWidget {
+class _RoomID extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: () {
-        context.read<RoomCubit>().enterGame();
+    return StreamBuilder<Room>(
+      stream: context.read<DataRepository>().streamRoom(),
+      builder: (context, snapshot) {
+        var data = snapshot.data;
+        return data == null ? const Text('<room is empty>') : Text(data.id);
       },
-      child: const Text('Rozpocznij grę', style: TextStyle(fontSize: 20)),
-    );
-  }
-}
-
-class _RolesDefButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton.tonal(
-      onPressed: () {},
-      child: const Text('Zdefiniuj role'),
     );
   }
 }
@@ -67,23 +43,16 @@ class _PlayerListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Player>>(
-      //TODO lepiej to?
       stream: context.read<DataRepository>().streamPlayersList(),
       builder: (context, snapshot) {
         var players = snapshot.data;
         return players == null
-            ? const CircularProgressIndicator()
+            ? const SizedBox.expand()
             : ListView(
                 scrollDirection: Axis.vertical,
                 children: <Widget>[
                   ...players.map(
-                    (player) => Card(
-                      // TODO to separate widget and add rmeoving players
-                      child: ListTile(
-                        title: Text(player.nick),
-                        trailing: const Icon(Icons.more_vert),
-                      ),
-                    ),
+                    (player) => _PlayerCard(player: player),
                   ),
                 ],
               );
@@ -92,7 +61,81 @@ class _PlayerListView extends StatelessWidget {
   }
 }
 
-Future<void> showNickDialog(BuildContext context) {
+class _PlayerCard extends StatelessWidget {
+  const _PlayerCard({
+    required this.player,
+  });
+
+  final Player player;
+
+  @override
+  Widget build(BuildContext context) {
+    final hostUserId = context.read<DataRepository>().currentRoom.hostUserId;
+    final userId = context.select((AppBloc bloc) => bloc.state.user.id);
+    return Card(
+      child: ListTile(
+        title: Text(player.nick),
+        trailing: userId != hostUserId
+            ? null
+            : PopupMenuButton(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: const Text("Remove"),
+                    onTap: () =>
+                        context.read<MatchupCubit>().removePlayer(player),
+                    // TODO !!! give the info about removal to the removed user's UI
+                  )
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _HostButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final hostUserId = context.read<DataRepository>().currentRoom.hostUserId;
+    final userId = context.select((AppBloc bloc) => bloc.state.user.id);
+    return userId != hostUserId
+        ? const SizedBox.shrink()
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _RolesDefButton(),
+              _StartGameButton(),
+            ],
+          );
+  }
+}
+
+class _StartGameButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: () {
+        // TODO !!!!! forward info to players.
+        // assign leader, others stream info if there is a leader
+        context.read<MatchupCubit>().initGame().then(
+              (_) => context.read<RoomCubit>().goToGame(),
+            );
+      },
+      child: const Text('Start game', style: TextStyle(fontSize: 20)),
+    );
+  }
+}
+
+class _RolesDefButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.tonal(
+      onPressed: null, // TODO role def feature !!!
+      child: const Text('Define roles(W.I.P.)'),
+    );
+  }
+}
+
+Future<void> _showNickDialog(BuildContext context) {
   return showDialog<void>(
       barrierDismissible: false,
       context: context,
@@ -108,8 +151,10 @@ Future<void> showNickDialog(BuildContext context) {
           actions: [
             TextButton(
               onPressed: () {
-                //simple validation TODO make validation more complex
-                if (context.read<MatchupCubit>().state.status.isInvalid) return;
+                //simple validation TODO ! make validation more complex
+                if (!context.read<MatchupCubit>().state.status.isValidated) {
+                  return;
+                }
                 final user = context.read<AppBloc>().state.user;
                 context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
                 Navigator.of(dialogContext).pop();
@@ -120,3 +165,5 @@ Future<void> showNickDialog(BuildContext context) {
         );
       });
 }
+
+// TODO !! add roles config popup

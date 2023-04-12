@@ -48,8 +48,10 @@ class _RoomIdInput extends StatelessWidget {
       //keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(),
-        labelText: 'ID pokoju',
+        labelText: 'room ID',
         helperText: '',
+        //errorText: state.roomId.invalid ? 'invalid room ID' : null, //TODO alike in login
+        // TODO !! add onError to joinRoom below with dialog about room gamestarted
       ),
     );
   }
@@ -69,15 +71,22 @@ class _JoinRoomButton extends StatelessWidget {
                 onPressed: !state.statusOfJoin.isValidated ||
                         state.statusOfCreate.isSubmissionInProgress
                     ? null
-                    : () {
-                        // TODO this looks kinda bad - rework
-                        context.read<LobbyCubit>().joinRoom().then(
-                              (_) => context.read<RoomCubit>().enterRoom(),
-                            );
+                    : () async {
+                        // context.read<LobbyCubit>().roomIdChanged(
+                        //     "mlMOv1XpSl1b4ETIVR94"); //TODO !!! remove this
+                        // TODO  rework this thing
+                        await context.read<LobbyCubit>().joinRoom();
+                        if (state.statusOfJoin.isValidated) {
+                          // TODO !!! change to have event sent to inside lobbycubit
+                          context.read<RoomCubit>().goToMatchup();
+                        } else {
+                          print("invalid room ID");
+                          //TODO push popup, or write info somwhere
+                        }
                       },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Dołącz', style: TextStyle(fontSize: 25)),
+                  child: Text('Join', style: TextStyle(fontSize: 25)),
                 ),
               );
       },
@@ -92,18 +101,19 @@ class _CreateRoomButton extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.statusOfCreate != current.statusOfCreate,
       builder: (context, state) {
+        final user = context.select((AppBloc bloc) => bloc.state.user);
         return state.statusOfCreate.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : FilledButton.tonal(
                 onPressed: () {
-                  // TODO this looks kinda bad - rework
-                  context.read<LobbyCubit>().createRoom().then(
-                        (_) => context.read<RoomCubit>().enterRoom(),
+                  // TODO rework this
+                  context.read<LobbyCubit>().createRoom(userId: user.id).then(
+                        (_) => context.read<RoomCubit>().goToMatchup(),
                       );
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Stwórz pokój', style: TextStyle(fontSize: 20)),
+                  child: Text('Create room', style: TextStyle(fontSize: 20)),
                 ),
               );
       },

@@ -1,6 +1,9 @@
+import 'package:fluttartur/game/cubit/game_cubit.dart';
 import 'package:fluttartur/game/view/game_form.dart';
+import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttartur/pages_old/view/mission_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:data_repository/data_repository.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -13,7 +16,7 @@ class GamePage extends StatelessWidget {
       children: <Widget>[
         Positioned.fill(
           child: Image.asset(
-            "images/startpagebg.jpg",
+            "images/Accolade.jpg",
             alignment: AlignmentDirectional.center,
             fit: BoxFit.cover,
           ),
@@ -22,10 +25,21 @@ class GamePage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: const Text('Game'),
-            //actions: <Widget>[_LogOutButton()], //TODO 3 dots menu with this
+            actions: <Widget>[
+              PopupMenuButton(
+                itemBuilder: (_) => [
+                  PopupMenuItem(
+                    child: const Text("Leave room"),
+                    onTap: () => context.read<RoomCubit>().leaveRoom(),
+                  )
+                ],
+              ),
+            ],
           ),
-          // TODO cubit here
-          body: GameForm(),
+          body: BlocProvider(
+            create: (_) => GameCubit(context.read<DataRepository>()),
+            child: const GameForm(),
+          ),
         ),
       ],
     );

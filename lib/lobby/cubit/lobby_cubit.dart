@@ -6,9 +6,6 @@ import 'package:data_repository/data_repository.dart';
 
 part 'lobby_state.dart';
 
-// TODO maybe change into full bloc, so it reacts on room changes
-// then problem with room stream in dataRepository needs to be resolved
-
 class LobbyCubit extends Cubit<LobbyState> {
   LobbyCubit(this._dataRepository) : super(const LobbyState());
 
@@ -28,19 +25,25 @@ class LobbyCubit extends Cubit<LobbyState> {
     if (!state.statusOfJoin.isValidated) return;
     emit(state.copyWith(statusOfJoin: FormzStatus.submissionInProgress));
     try {
-      await Future.delayed(Duration(seconds: 1)); //TODO remove
+      await Future.delayed(Duration(seconds: 1)); //TODO remove delay
       await _dataRepository.joinRoom(roomId: state.roomId.value);
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionSuccess));
+    }
+    // TODO better handling of possible errors !!!
+    on JoiningStartedGameFailure catch (e) {
+      print(e.message);
+      rethrow;
+      //emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
     } catch (_) {
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
     }
   }
 
-  Future<void> createRoom() async {
+  Future<void> createRoom({required String userId}) async {
     emit(state.copyWith(statusOfCreate: FormzStatus.submissionInProgress));
     try {
-      await Future.delayed(Duration(seconds: 1)); //TODO remove
-      await _dataRepository.createRoom();
+      await Future.delayed(Duration(seconds: 1)); //TODO remove delay
+      await _dataRepository.createRoom(userId: userId);
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionFailure));

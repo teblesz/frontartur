@@ -6,6 +6,16 @@ import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/theme.dart';
 import 'package:data_repository/data_repository.dart';
 
+// MAIN TODO's:
+// TODO move resources to some resources class
+// TODO internalizacja
+// TODO anonimowe logowanie
+// TODO animacje
+// TODO dołączanie do lobby przez kod QR
+// TODO timouts for db actions(such as joining room etc)
+// TODO get rid of view files ?
+// TODO lobby todos
+
 class App extends StatelessWidget {
   const App({
     super.key,
@@ -28,14 +38,14 @@ class App extends StatelessWidget {
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
         ),
-        child: const AppView(),
+        child: const _AppView(),
       ),
     );
   }
 }
 
-class AppView extends StatelessWidget {
-  const AppView({super.key});
+class _AppView extends StatelessWidget {
+  const _AppView({super.key});
 
   @override
   Widget build(BuildContext context) {

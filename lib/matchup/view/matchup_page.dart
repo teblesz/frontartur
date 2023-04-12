@@ -3,6 +3,7 @@ import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 
 // tutaj zostały stracone 3 godziny na dojście co jest nie tak z Hero.
 // nie działał zupełnie bo w app.dart nie było observera
@@ -28,7 +29,7 @@ class MatchupPage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: const Text('Matchup'),
-            actions: <Widget>[_LeaveRoomButton()],
+            actions: <Widget>[_MatchupAppBarActions()],
           ),
           body: BlocProvider(
             create: (_) => MatchupCubit(context.read<DataRepository>()),
@@ -40,14 +41,23 @@ class MatchupPage extends StatelessWidget {
   }
 }
 
-class _LeaveRoomButton extends StatelessWidget {
+class _MatchupAppBarActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        context.read<RoomCubit>().leaveRoom();
-      },
-      child: const Text("Leave Room"),
+    return PopupMenuButton(
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          child: const Text("Copy room's ID"),
+          onTap: () async {
+            final roomId = context.read<DataRepository>().currentRoom.id;
+            await Clipboard.setData(ClipboardData(text: roomId));
+          },
+        ),
+        PopupMenuItem(
+          child: const Text("Leave room"),
+          onTap: () => context.read<RoomCubit>().leaveRoom(),
+        ),
+      ],
     );
   }
 }

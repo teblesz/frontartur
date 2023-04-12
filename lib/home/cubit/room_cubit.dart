@@ -4,21 +4,29 @@ import 'package:equatable/equatable.dart';
 
 part 'room_state.dart';
 
-/// cubit responisoble for routing between lobby, matchup and game layers
+/// cubit responsible for routing between lobby, matchup and game layers
 class RoomCubit extends Cubit<RoomState> {
   RoomCubit(this._dataRepository) : super(const RoomState());
 
   final DataRepository _dataRepository;
 
-  void enterGame() {
+  /// directs to game pages
+  void goToGame() {
+    _dataRepository.unsubscribeGameStarted();
     emit(state.copyWith(status: RoomStatus.inGame));
   }
 
-  void enterRoom() {
+  /// directs to matchup page
+  void goToMatchup() {
     emit(state.copyWith(status: RoomStatus.inMathup));
+    _dataRepository.subscribeGameStartedWith((gameStarted) {
+      if (gameStarted) goToGame();
+    });
   }
 
+  /// directs back to lobby
   void leaveRoom() {
+    _dataRepository.unsubscribeGameStarted();
     _dataRepository.leaveRoom();
     emit(state.copyWith(status: RoomStatus.inLobby));
   }
