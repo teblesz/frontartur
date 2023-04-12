@@ -35,7 +35,8 @@ class LobbyCubit extends Cubit<LobbyState> {
     // TODO better handling of possible errors !!!
     on JoiningStartedGameFailure catch (e) {
       print(e.message);
-      emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
+      rethrow;
+      //emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
     } catch (_) {
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionFailure));
     }
