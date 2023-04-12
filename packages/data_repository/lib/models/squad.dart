@@ -16,9 +16,8 @@ class Squad extends Equatable {
     this.isSuccessfull,
   });
 
-  const Squad.first()
+  const Squad.init(this.questNumber)
       : id = '',
-        questNumber = 1,
         isSubmitted = false,
         isApproved = null,
         isSuccessfull = null;
@@ -57,8 +56,8 @@ class Squad extends Equatable {
     return {
       'quest_number': questNumber,
       'is_submitted': isSubmitted,
-      'is_approved': isApproved,
-      "is_successfull": isSuccessfull,
+      if (isApproved != null) 'is_approved': isApproved,
+      if (isSuccessfull != null) 'is_successfull': isSuccessfull,
     };
   }
 }

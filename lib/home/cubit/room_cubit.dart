@@ -19,7 +19,7 @@ class RoomCubit extends Cubit<RoomState> {
   /// directs to matchup page
   void goToMatchup() {
     emit(state.copyWith(status: RoomStatus.inMathup));
-    _dataRepository.subscribeGameStartedWith((gameStarted) {
+    _dataRepository.subscribeGameStartedWith(doLogic: (gameStarted) {
       if (gameStarted) goToGame();
     });
   }
