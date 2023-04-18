@@ -58,11 +58,10 @@ class DataRepository {
     final roomSnap = await _firestore.collection('rooms').doc(roomId).get();
     if (!roomSnap.exists) throw GetRoomByIdFailure();
 
+    _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
     if (Room.fromFirestore(roomSnap).gameStarted) {
       throw const JoiningStartedGameFailure();
     }
-
-    _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
   }
 
   Future<void> updateRoomCharacters(List<String> characters) async {
@@ -94,8 +93,7 @@ class DataRepository {
         .doc(currentRoom.id)
         .snapshots()
         .listen((snap) {
-      final gameStarted = Room.fromFirestore(snap).gameStarted;
-      doLogic(gameStarted);
+      doLogic(Room.fromFirestore(snap).gameStarted);
     });
   }
 
@@ -271,28 +269,6 @@ class DataRepository {
     squadSnap.reference.update({'is_submitted': true});
   }
 
-  StreamSubscription? _squadIsSubmittedSubscription;
-
-//TODO return squadid from next squad and pass it here?
-  /// must unsubsribe everytime currentsquad changes
-  void subscribeSquadIsSubmittedWith({
-    required String squadId,
-    required void Function(bool) doLogic,
-  }) {
-    _squadIsSubmittedSubscription = _firestore
-        .collection('rooms')
-        .doc(currentRoom.id)
-        .collection('squads')
-        .doc(squadId)
-        .snapshots()
-        .listen((snap) {
-      final isSubmitted = Squad.fromFirestore(snap).isSubmitted;
-      doLogic(isSubmitted);
-    });
-  }
-
-  void unsubscribeSquadIsSubmitted() => _squadIsSubmittedSubscription?.cancel();
-
   /// creates new squad and sets new value for current_squad_id
   Future<void> nextSquad({required int questNumber}) async {
     final newSquadRef = await _firestore
@@ -307,12 +283,39 @@ class DataRepository {
     roomSnap.reference.update({'current_squad_id': newSquadRef.id});
   }
 
-  StreamSubscription? _currentSquadIdSubscription;
+  StreamSubscription? _squadIsSubmittedSubscription;
 
-//TODO remove this and rework conflict with room stream( dunno if the stream is at all necessary)
+//TODO one subcribion for all fields?
+//TODO check if it reacts on any change to room, if so add other paramethers to dologic
+  /// must unsubsribe everytime currentsquad changes
+  void subscribeSquadWith({
+    required String squadId,
+    required void Function(Squad) doLogic,
+  }) {
+    _squadIsSubmittedSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(squadId)
+        .snapshots()
+        .listen(
+          (snap) => doLogic(Squad.fromFirestore(snap)),
+        );
+  }
+
+  void unsubscribeSquadIsSubmitted() => _squadIsSubmittedSubscription?.cancel();
+
+  StreamSubscription? _currentSquadIdSubscription;
+//TODO merge this with other room subsrbtion? how it reacts to changes.
+//i think not, maybe all subscribtions react to all changes, and dividing them
+//is of use for flternig where to use which information
+//TODO remove this and rework conflict with room stream( dunno if the stream is
+//at all necessary)
   String _oldCurrentSquadId = '';
 
-  void subscribeCurrentSquadIdWith({required void Function(String) doLogic}) {
+  void subscribeCurrentSquadIdWith({
+    required void Function(String) doLogic,
+  }) {
     _currentSquadIdSubscription = _firestore
         .collection('rooms')
         .doc(currentRoom.id)
