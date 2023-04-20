@@ -58,10 +58,11 @@ class DataRepository {
     final roomSnap = await _firestore.collection('rooms').doc(roomId).get();
     if (!roomSnap.exists) throw GetRoomByIdFailure();
 
-    _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
     if (Room.fromFirestore(roomSnap).gameStarted) {
       throw const JoiningStartedGameFailure();
     }
+
+    _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
   }
 
   Future<void> updateRoomCharacters(List<String> characters) async {
