@@ -16,24 +16,25 @@ class GameCubit extends Cubit<GameState> {
 
   // TODO this just seems like doing BLoC but around
   GameCubit(this._dataRepository) : super(const GameState()) {
-    setupSquadSubscribtion(
-        _dataRepository.currentRoom.currentSquadId); // subs to first squad
+    _dataRepository.subscribeSquadWith(
+      squadId: _dataRepository.currentRoom.currentSquadId,
+      doLogic: doGameLoop,
+    ); //first squad
     _dataRepository.subscribeCurrentSquadIdWith(
-        doLogic: setupSquadSubscribtion); // subs to next squads
+      doLogic: (currentSquadId) {
+        _dataRepository.unsubscribeSquadIsSubmitted();
+        _dataRepository.subscribeSquadWith(
+          squadId: currentSquadId,
+          doLogic: doGameLoop,
+        );
+      },
+    ); // subs to next squads
   }
 
   @override
   Future<void> close() {
     _dataRepository.unsubscribeCurrentSquadId();
     return super.close();
-  }
-
-  //todo draw tthis and check
-  void setupSquadSubscribtion(String currentSquadId) {
-    _dataRepository.unsubscribeSquadIsSubmitted();
-    _dataRepository.subscribeSquadWith(
-        squadId: _dataRepository.currentRoom.currentSquadId,
-        doLogic: doGameLoop);
   }
 
   Stream<List<Player>> streamPlayersList() {

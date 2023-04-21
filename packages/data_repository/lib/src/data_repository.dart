@@ -27,7 +27,13 @@ class DataRepository {
     return _cache.read<Room>(key: roomCacheKey) ?? Room.empty;
   }
 
-  // TODO confict with subscribtion to cuurentquadID?
+  /// room stream getter
+  Future<void> refreshRoomCache() async {
+    final roomSnap =
+        await _firestore.collection('rooms').doc(currentRoom.id).get();
+    _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
+  }
+
   /// room stream getter
   Stream<Room> streamRoom() {
     if (currentRoom.isEmpty) {
@@ -80,10 +86,8 @@ class DataRepository {
     final roomSnap =
         await _firestore.collection('rooms').doc(currentRoom.id).get();
 
-    roomSnap.reference.update({
-      'game_started': true,
-      'current_squad_id': firstSquadRef.id,
-    });
+    await roomSnap.reference.update({'current_squad_id': firstSquadRef.id});
+    await roomSnap.reference.update({'game_started': true});
   }
 
   StreamSubscription? _gameStartedSubscription;
@@ -286,13 +290,15 @@ class DataRepository {
 
   StreamSubscription? _squadIsSubmittedSubscription;
 
-//TODO one subcribion for all fields?
-//TODO check if it reacts on any change to room, if so add other paramethers to dologic
-  /// must unsubsribe everytime currentsquad changes
   void subscribeSquadWith({
     required String squadId,
     required void Function(Squad) doLogic,
-  }) {
+  }) async {
+    if (squadId == '') {
+      await refreshRoomCache();
+      squadId = currentRoom.currentSquadId;
+    }
+
     _squadIsSubmittedSubscription = _firestore
         .collection('rooms')
         .doc(currentRoom.id)
@@ -307,12 +313,8 @@ class DataRepository {
   void unsubscribeSquadIsSubmitted() => _squadIsSubmittedSubscription?.cancel();
 
   StreamSubscription? _currentSquadIdSubscription;
-//TODO merge this with other room subsrbtion? how it reacts to changes.
-//i think not, maybe all subscribtions react to all changes, and dividing them
-//is of use for flternig where to use which information
-//TODO remove this and rework conflict with room stream( dunno if the stream is
-//at all necessary)
-  String _oldCurrentSquadId = '';
+
+  String _oldCurrentSquadId = ''; // TODO remove this (?)
 
   void subscribeCurrentSquadIdWith({
     required void Function(String) doLogic,
@@ -324,6 +326,7 @@ class DataRepository {
         .listen((snap) {
       final currentSquadId = Room.fromFirestore(snap).currentSquadId;
       if (currentSquadId == _oldCurrentSquadId) return;
+      _oldCurrentSquadId = currentSquadId;
       doLogic(currentSquadId);
     });
   }
