@@ -217,7 +217,7 @@ class DataRepository {
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(questNumber.toString())
+        .doc(currentRoom.currentSquadId)
         .collection('members')
         .snapshots()
         .map((list) =>
@@ -234,7 +234,7 @@ class DataRepository {
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(questNumber.toString())
+        .doc(currentRoom.currentSquadId)
         .collection('members')
         .add(Member(playerId: playerId, nick: nick).toFirestore());
   }
@@ -248,7 +248,7 @@ class DataRepository {
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(questNumber.toString())
+        .doc(currentRoom.currentSquadId)
         .collection('members')
         .doc(memberId)
         .delete();
