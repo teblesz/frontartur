@@ -22,6 +22,12 @@ class GameForm extends StatelessWidget {
           child: _TeamWrap(),
         ),
         _TeamChoiceButtons(),
+        BlocBuilder<GameCubit, GameState>(
+            // TODO remove this
+            buildWhen: (previous, current) => previous.status != current.status,
+            builder: (context, state) {
+              return Text(state.status.name);
+            })
       ],
     );
   }
