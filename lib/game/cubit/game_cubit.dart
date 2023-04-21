@@ -17,7 +17,6 @@ class GameCubit extends Cubit<GameState> {
   // TODO this just seems like doing BLoC but around
   GameCubit(this._dataRepository) : super(const GameState()) {
     _dataRepository.subscribeSquadWith(
-      squadId: _dataRepository.currentRoom.currentSquadId,
       doLogic: doGameLoop,
     ); //first squad
     _dataRepository.subscribeCurrentSquadIdWith(

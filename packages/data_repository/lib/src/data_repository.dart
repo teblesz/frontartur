@@ -291,7 +291,7 @@ class DataRepository {
   StreamSubscription? _squadIsSubmittedSubscription;
 
   void subscribeSquadWith({
-    required String squadId,
+    String squadId = '',
     required void Function(Squad) doLogic,
   }) async {
     if (squadId == '') {
