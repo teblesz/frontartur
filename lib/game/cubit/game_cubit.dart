@@ -74,6 +74,7 @@ class GameCubit extends Cubit<GameState> {
   }
 
   /// steering the game course through states and squad props
+  /// reacts to changes in squad parameter and
   Future<void> doGameLoop(Squad squad) async {
     emit(state.copyWith(questNumber: squad.questNumber));
     switch (state.status) {
@@ -82,7 +83,7 @@ class GameCubit extends Cubit<GameState> {
           emit(state.copyWith(status: GameStatus.squadVoting));
         }
         break;
-      case GameStatus.squadVoting:
+      case GameStatus.squadVoting: // TODO add counting votes for leader
         if (squad.isApproved == null) return;
         if (squad.isApproved!) {
           emit(state.copyWith(status: GameStatus.questVoting));

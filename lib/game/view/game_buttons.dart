@@ -1,15 +1,23 @@
 part of 'game_form.dart';
 
-class _TeamChoiceButtons extends StatelessWidget {
+class _GameButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // streamBuilder is here to start streaming player for bussiness logic
+    // streamBuilder is here to start streaming player for bussiness logic (?)
     return StreamBuilder<Player>(
         stream: context.read<DataRepository>().streamPlayer(),
         builder: (context, snapshot) {
-          return context.read<DataRepository>().currentPlayer.isLeader
-              ? _SubmitTeamButton()
-              : _VotingButtons();
+          var usersPlayer = snapshot.data ?? Player.empty;
+          return BlocBuilder<GameCubit, GameState>(
+              // TODO remove this
+              buildWhen: (previous, current) =>
+                  previous.status != current.status,
+              builder: (context, state) {
+                return state.status == GameStatus.squadChoice &&
+                        usersPlayer.isLeader
+                    ? _SubmitTeamButton()
+                    : const SizedBox.shrink();
+              });
         });
   }
 }
