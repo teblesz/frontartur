@@ -332,4 +332,10 @@ class DataRepository {
   }
 
   void unsubscribeCurrentSquadId() => _currentSquadIdSubscription?.cancel();
+
+  //--------------------------------votings-------------------------------------
+
+  voteSquad(bool vote) {
+    // TODO
+  }
 }

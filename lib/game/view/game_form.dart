@@ -22,7 +22,6 @@ class GameForm extends StatelessWidget {
           Expanded(
             child: _TeamWrap(),
           ),
-          _GameButtons(),
           BlocBuilder<GameCubit, GameState>(
               // TODO remove this
               buildWhen: (previous, current) =>
@@ -30,6 +29,7 @@ class GameForm extends StatelessWidget {
               builder: (context, state) {
                 return Text(state.status.name);
               }),
+          _GameButtons(),
         ],
       ),
     );
@@ -43,10 +43,43 @@ void listenGameCubit(context, state) {
     case GameStatus.squadVoting:
       break;
     case GameStatus.questVoting:
+      _pushSquadVotingDialog(context);
+      //navigation to page
       break;
     case GameStatus.questResults:
+      //popup
       break;
     case GameStatus.gameResults:
+      //popup with leave room
       break;
   }
+}
+//guziki na dole, nie popup, jak kliknie to wyszarzyc,
+// zmiana stanu przez nasluhwanie na squad w gameloop,
+// a stan w fs smienia tylko lider
+
+Future<void> _pushSquadVotingDialog(BuildContext context) {
+  return showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Vote this squad"),
+          content: null,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text("Approve"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text("Reject"),
+            ),
+          ],
+        );
+      });
 }

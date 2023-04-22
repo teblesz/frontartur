@@ -13,16 +13,20 @@ class _GameButtons extends StatelessWidget {
               buildWhen: (previous, current) =>
                   previous.status != current.status,
               builder: (context, state) {
-                return state.status == GameStatus.squadChoice &&
-                        usersPlayer.isLeader
-                    ? _SubmitTeamButton()
-                    : const SizedBox.shrink();
+                if (state.status == GameStatus.squadChoice &&
+                    usersPlayer.isLeader) {
+                  return _SubmitSquadButton();
+                } else if (state.status == GameStatus.squadVoting) {
+                  return _VoteSquadPanel();
+                } else {
+                  return const SizedBox.shrink();
+                }
               });
         });
   }
 }
 
-class _SubmitTeamButton extends StatelessWidget {
+class _SubmitSquadButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
@@ -37,45 +41,85 @@ class _SubmitTeamButton extends StatelessWidget {
   }
 }
 
-class _VotingButtons extends StatelessWidget {
+class _VoteSquadPanel extends StatefulWidget {
+  @override
+  State<_VoteSquadPanel> createState() => _VoteSquadPanelState();
+}
+
+class _VoteSquadPanelState extends State<_VoteSquadPanel> {
+  bool _isDisabled = false;
+
+  void _updateisDisabled(bool newState) {
+    setState(() {
+      _isDisabled = newState;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: const Color.fromARGB(172, 63, 63, 63),
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CircleAvatar(
-              radius: 40,
-              backgroundColor: Colors.red,
-              child: IconButton(
-                iconSize: 60,
-                color: Colors.white,
-                icon: const Icon(Icons.close),
-                onPressed: () {},
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          const Text(
+            'Vote for this squad',
+            style: TextStyle(fontSize: 30),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _VoteSquadButton(
+                isPositive: true,
+                isDisabled: _isDisabled,
+                updateisDisabled: _updateisDisabled,
               ),
-            ),
-            CircleAvatar(
-              radius: 40,
-              backgroundColor: Colors.green,
-              child: IconButton(
-                iconSize: 60,
-                color: Colors.white,
-                icon: const Icon(Icons.check),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const MissionPage()),
-                  );
-                },
+              _VoteSquadButton(
+                isPositive: false,
+                isDisabled: _isDisabled,
+                updateisDisabled: _updateisDisabled,
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(height: 10),
+        ],
       ),
     );
+  }
+}
+
+class _VoteSquadButton extends StatelessWidget {
+  const _VoteSquadButton({
+    required this.isDisabled,
+    required this.updateisDisabled,
+    required this.isPositive,
+  });
+
+  final bool isDisabled;
+  final Function(bool) updateisDisabled;
+
+  final bool isPositive;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: isDisabled
+            ? null
+            : () {
+                context.read<GameCubit>().voteSquad(isPositive);
+                updateisDisabled(!isDisabled);
+              },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(
+              isPositive ? Colors.green.shade700 : Colors.red.shade700),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            isPositive ? "Accept" : "Reject",
+            style: const TextStyle(fontSize: 25),
+          ),
+        ));
   }
 }

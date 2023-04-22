@@ -73,6 +73,10 @@ class GameCubit extends Cubit<GameState> {
     await _dataRepository.submitSquad();
   }
 
+  Future<void> voteSquad(bool vote) async {
+    await _dataRepository.voteSquad(vote);
+  }
+
   /// steering the game course through states and squad props
   /// reacts to changes in squad parameter and
   Future<void> doGameLoop(Squad squad) async {
