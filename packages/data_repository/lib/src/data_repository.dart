@@ -81,7 +81,7 @@ class DataRepository {
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .add(const Squad.init(1).toFirestore());
+        .add(Squad.init(1).toFirestore());
 
     final roomSnap =
         await _firestore.collection('rooms').doc(currentRoom.id).get();
@@ -336,6 +336,13 @@ class DataRepository {
   //--------------------------------votings-------------------------------------
 
   voteSquad(bool vote) {
-    // TODO
+    _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .update({
+      'votes': FieldValue.arrayUnion([vote])
+    });
   }
 }

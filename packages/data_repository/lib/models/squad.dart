@@ -7,6 +7,7 @@ class Squad extends Equatable {
   final bool isSubmitted;
   final bool? isApproved;
   final bool? isSuccessfull;
+  final List<bool> votes;
 
   const Squad({
     required this.id,
@@ -14,13 +15,15 @@ class Squad extends Equatable {
     required this.isSubmitted,
     this.isApproved,
     this.isSuccessfull,
+    required this.votes,
   });
 
-  const Squad.init(this.questNumber)
+  Squad.init(this.questNumber)
       : id = '',
         isSubmitted = false,
         isApproved = null,
-        isSuccessfull = null;
+        isSuccessfull = null,
+        votes = <bool>[];
 
   /// Empty Squad
   static const empty = Squad(
@@ -29,6 +32,7 @@ class Squad extends Equatable {
     isSubmitted: false,
     isApproved: null,
     isSuccessfull: null,
+    votes: <bool>[],
   );
 
   /// Convenience getter to determine whether the current Squad is empty.
@@ -39,7 +43,7 @@ class Squad extends Equatable {
 
   @override
   List<Object?> get props =>
-      [id, questNumber, isSubmitted, isApproved, isSuccessfull];
+      [id, questNumber, isSubmitted, isApproved, isSuccessfull, votes];
 
   factory Squad.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data();
@@ -49,6 +53,7 @@ class Squad extends Equatable {
       isSubmitted: data?['is_submitted'],
       isApproved: data?['is_approved'],
       isSuccessfull: data?['is_successfull'],
+      votes: List.from(data?['votes']),
     );
   }
 
@@ -58,6 +63,7 @@ class Squad extends Equatable {
       'is_submitted': isSubmitted,
       if (isApproved != null) 'is_approved': isApproved,
       if (isSuccessfull != null) 'is_successfull': isSuccessfull,
+      'votes': votes,
     };
   }
 }
