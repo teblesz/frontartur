@@ -14,7 +14,6 @@ enum QuestStatus {
 class GameCubit extends Cubit<GameState> {
   final DataRepository _dataRepository;
 
-  // TODO this just seems like doing BLoC but around
   GameCubit(this._dataRepository) : super(const GameState()) {
     _dataRepository.subscribeSquadWith(
       doLogic: doGameLoop,
@@ -71,6 +70,24 @@ class GameCubit extends Cubit<GameState> {
 
   Future<void> submitSquad() async {
     await _dataRepository.submitSquad();
+    // leader counts votes
+    _dataRepository.subscribeSquadVotesWith(doLogic: _assessSquadVoteResults);
+  }
+
+  /// leader's logic
+  Future<void> _assessSquadVoteResults(List<bool> votes) async {
+    final numberOfPlayers = await _dataRepository.numberOfPlayers;
+    if (numberOfPlayers > votes.length) return;
+
+    final positiveVotesCount = votes.where((v) => v == true).length;
+    if (positiveVotesCount > votes.length / 2) {
+      await _dataRepository.approveSquad();
+    } else {
+      await _dataRepository.approveSquad(isApproved: false);
+      await _dataRepository.nextLeader();
+      await _dataRepository.nextSquad(questNumber: state.questNumber);
+    }
+    _dataRepository.unsubscribeSquadVotes();
   }
 
   Future<void> voteSquad(bool vote) async {
@@ -80,7 +97,7 @@ class GameCubit extends Cubit<GameState> {
   /// steering the game course through states and squad props
   /// reacts to changes in squad parameter and
   Future<void> doGameLoop(Squad squad) async {
-    emit(state.copyWith(questNumber: squad.questNumber));
+    emit(state.copyWith(questNumber: squad.questNumber)); // update questNumber
     switch (state.status) {
       case GameStatus.squadChoice:
         if (squad.isSubmitted) {
@@ -92,10 +109,6 @@ class GameCubit extends Cubit<GameState> {
         if (squad.isApproved!) {
           emit(state.copyWith(status: GameStatus.questVoting));
         } else {
-          if (_dataRepository.currentPlayer.isLeader) {
-            await _dataRepository.nextSquad(questNumber: squad.questNumber);
-            await _dataRepository.nextLeader();
-          }
           emit(state.copyWith(status: GameStatus.squadChoice));
         }
         break;

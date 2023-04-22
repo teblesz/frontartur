@@ -27,7 +27,12 @@ class GameForm extends StatelessWidget {
               buildWhen: (previous, current) =>
                   previous.status != current.status,
               builder: (context, state) {
-                return Text(state.status.name);
+                return TextButton(
+                  onPressed: () {
+                    context.read<DataRepository>().nextLeader();
+                  },
+                  child: Text(state.status.name + " nextLeaderClick"),
+                );
               }),
           _GameButtons(),
         ],
@@ -43,7 +48,6 @@ void listenGameCubit(context, state) {
     case GameStatus.squadVoting:
       break;
     case GameStatus.questVoting:
-      _pushSquadVotingDialog(context);
       //navigation to page
       break;
     case GameStatus.questResults:
@@ -54,9 +58,6 @@ void listenGameCubit(context, state) {
       break;
   }
 }
-//guziki na dole, nie popup, jak kliknie to wyszarzyc,
-// zmiana stanu przez nasluhwanie na squad w gameloop,
-// a stan w fs smienia tylko lider
 
 Future<void> _pushSquadVotingDialog(BuildContext context) {
   return showDialog<void>(

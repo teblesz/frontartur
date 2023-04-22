@@ -164,6 +164,7 @@ class DataRepository {
             list.docs.map((snap) => Player.fromFirestore(snap)).toList());
   }
 
+// TODO change this to a field in Room
   Future<int> get numberOfPlayers async {
     final playersSnap = await _firestore
         .collection('rooms')
@@ -198,8 +199,25 @@ class DataRepository {
         .doc(currentRoom.id)
         .collection('players')
         .get();
+    await playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
+  }
 
-    playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
+  Future<void> nextLeader() async {
+    //find leader id, set false, find next id, set true, circling
+    final playersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players')
+        .get();
+
+    int leaderIndex = playersSnap.docs.indexWhere(
+      (playerSnap) => Player.fromFirestore(playerSnap).isLeader,
+    );
+    await playersSnap.docs[leaderIndex].reference.update({'is_leader': false});
+
+    final numberOfPlayers = await this.numberOfPlayers;
+    leaderIndex = (leaderIndex + 1) % numberOfPlayers;
+    await playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
   }
 
   Future<void> removePlayer({required String playerId}) async {
@@ -259,10 +277,6 @@ class DataRepository {
   }
 
   //--------------------------------squads-------------------------------------
-  Future<void> nextLeader() async {
-    // TODO
-    //find leader id, set false, find next id, set true, circling
-  }
 
   Future<void> submitSquad() async {
     final squadSnap = await _firestore
@@ -272,6 +286,16 @@ class DataRepository {
         .doc(currentRoom.currentSquadId)
         .get();
     squadSnap.reference.update({'is_submitted': true});
+  }
+
+  Future<void> approveSquad({bool isApproved = true}) async {
+    final squadSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .get();
+    squadSnap.reference.update({'is_approved': isApproved});
   }
 
   /// creates new squad and sets new value for current_squad_id
@@ -345,4 +369,22 @@ class DataRepository {
       'votes': FieldValue.arrayUnion([vote])
     });
   }
+
+  StreamSubscription? _squadVotesSubscription;
+
+  void subscribeSquadVotesWith({
+    required void Function(List<bool>) doLogic,
+  }) {
+    _squadVotesSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .snapshots()
+        .listen((snap) {
+      doLogic(List<bool>.from(snap['votes']));
+    });
+  }
+
+  void unsubscribeSquadVotes() => _squadVotesSubscription?.cancel();
 }
