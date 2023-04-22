@@ -190,4 +190,13 @@ class GameCubit extends Cubit<GameState> {
   void checkQuestInfo(int questNumber) {
     //if quest.successfull ?? giveinfoAboutVotes()
   }
+
+  bool isMember({required Player player}) {
+    //TODO !!!
+    return true;
+  }
+
+  Future<void> voteQuest(bool vote) async {
+    await _dataRepository.voteQuest(vote);
+  }
 }

@@ -7,17 +7,19 @@ class _GameButtons extends StatelessWidget {
     return StreamBuilder<Player>(
         stream: context.read<DataRepository>().streamPlayer(),
         builder: (context, snapshot) {
-          var usersPlayer = snapshot.data ?? Player.empty;
+          var player = snapshot.data ?? Player.empty;
           return BlocBuilder<GameCubit, GameState>(
               // TODO remove this
               buildWhen: (previous, current) =>
                   previous.status != current.status,
               builder: (context, state) {
-                if (state.status == GameStatus.squadChoice &&
-                    usersPlayer.isLeader) {
+                if (state.status == GameStatus.squadChoice && player.isLeader) {
                   return _SubmitSquadButton();
                 } else if (state.status == GameStatus.squadVoting) {
                   return _VoteSquadPanel();
+                } else if (state.status == GameStatus.questVoting &&
+                    context.read<GameCubit>().isMember(player: player)) {
+                  return _EmbarkmentCard();
                 } else {
                   return const SizedBox.shrink();
                 }
@@ -29,12 +31,15 @@ class _GameButtons extends StatelessWidget {
 class _SubmitSquadButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: context.read<GameCubit>().submitSquad,
-      child: const Text(
-        "Submit Team",
-        style: TextStyle(
-          fontSize: 23,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: FilledButton(
+        onPressed: context.read<GameCubit>().submitSquad,
+        child: const Text(
+          "Submit Team",
+          style: TextStyle(
+            fontSize: 25,
+          ),
         ),
       ),
     );
@@ -49,7 +54,7 @@ class _VoteSquadPanel extends StatefulWidget {
 class _VoteSquadPanelState extends State<_VoteSquadPanel> {
   bool _isDisabled = false;
 
-  void _updateisDisabled(bool newState) {
+  void _updateIsDisabled(bool newState) {
     setState(() {
       _isDisabled = newState;
     });
@@ -73,12 +78,12 @@ class _VoteSquadPanelState extends State<_VoteSquadPanel> {
               _VoteSquadButton(
                 isPositive: true,
                 isDisabled: _isDisabled,
-                updateisDisabled: _updateisDisabled,
+                updateisDisabled: _updateIsDisabled,
               ),
               _VoteSquadButton(
                 isPositive: false,
                 isDisabled: _isDisabled,
-                updateisDisabled: _updateisDisabled,
+                updateisDisabled: _updateIsDisabled,
               ),
             ],
           ),
@@ -121,5 +126,59 @@ class _VoteSquadButton extends StatelessWidget {
             style: const TextStyle(fontSize: 25),
           ),
         ));
+  }
+}
+
+class _EmbarkmentCard extends StatefulWidget {
+  @override
+  State<_EmbarkmentCard> createState() => _EmbarkmentCardState();
+}
+
+class _EmbarkmentCardState extends State<_EmbarkmentCard> {
+  bool _isDisabled = false;
+
+  void _updateIsDisabled(bool newState) {
+    // TODO move this to context?
+    setState(() {
+      _isDisabled = newState;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'This squad was approved.',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+              FilledButton(
+                onPressed: _isDisabled
+                    ? null
+                    : () => Navigator.push(
+                        // of context?
+                        context,
+                        QuestPage.route(() => _updateIsDisabled(true))),
+                child: const Text(
+                  "Embark",
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

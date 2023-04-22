@@ -387,4 +387,8 @@ class DataRepository {
   }
 
   void unsubscribeSquadVotes() => _squadVotesSubscription?.cancel();
+
+  Future<void> voteQuest(bool vote) async {
+    //TODO
+  }
 }
