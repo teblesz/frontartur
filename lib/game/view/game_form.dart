@@ -27,12 +27,7 @@ class GameForm extends StatelessWidget {
               buildWhen: (previous, current) =>
                   previous.status != current.status,
               builder: (context, state) {
-                return TextButton(
-                  onPressed: () {
-                    context.read<DataRepository>().nextLeader();
-                  },
-                  child: Text(state.status.name + " nextLeaderClick"),
-                );
+                return Text(state.status.name);
               }),
           _GameButtons(),
         ],
