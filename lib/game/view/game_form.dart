@@ -1,7 +1,7 @@
 import 'package:data_repository/data_repository.dart';
 import 'package:fluttartur/game/cubit/game_cubit.dart';
+import 'package:fluttartur/game/view/quest_page.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttartur/pages_old/view/mission_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'quest_tiles.dart';
@@ -43,7 +43,6 @@ void listenGameCubit(context, state) {
     case GameStatus.squadVoting:
       break;
     case GameStatus.questVoting:
-      //navigation to page
       break;
     case GameStatus.questResults:
       //popup
