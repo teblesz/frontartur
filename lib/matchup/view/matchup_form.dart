@@ -137,7 +137,7 @@ Future<void> _showNickDialog(BuildContext context) {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Enter your nick for this play"),
+          title: const Text("Enter your nick"),
           content: TextField(
             onChanged: (nick) => context.read<MatchupCubit>().nickChanged(nick),
             decoration: const InputDecoration(
