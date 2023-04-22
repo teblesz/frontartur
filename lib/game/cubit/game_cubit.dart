@@ -79,6 +79,8 @@ class GameCubit extends Cubit<GameState> {
     final numberOfPlayers = await _dataRepository.numberOfPlayers;
     if (numberOfPlayers > votes.length) return;
 
+    _dataRepository.unsubscribeSquadVotes();
+
     final positiveVotesCount = votes.where((v) => v == true).length;
     if (positiveVotesCount > votes.length / 2) {
       await _dataRepository.approveSquad();
@@ -87,7 +89,6 @@ class GameCubit extends Cubit<GameState> {
       await _dataRepository.nextLeader();
       await _dataRepository.nextSquad(questNumber: state.questNumber);
     }
-    _dataRepository.unsubscribeSquadVotes();
   }
 
   Future<void> voteSquad(bool vote) async {
