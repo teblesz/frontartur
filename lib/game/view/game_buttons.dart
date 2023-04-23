@@ -36,7 +36,7 @@ class _SubmitSquadButton extends StatelessWidget {
       child: FilledButton(
         onPressed: context.read<GameCubit>().submitSquad,
         child: const Text(
-          "Submit Team",
+          "Submit squad",
           style: TextStyle(
             fontSize: 25,
           ),
