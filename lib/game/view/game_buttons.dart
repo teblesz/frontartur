@@ -4,6 +4,7 @@ class _GameButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // streamBuilder is here to start streaming player for bussiness logic (?)
+    // TODO this /\ is stupid
     return StreamBuilder<Player>(
         stream: context.read<DataRepository>().streamPlayer(),
         builder: (context, snapshot) {
@@ -17,9 +18,8 @@ class _GameButtons extends StatelessWidget {
                   return _SubmitSquadButton();
                 } else if (state.status == GameStatus.squadVoting) {
                   return _VoteSquadPanel();
-                } else if (state.status == GameStatus.questVoting &&
-                    context.read<GameCubit>().isMember(player: player)) {
-                  return _EmbarkmentCard();
+                } else if (state.status == GameStatus.questVoting) {
+                  return _EmbarkmentCardIfMember();
                 } else {
                   return const SizedBox.shrink();
                 }
@@ -126,6 +126,25 @@ class _VoteSquadButton extends StatelessWidget {
             style: const TextStyle(fontSize: 25),
           ),
         ));
+  }
+}
+
+class _EmbarkmentCardIfMember extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: context.read<GameCubit>().isCurrentPlayerAMember(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        bool isMember = snapshot.data ?? false;
+        return isMember ? _EmbarkmentCard() : const SizedBox.shrink();
+      },
+    );
   }
 }
 
