@@ -109,7 +109,11 @@ class _VoteQuestButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () {
-          // TODO if player is good and this is fail button return null
+          final playerCharacter =
+              context.read<DataRepository>().currentPlayer.character;
+          // good player cant click on "fail" button
+          if (playerCharacter == 'good' && isPositive == false) return;
+          //TODO use gamecubit here (?) (reverted in commit 7ab80bc7ad378f6f6a2186bb55a544c889e04ec1)
           context.read<DataRepository>().voteQuest(isPositive);
           disableEmbark();
           Navigator.of(context).pop();
