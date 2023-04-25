@@ -48,13 +48,13 @@ class MatchupCubit extends Cubit<MatchupState> {
   }
 
   Future<void> _assignLeader() async {
-    final numberOfPlayers = await _dataRepository.numberOfPlayers;
+    final numberOfPlayers = await _dataRepository.playersCount;
     int leaderIndex = Random().nextInt(numberOfPlayers);
     await _dataRepository.assignLeader(leaderIndex);
   }
 
   Future<void> _assignCharacters() async {
-    final numberOfPlayers = await _dataRepository.numberOfPlayers;
+    final numberOfPlayers = await _dataRepository.playersCount;
     final characters = _dataRepository.currentRoom.characters.isNotEmpty
         ? [..._dataRepository.currentRoom.characters] // clone
         : defaultCharacters(numberOfPlayers);

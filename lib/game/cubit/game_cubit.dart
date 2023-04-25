@@ -45,6 +45,8 @@ class GameCubit extends Cubit<GameState> {
     );
   }
 
+  //--------------------------------leader's logic-------------------------------------
+
   /// add player to squad
   Future<void> addMember({required Player player}) async {
     if (!_dataRepository.currentPlayer.isLeader) return;
@@ -70,26 +72,49 @@ class GameCubit extends Cubit<GameState> {
 
   Future<void> submitSquad() async {
     await _dataRepository.submitSquad();
-    // leader counts votes
+    // leader counts squad votes
     _dataRepository.subscribeSquadVotesWith(doLogic: _assessSquadVoteResults);
   }
 
-  /// leader's logic
   Future<void> _assessSquadVoteResults(List<bool> votes) async {
-    final numberOfPlayers = await _dataRepository.numberOfPlayers;
-    if (numberOfPlayers > votes.length) return;
+    final playersCount = await _dataRepository.playersCount;
+    if (playersCount > votes.length) return;
 
     _dataRepository.unsubscribeSquadVotes();
 
     final positiveVotesCount = votes.where((v) => v == true).length;
     if (positiveVotesCount > votes.length / 2) {
-      await _dataRepository.approveSquad();
+      await _dataRepository.updateSquadIsApproved();
     } else {
-      await _dataRepository.approveSquad(isApproved: false);
+      await _dataRepository.updateSquadIsApproved(isApproved: false);
       await _dataRepository.nextLeader();
       await _dataRepository.nextSquad(questNumber: state.questNumber);
     }
+
+    // leader counts quest votes
+    _dataRepository.subscribeQuestVotesWith(doLogic: _assessQuestVoteResults);
   }
+
+  Future<void> _assessQuestVoteResults(List<bool?> votes) async {
+    if (votes.any((v) => v == null)) return;
+
+    _dataRepository.unsubscribeQuestVotes();
+
+    final playersCount = await _dataRepository.playersCount;
+    final isTwoFailsQuest = _isTwoFailsQuest(playersCount, state.questNumber);
+
+    final negativeVotesCount = votes.where((v) => v == false).length;
+    if ((isTwoFailsQuest && negativeVotesCount >= 2) ||
+        (!isTwoFailsQuest && negativeVotesCount >= 1)) {
+      await _dataRepository.updateSquadIsSuccessfull();
+    } else {
+      await _dataRepository.updateSquadIsSuccessfull(isSuccessfull: false);
+    }
+
+    await _dataRepository.nextLeader();
+    await _dataRepository.nextSquad(questNumber: state.questNumber);
+  }
+  //--------------------------------players's logic-------------------------------------
 
   Future<void> voteSquad(bool vote) async {
     await _dataRepository.voteSquad(vote);
@@ -105,7 +130,7 @@ class GameCubit extends Cubit<GameState> {
           emit(state.copyWith(status: GameStatus.squadVoting));
         }
         break;
-      case GameStatus.squadVoting: // TODO add counting votes for leader
+      case GameStatus.squadVoting:
         if (squad.isApproved == null) return;
         if (squad.isApproved!) {
           emit(state.copyWith(status: GameStatus.questVoting));
@@ -114,20 +139,15 @@ class GameCubit extends Cubit<GameState> {
         }
         break;
       case GameStatus.questVoting: //TODO
-        //leader listen for results and sets up isSuccessfull, //here exception for 4th quest
-        //everybody listens for is succ and then see results
-        // get resutls
-        // leader sets up is successfull flag or it's counted everytime
-        // popup results after circle progress idicator
+        if (squad.isSuccessfull == null) return;
+        emit(state.copyWith(status: GameStatus.questResults));
+        // TODO popup results, emit either gamereuslts or squad voting after OK
         break;
       case GameStatus.questResults: //TODO
-        //giveinfoAboutVotes()
+
         if (await _checkEndGameCondition()) {
           emit(state.copyWith(status: GameStatus.gameResults));
           return;
-        }
-        if (_dataRepository.currentPlayer.isLeader) {
-          await _dataRepository.nextLeader();
         }
         break;
       case GameStatus.gameResults: //TODO
@@ -139,6 +159,7 @@ class GameCubit extends Cubit<GameState> {
     }
   }
 
+  //--------------------------------other logic-------------------------------------
   Future<bool> _checkEndGameCondition() async {
     //TODO
     // check quest votes and set up isSuccessfull
@@ -194,4 +215,8 @@ class GameCubit extends Cubit<GameState> {
   Future<bool> isCurrentPlayerAMember() async {
     return _dataRepository.isCurrentPlayerAMember();
   }
+
+//--------------------------------game rules logic-------------------------------------
+  bool _isTwoFailsQuest(int playersCount, int questNumber) =>
+      playersCount >= 7 && questNumber == 4;
 }

@@ -165,7 +165,7 @@ class DataRepository {
   }
 
 // TODO change this to a field in Room
-  Future<int> get numberOfPlayers async {
+  Future<int> get playersCount async {
     final playersSnap = await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
@@ -215,8 +215,8 @@ class DataRepository {
     );
     await playersSnap.docs[leaderIndex].reference.update({'is_leader': false});
 
-    final numberOfPlayers = await this.numberOfPlayers;
-    leaderIndex = (leaderIndex + 1) % numberOfPlayers;
+    final playersCount = await this.playersCount;
+    leaderIndex = (leaderIndex + 1) % playersCount;
     await playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
   }
 
@@ -288,7 +288,7 @@ class DataRepository {
     squadSnap.reference.update({'is_submitted': true});
   }
 
-  Future<void> approveSquad({bool isApproved = true}) async {
+  Future<void> updateSquadIsApproved({bool isApproved = true}) async {
     final squadSnap = await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
@@ -357,7 +357,7 @@ class DataRepository {
 
   void unsubscribeCurrentSquadId() => _currentSquadIdSubscription?.cancel();
 
-  //--------------------------------votings-------------------------------------
+  //--------------------------------squad voting-------------------------------------
 
   voteSquad(bool vote) {
     _firestore
@@ -403,6 +403,8 @@ class DataRepository {
         : null;
   }
 
+  //--------------------------------quest voting-------------------------------------
+
   Future<bool> isCurrentPlayerAMember() async {
     final memberId = await _getMemberIdWith(player: currentPlayer);
     return memberId != null;
@@ -419,4 +421,36 @@ class DataRepository {
         .doc(memberId)
         .update({'vote': vote});
   }
+
+  StreamSubscription? _questVotesSubscription;
+
+  void subscribeQuestVotesWith({
+    required void Function(List<bool?>) doLogic,
+  }) {
+    _questVotesSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .collection('members')
+        .snapshots()
+        .listen((snap) {
+      final votes = snap.docs.map((doc) => doc.data()['secret_vote']);
+      doLogic(List<bool?>.from(votes));
+    });
+  }
+
+  void unsubscribeQuestVotes() => _questVotesSubscription?.cancel();
+
+  Future<void> updateSquadIsSuccessfull({bool isSuccessfull = true}) async {
+    final squadSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .get();
+    squadSnap.reference.update({'is_successfull': isSuccessfull});
+  }
+
+  // DataRepository
 }
