@@ -13,9 +13,11 @@ class GameForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO change this to duration.zero (must get fresh player, cache gives old)
     Future.delayed(
         const Duration(seconds: 1), () => _showCharacterInfoDialog(context));
     return BlocListener<GameCubit, GameState>(
+      listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) => listenGameCubit(context, state),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
