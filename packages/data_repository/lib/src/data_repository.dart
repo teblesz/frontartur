@@ -388,14 +388,14 @@ class DataRepository {
 
   void unsubscribeSquadVotes() => _squadVotesSubscription?.cancel();
 
-  Future<String?> getMemberIdWith({required Player player}) async {
+  Future<String?> _getMemberIdWith({required Player player}) async {
     final memberQuerySnap = await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
         .doc(currentRoom.currentSquadId)
         .collection('members')
-        .where('player_id', isEqualTo: currentPlayer.id)
+        .where('player_id', isEqualTo: player.id)
         .limit(1)
         .get();
     return memberQuerySnap.docs.isNotEmpty
@@ -404,12 +404,12 @@ class DataRepository {
   }
 
   Future<bool> isCurrentPlayerAMember() async {
-    final memberId = await getMemberIdWith(player: currentPlayer);
+    final memberId = await _getMemberIdWith(player: currentPlayer);
     return memberId != null;
   }
 
   Future<void> voteQuest(bool vote) async {
-    final memberId = await getMemberIdWith(player: currentPlayer);
+    final memberId = await _getMemberIdWith(player: currentPlayer);
     _firestore
         .collection('rooms')
         .doc(currentRoom.id)

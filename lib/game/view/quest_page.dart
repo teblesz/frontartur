@@ -119,10 +119,8 @@ class _VoteQuestButton extends StatelessWidget {
           Navigator.of(context).pop();
         },
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(isPositive
-              ? const Color.fromARGB(120, 56, 142, 60)
-              : const Color.fromARGB(120, 211, 47, 47)),
-        ),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                isPositive ? Colors.green.shade900 : Colors.red.shade900)),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
