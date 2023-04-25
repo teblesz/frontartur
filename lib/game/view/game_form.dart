@@ -23,7 +23,7 @@ class GameForm extends StatelessWidget {
             child: _TeamWrap(),
           ),
           BlocBuilder<GameCubit, GameState>(
-              // TODO remove this
+              // TODO !!! remove this
               buildWhen: (previous, current) =>
                   previous.status != current.status,
               builder: (context, state) {
@@ -45,10 +45,12 @@ void listenGameCubit(context, state) {
     case GameStatus.questVoting:
       break;
     case GameStatus.questResults:
-      //popup
+      // popup with closeQuestResults()
       break;
     case GameStatus.gameResults:
-      //popup with leave room
+      //present gaame results, give button to go back to lobby
+      // show players characters
+      //_winningTeamIs()
       break;
   }
 }

@@ -16,14 +16,14 @@ class GameCubit extends Cubit<GameState> {
 
   GameCubit(this._dataRepository) : super(const GameState()) {
     _dataRepository.subscribeSquadWith(
-      doLogic: doGameLoop,
+      doLogic: doSquadLoop,
     ); //first squad
     _dataRepository.subscribeCurrentSquadIdWith(
       doLogic: (currentSquadId) {
         _dataRepository.unsubscribeSquadIsSubmitted();
         _dataRepository.subscribeSquadWith(
           squadId: currentSquadId,
-          doLogic: doGameLoop,
+          doLogic: doSquadLoop,
         );
       },
     ); // subs to next squads
@@ -85,14 +85,12 @@ class GameCubit extends Cubit<GameState> {
     final positiveVotesCount = votes.where((v) => v == true).length;
     if (positiveVotesCount > votes.length / 2) {
       await _dataRepository.updateSquadIsApproved();
+      _dataRepository.subscribeQuestVotesWith(doLogic: _assessQuestVoteResults);
     } else {
       await _dataRepository.updateSquadIsApproved(isApproved: false);
       await _dataRepository.nextLeader();
       await _dataRepository.nextSquad(questNumber: state.questNumber);
     }
-
-    // leader counts quest votes
-    _dataRepository.subscribeQuestVotesWith(doLogic: _assessQuestVoteResults);
   }
 
   Future<void> _assessQuestVoteResults(List<bool?> votes) async {
@@ -112,7 +110,7 @@ class GameCubit extends Cubit<GameState> {
     }
 
     await _dataRepository.nextLeader();
-    await _dataRepository.nextSquad(questNumber: state.questNumber);
+    await _dataRepository.nextSquad(questNumber: state.questNumber + 1);
   }
   //--------------------------------players's logic-------------------------------------
 
@@ -121,8 +119,7 @@ class GameCubit extends Cubit<GameState> {
   }
 
   /// steering the game course through states and squad props
-  /// reacts to changes in squad parameter and
-  Future<void> doGameLoop(Squad squad) async {
+  Future<void> doSquadLoop(Squad squad) async {
     emit(state.copyWith(questNumber: squad.questNumber)); // update questNumber
     switch (state.status) {
       case GameStatus.squadChoice:
@@ -138,41 +135,27 @@ class GameCubit extends Cubit<GameState> {
           emit(state.copyWith(status: GameStatus.squadChoice));
         }
         break;
-      case GameStatus.questVoting: //TODO
+      case GameStatus.questVoting:
         if (squad.isSuccessfull == null) return;
         emit(state.copyWith(status: GameStatus.questResults));
-        // TODO popup results, emit either gamereuslts or squad voting after OK
         break;
-      case GameStatus.questResults: //TODO
+      case GameStatus.questResults:
+        break;
+      case GameStatus.gameResults:
+        break;
+    }
+  }
 
-        if (await _checkEndGameCondition()) {
-          emit(state.copyWith(status: GameStatus.gameResults));
-          return;
-        }
-        break;
-      case GameStatus.gameResults: //TODO
-        //add state here - voting to kill merlin
-        //present gaame results, give button to go back to lobby
-        // show players characters
-
-        break;
+  Future<void> closeQuestResults() async {
+    final winningTeam = await _winningTeamIs();
+    if (winningTeam == null) {
+      emit(state.copyWith(status: GameStatus.squadChoice));
+    } else {
+      emit(state.copyWith(status: GameStatus.gameResults));
     }
   }
 
   //--------------------------------other logic-------------------------------------
-  Future<bool> _checkEndGameCondition() async {
-    //TODO
-    // check quest votes and set up isSuccessfull
-    return true;
-  }
-
-  Future<void> closeQuestResults() async {
-    //TODO
-    if (_dataRepository.currentPlayer.isLeader) {
-      await _dataRepository.nextSquad(questNumber: state.questNumber + 1);
-    }
-    emit(state.copyWith(status: GameStatus.gameResults));
-  }
 
   // TODO Add method using nextSquad
 
@@ -219,4 +202,25 @@ class GameCubit extends Cubit<GameState> {
 //--------------------------------game rules logic-------------------------------------
   bool _isTwoFailsQuest(int playersCount, int questNumber) =>
       playersCount >= 7 && questNumber == 4;
+
+  Future<bool?> _winningTeamIs() async {
+    final approvedSquads = await _dataRepository.getApprovedSquads();
+
+    int successCount = 0, failCount = 0;
+    for (var squad in approvedSquads) {
+      if (squad.isSuccessfull == null) {
+        throw const SquadMissingFieldOnResultsFailure();
+      }
+      if (squad.isSuccessfull!) {
+        successCount++;
+      } else {
+        failCount++;
+      }
+    }
+    if (successCount >= 3) return true;
+    if (failCount >= 3) return false;
+    return null;
+  }
+
+  // GameCubit
 }

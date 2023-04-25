@@ -39,3 +39,12 @@ class GameState extends Equatable {
     );
   }
 }
+
+class SquadMissingFieldOnResultsFailure implements Exception {
+  const SquadMissingFieldOnResultsFailure(
+      [this.message =
+          'Squad is approved but field is_successful field is missing, '
+              'while user displays quest results.']);
+
+  final String message;
+}

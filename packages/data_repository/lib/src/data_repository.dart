@@ -452,5 +452,17 @@ class DataRepository {
     squadSnap.reference.update({'is_successfull': isSuccessfull});
   }
 
+//TODO add simillar stream for questTiles
+  Future<List<Squad>> getApprovedSquads() async {
+    final squadsSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .where('is_approved', isEqualTo: true)
+        .get();
+    return List<Squad>.from(
+        squadsSnap.docs.map((snap) => Squad.fromFirestore(snap)));
+  }
+
   // DataRepository
 }
