@@ -94,6 +94,9 @@ class GameCubit extends Cubit<GameState> {
   }
 
   Future<void> _assessQuestVoteResults(List<bool?> votes) async {
+    // TODO change vote to enum and check them with any == voteenum.empty
+    final membersCount = await _dataRepository.membersCount;
+    if (membersCount > votes.length) return;
     if (votes.any((v) => v == null)) return;
 
     _dataRepository.unsubscribeQuestVotes();
@@ -104,9 +107,9 @@ class GameCubit extends Cubit<GameState> {
     final negativeVotesCount = votes.where((v) => v == false).length;
     if ((isTwoFailsQuest && negativeVotesCount >= 2) ||
         (!isTwoFailsQuest && negativeVotesCount >= 1)) {
-      await _dataRepository.updateSquadIsSuccessfull();
-    } else {
       await _dataRepository.updateSquadIsSuccessfull(isSuccessfull: false);
+    } else {
+      await _dataRepository.updateSquadIsSuccessfull();
     }
 
     await _dataRepository.nextLeader();
@@ -137,6 +140,7 @@ class GameCubit extends Cubit<GameState> {
         break;
       case GameStatus.questVoting:
         if (squad.isSuccessfull == null) return;
+        emit(state.copyWith(lastQuestOutcome: squad.isSuccessfull));
         emit(state.copyWith(status: GameStatus.questResults));
         break;
       case GameStatus.questResults:
@@ -147,7 +151,7 @@ class GameCubit extends Cubit<GameState> {
   }
 
   Future<void> closeQuestResults() async {
-    final winningTeam = await _winningTeamIs();
+    final winningTeam = await winningTeamIs();
     if (winningTeam == null) {
       emit(state.copyWith(status: GameStatus.squadChoice));
     } else {
@@ -203,7 +207,7 @@ class GameCubit extends Cubit<GameState> {
   bool _isTwoFailsQuest(int playersCount, int questNumber) =>
       playersCount >= 7 && questNumber == 4;
 
-  Future<bool?> _winningTeamIs() async {
+  Future<bool?> winningTeamIs() async {
     final approvedSquads = await _dataRepository.getApprovedSquads();
 
     int successCount = 0, failCount = 0;

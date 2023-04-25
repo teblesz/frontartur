@@ -13,6 +13,8 @@ class GameForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(
+        const Duration(seconds: 1), () => _showCharacterInfoDialog(context));
     return BlocListener<GameCubit, GameState>(
       listener: (context, state) => listenGameCubit(context, state),
       child: Column(
@@ -45,36 +47,107 @@ void listenGameCubit(context, state) {
     case GameStatus.questVoting:
       break;
     case GameStatus.questResults:
-      // popup with closeQuestResults()
+      _pushQuestResultsDialog(context);
       break;
     case GameStatus.gameResults:
-      //present gaame results, give button to go back to lobby
-      // show players characters
-      //_winningTeamIs()
+      _pushGameResultsDialog(context);
       break;
   }
 }
 
-Future<void> _pushSquadVotingDialog(BuildContext context) {
+Future<void> _showCharacterInfoDialog(BuildContext context) {
   return showDialog<void>(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Vote this squad"),
-          content: null,
+          title: const Text("Quest results"),
+          content: // TODO add button to unveil,
+              Text(
+            context.read<DataRepository>().currentPlayer.character ?? "error",
+            style: const TextStyle(
+              fontSize: 25,
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text("Approve"),
+              child: const Text("Close info"),
             ),
+          ],
+        );
+      });
+}
+
+Future<void> _pushQuestResultsDialog(BuildContext context) {
+  return showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Quest results"),
+          content: context.read<GameCubit>().state.lastQuestOutcome
+              ? Text(
+                  "Quest Successfull!",
+                  style: TextStyle(
+                    color: Colors.green.shade900,
+                    fontSize: 50,
+                  ),
+                )
+              : Text(
+                  "Quest Failed",
+                  style: TextStyle(
+                    color: Colors.red.shade900,
+                    fontSize: 50,
+                  ),
+                ),
+          actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text("Reject"),
+              child: const Text("Close result"),
+            ),
+          ],
+        );
+      });
+}
+
+//present gaame results, give button to go back to lobby
+// show players characters
+//_winningTeamIs()
+Future<void> _pushGameResultsDialog(BuildContext context) {
+  return showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Game results"),
+          content: context.read<GameCubit>().state.lastQuestOutcome
+              ? Text(
+                  "Game won by Good team!\nKingdom is saved.",
+                  style: TextStyle(
+                    color: Colors.green.shade900,
+                    fontSize: 30,
+                  ),
+                )
+              : Text(
+                  "Game won by Evil team!\nKigdom is lost.",
+                  style: TextStyle(
+                    color: Colors.red.shade900,
+                    fontSize: 30,
+                  ),
+                ),
+          // TODO add more info here
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                // TODO leave game !
+              },
+              child: const Text("Exit Game"),
             ),
           ],
         );

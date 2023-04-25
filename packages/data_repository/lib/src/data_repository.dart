@@ -435,7 +435,7 @@ class DataRepository {
         .collection('members')
         .snapshots()
         .listen((snap) {
-      final votes = snap.docs.map((doc) => doc.data()['secret_vote']);
+      final votes = snap.docs.map((doc) => doc.data()['vote']);
       doLogic(List<bool?>.from(votes));
     });
   }
@@ -464,5 +464,16 @@ class DataRepository {
         squadsSnap.docs.map((snap) => Squad.fromFirestore(snap)));
   }
 
+// TODO change this to a field in squad
+  Future<int> get membersCount async {
+    final membersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .collection('members')
+        .get();
+    return membersSnap.size;
+  }
   // DataRepository
 }
