@@ -4,14 +4,6 @@ import 'package:equatable/equatable.dart';
 
 part 'game_state.dart';
 
-enum QuestStatus {
-  success,
-  defeat,
-  ongoing,
-  upcoming,
-  error,
-}
-
 class GameCubit extends Cubit<GameState> {
   final DataRepository _dataRepository;
 
@@ -139,6 +131,11 @@ class GameCubit extends Cubit<GameState> {
         break;
       case GameStatus.questVoting:
         if (squad.isSuccessfull == null) return;
+        emit(state.copyWith(
+            questStatuses: state.insertToQuestStatuses(
+          squad.isSuccessfull == true ? QuestStatus.success : QuestStatus.fail,
+        )));
+
         emit(state.copyWith(lastQuestOutcome: squad.isSuccessfull));
         emit(state.copyWith(status: GameStatus.questResults));
         break;
@@ -153,6 +150,8 @@ class GameCubit extends Cubit<GameState> {
     final winningTeam = await winningTeamIs();
     if (winningTeam == null) {
       emit(state.copyWith(status: GameStatus.squadChoice));
+      emit(state.copyWith(
+          questStatuses: state.insertToQuestStatuses(QuestStatus.ongoing)));
     } else {
       emit(state.copyWith(status: GameStatus.gameResults));
     }
@@ -160,20 +159,6 @@ class GameCubit extends Cubit<GameState> {
 
   Future<bool> isCurrentPlayerAMember() async {
     return _dataRepository.isCurrentPlayerAMember();
-  }
-
-  //--------------------------------other logic-------------------------------------
-
-  Stream<QuestStatus> streamQuestResult({required int questNumber}) {
-    return _dataRepository
-        .streamLatestSquadWith(questNumber: questNumber)
-        .map((squad) {
-      if (squad == null) return QuestStatus.upcoming;
-      if (squad.isSuccessfull == null) return QuestStatus.ongoing;
-      if (squad.isSuccessfull == true) return QuestStatus.success;
-      if (squad.isSuccessfull == false) return QuestStatus.defeat;
-      return QuestStatus.error;
-    });
   }
 
 //--------------------------------game rules logic-------------------------------------

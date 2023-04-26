@@ -484,21 +484,5 @@ class DataRepository {
     return membersSnap.size;
   }
 
-  //--------------------------------results-------------------------------------
-  Stream<Squad?> streamLatestSquadWith({required int questNumber}) {
-    return _firestore
-        .collection('rooms')
-        .doc(currentRoom.id)
-        .collection('squads')
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map((snap) {
-      for (var doc in snap.docs) {
-        final squad = Squad.fromFirestore(doc);
-        if (squad.questNumber == questNumber) return squad;
-      }
-      return null;
-    });
-  }
   // DataRepository
 }

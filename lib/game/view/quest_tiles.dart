@@ -7,31 +7,40 @@ class _QuestTiles extends StatelessWidget {
       color: const Color.fromARGB(172, 63, 63, 63),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const <Widget>[
-            _QuestTile(questNumber: 1),
-            _QuestTile(questNumber: 2),
-            _QuestTile(questNumber: 3),
-            _QuestTile(questNumber: 4),
-            _QuestTile(questNumber: 5),
-          ],
-        ),
+        child: BlocBuilder<GameCubit, GameState>(
+            buildWhen: (previous, current) =>
+                previous.questStatuses != current.questStatuses,
+            builder: (context, state) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _QuestTile(questNumber: 1, gameState: state),
+                  _QuestTile(questNumber: 2, gameState: state),
+                  _QuestTile(questNumber: 3, gameState: state),
+                  _QuestTile(questNumber: 4, gameState: state),
+                  _QuestTile(questNumber: 5, gameState: state),
+                ],
+              );
+            }),
       ),
     );
   }
 }
 
 class _QuestTile extends StatelessWidget {
-  const _QuestTile({required this.questNumber});
+  const _QuestTile({
+    required this.questNumber,
+    required this.gameState,
+  });
 
   final int questNumber;
+  final GameState gameState;
 
-  Color _questTileColor(QuestStatus? result) {
-    switch (result) {
+  Color _questTileColor(QuestStatus? questStatus) {
+    switch (questStatus) {
       case QuestStatus.success:
         return Colors.green.shade700;
-      case QuestStatus.defeat:
+      case QuestStatus.fail:
         return Colors.red.shade700;
       case QuestStatus.ongoing:
         return const Color.fromARGB(255, 64, 134, 169);
@@ -43,11 +52,11 @@ class _QuestTile extends StatelessWidget {
     }
   }
 
-  IconData _questTileIconData(QuestStatus? result) {
-    switch (result) {
+  IconData _questTileIconData(QuestStatus? questStatus) {
+    switch (questStatus) {
       case QuestStatus.success:
         return Icons.done;
-      case QuestStatus.defeat:
+      case QuestStatus.fail:
         return Icons.close;
       case QuestStatus.ongoing:
       case QuestStatus.upcoming:
@@ -60,24 +69,18 @@ class _QuestTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuestStatus>(
-      stream:
-          context.read<GameCubit>().streamQuestResult(questNumber: questNumber),
-      builder: (context, snapshot) {
-        var result = snapshot.data;
-        return CircleAvatar(
-          radius: 30,
-          backgroundColor: _questTileColor(result),
-          child: IconButton(
-            iconSize: 40,
-            color: Colors.white,
-            icon: Icon(_questTileIconData(result)),
-            onPressed: () {
-              // TODO !! quest info
-            },
-          ),
-        );
-      },
+    final questStatus = gameState.questStatuses[questNumber - 1];
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: _questTileColor(questStatus),
+      child: IconButton(
+        iconSize: 40,
+        color: Colors.white,
+        icon: Icon(_questTileIconData(questStatus)),
+        onPressed: () {
+          // TODO !! quest info
+        },
+      ),
     );
   }
 }
