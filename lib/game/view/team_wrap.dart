@@ -102,19 +102,30 @@ class _PlayerCard extends StatelessWidget {
 class _SquadListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Member>>(
-      stream: context.read<GameCubit>().streamMembersList(),
+    // TODO move curretnsqadid to cubit and make blocbuilder here instead
+    return StreamBuilder<String>(
+      stream: context.read<DataRepository>().streamCurrentSquadId(),
       builder: (context, snapshot) {
-        var members = snapshot.data;
-        return members == null
+        var currentSquadId = snapshot.data;
+        return currentSquadId == null
             ? const Text('<squad is empty>')
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  ...members.map(
-                    (member) => _MemberCard(member: member),
-                  ),
-                ],
+            : StreamBuilder<List<Member>>(
+                stream: context
+                    .read<GameCubit>()
+                    .streamMembersList(squadId: currentSquadId),
+                builder: (context, snapshot) {
+                  var members = snapshot.data;
+                  return members == null
+                      ? const Text('<squad is empty>')
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            ...members.map(
+                              (member) => _MemberCard(member: member),
+                            ),
+                          ],
+                        );
+                },
               );
       },
     );

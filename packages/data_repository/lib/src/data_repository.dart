@@ -234,12 +234,12 @@ class DataRepository {
   }
 
   //--------------------------------squad members-------------------------------------
-  Stream<List<Member>> streamMembersList({required int questNumber}) {
+  Stream<List<Member>> streamMembersList({required squadId}) {
     return _firestore
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(currentRoom.currentSquadId)
+        .doc(squadId)
         .collection('members')
         .snapshots()
         .map((list) =>
@@ -314,12 +314,12 @@ class DataRepository {
 
   StreamSubscription? _squadIsSubmittedSubscription;
 
-  void subscribeSquadWith({
+  void subscribeSquadIsSubmittedWith({
     String squadId = '',
     required void Function(Squad) doLogic,
   }) async {
+    await refreshRoomCache();
     if (squadId == '') {
-      await refreshRoomCache();
       squadId = currentRoom.currentSquadId;
     }
 
@@ -338,7 +338,7 @@ class DataRepository {
 
   StreamSubscription? _currentSquadIdSubscription;
 
-  String _oldCurrentSquadId = ''; // TODO remove this (?)
+  String currentSquadId = ''; // TODO remove this (?)
 
   void subscribeCurrentSquadIdWith({
     required void Function(String) doLogic,
@@ -348,14 +348,22 @@ class DataRepository {
         .doc(currentRoom.id)
         .snapshots()
         .listen((snap) {
-      final currentSquadId = Room.fromFirestore(snap).currentSquadId;
-      if (currentSquadId == _oldCurrentSquadId) return;
-      _oldCurrentSquadId = currentSquadId;
-      doLogic(currentSquadId);
+      final newCurrentSquadId = Room.fromFirestore(snap).currentSquadId;
+      if (newCurrentSquadId == currentSquadId) return;
+      currentSquadId = newCurrentSquadId;
+      doLogic(newCurrentSquadId);
     });
   }
 
   void unsubscribeCurrentSquadId() => _currentSquadIdSubscription?.cancel();
+
+  Stream<String> streamCurrentSquadId() {
+    return _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .snapshots()
+        .map((roomSnap) => Room.fromFirestore(roomSnap).currentSquadId);
+  }
 
   //--------------------------------squad voting-------------------------------------
 

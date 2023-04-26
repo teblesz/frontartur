@@ -15,13 +15,13 @@ class GameCubit extends Cubit<GameState> {
   final DataRepository _dataRepository;
 
   GameCubit(this._dataRepository) : super(const GameState()) {
-    _dataRepository.subscribeSquadWith(
+    _dataRepository.subscribeSquadIsSubmittedWith(
       doLogic: doSquadLoop,
     ); //first squad
     _dataRepository.subscribeCurrentSquadIdWith(
       doLogic: (currentSquadId) {
         _dataRepository.unsubscribeSquadIsSubmitted();
-        _dataRepository.subscribeSquadWith(
+        _dataRepository.subscribeSquadIsSubmittedWith(
           squadId: currentSquadId,
           doLogic: doSquadLoop,
         );
@@ -39,10 +39,8 @@ class GameCubit extends Cubit<GameState> {
     return _dataRepository.streamPlayersList();
   }
 
-  Stream<List<Member>> streamMembersList() {
-    return _dataRepository.streamMembersList(
-      questNumber: state.questNumber,
-    );
+  Stream<List<Member>> streamMembersList({required squadId}) {
+    return _dataRepository.streamMembersList(squadId: squadId);
   }
 
   //--------------------------------leader's logic-------------------------------------
@@ -182,17 +180,18 @@ class GameCubit extends Cubit<GameState> {
   Stream<QuestStatus> streamQuestResult({required int questNumber}) {
     //TODO trash this and rework
     //TODO !!! exception for 4th
-    return _dataRepository
-        .streamMembersList(questNumber: questNumber)
-        .map((members) {
-      if (members.isEmpty) return QuestStatus.upcoming;
-      if (members.any((member) => member.secretVote == null)) {
-        return QuestStatus.ongoing;
-      }
-      return members.any((member) => member.secretVote == false)
-          ? QuestStatus.defeat
-          : QuestStatus.success;
-    });
+    // return _dataRepository
+    //     .streamMembersList(questNumber: questNumber)
+    //     .map((members) {
+    //   if (members.isEmpty) return QuestStatus.upcoming;
+    //   if (members.any((member) => member.secretVote == null)) {
+    //     return QuestStatus.ongoing;
+    //   }
+    //   return members.any((member) => member.secretVote == false)
+    //       ? QuestStatus.defeat
+    //       : QuestStatus.success;
+    // });
+    return Stream.fromFuture(Future.value(QuestStatus.success));
   }
 
   void checkQuestInfo(int questNumber) {

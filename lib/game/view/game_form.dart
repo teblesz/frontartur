@@ -109,6 +109,7 @@ Future<void> _pushQuestResultsDialog(BuildContext context) {
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
+                // TODO emit state
               },
               child: const Text("Close result"),
             ),
