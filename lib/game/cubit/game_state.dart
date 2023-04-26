@@ -31,7 +31,7 @@ class GameState extends Equatable {
     this.questNumber = 1,
     this.lastQuestOutcome = false,
     this.questStatuses = const [
-      QuestStatus.upcoming,
+      QuestStatus.ongoing,
       QuestStatus.upcoming,
       QuestStatus.upcoming,
       QuestStatus.upcoming,
