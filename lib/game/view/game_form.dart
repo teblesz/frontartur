@@ -73,13 +73,7 @@ Future<void> _showCharacterInfoDialog(BuildContext context) {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text("Your character is:"),
-          content: // TODO add button to unveil,
-              Text(
-            context.read<DataRepository>().currentPlayer.character ?? "error",
-            style: const TextStyle(
-              fontSize: 25,
-            ),
-          ),
+          content: _CharacterInfo(),
           actions: [
             TextButton(
               onPressed: () {
@@ -90,6 +84,53 @@ Future<void> _showCharacterInfoDialog(BuildContext context) {
           ],
         );
       });
+}
+
+class _CharacterInfo extends StatefulWidget {
+  @override
+  State<_CharacterInfo> createState() => _CharacterInfoState();
+}
+
+class _CharacterInfoState extends State<_CharacterInfo> {
+  bool _characterHidden = true;
+  void showHideCharacter() {
+    setState(() {
+      _characterHidden = !_characterHidden;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Builder(builder: (context) {
+          return _characterHidden
+              ? const SizedBox.shrink()
+              : Text(
+                  context.read<DataRepository>().currentPlayer.character ??
+                      "error",
+                  style: const TextStyle(
+                    fontSize: 25,
+                  ),
+                );
+        }),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: () => setState(() {
+            _characterHidden = !_characterHidden;
+          }),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              _characterHidden ? "Show" : "Hide",
+              style: const TextStyle(fontSize: 30),
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
 
 Future<void> _pushQuestResultsDialog(BuildContext context) {
