@@ -114,11 +114,7 @@ class _StartGameButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: () {
-        // TODO !!!!! forward info to players.
-        // assign leader, others stream info if there is a leader
-        context.read<MatchupCubit>().initGame().then(
-              (_) => context.read<RoomCubit>().goToGame(),
-            );
+        context.read<MatchupCubit>().initGame();
       },
       child: const Text('Start game', style: TextStyle(fontSize: 20)),
     );
@@ -141,7 +137,7 @@ Future<void> _showNickDialog(BuildContext context) {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Enter your nick for this play"),
+          title: const Text("Enter your nick"),
           content: TextField(
             onChanged: (nick) => context.read<MatchupCubit>().nickChanged(nick),
             decoration: const InputDecoration(
@@ -158,6 +154,7 @@ Future<void> _showNickDialog(BuildContext context) {
                 final user = context.read<AppBloc>().state.user;
                 context.read<MatchupCubit>().writeinPlayerWithUserId(user.id);
                 Navigator.of(dialogContext).pop();
+                context.read<RoomCubit>().subscribeToGameStarted();
               },
               child: const Text("Confirm"),
             )

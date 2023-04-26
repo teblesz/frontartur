@@ -19,9 +19,6 @@ class RoomCubit extends Cubit<RoomState> {
   /// directs to matchup page
   void goToMatchup() {
     emit(state.copyWith(status: RoomStatus.inMathup));
-    _dataRepository.subscribeGameStartedWith((gameStarted) {
-      if (gameStarted) goToGame();
-    });
   }
 
   /// directs back to lobby
@@ -29,5 +26,11 @@ class RoomCubit extends Cubit<RoomState> {
     _dataRepository.unsubscribeGameStarted();
     _dataRepository.leaveRoom();
     emit(state.copyWith(status: RoomStatus.inLobby));
+  }
+
+  void subscribeToGameStarted() {
+    _dataRepository.subscribeGameStartedWith(doLogic: (gameStarted) {
+      if (gameStarted) goToGame();
+    });
   }
 }

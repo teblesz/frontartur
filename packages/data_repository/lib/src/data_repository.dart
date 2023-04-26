@@ -7,7 +7,7 @@ import 'package:cache/cache.dart';
 
 part 'data_failures.dart';
 // TODO unique room name (kahoot-like) https://stackoverflow.com/questions/47543251/firestore-unique-index-or-unique-constraint
-// TODO divide this moloch (mixins?, extension methods?)
+// TODO divide this moloch (mixins?, extension methods?) separate classes?
 // TODO limit number of players in room
 
 class DataRepository {
@@ -25,6 +25,13 @@ class DataRepository {
 
   Room get currentRoom {
     return _cache.read<Room>(key: roomCacheKey) ?? Room.empty;
+  }
+
+  /// room stream getter
+  Future<void> refreshRoomCache() async {
+    final roomSnap =
+        await _firestore.collection('rooms').doc(currentRoom.id).get();
+    _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
   }
 
   /// room stream getter
@@ -68,22 +75,30 @@ class DataRepository {
     //TODO this feature
   }
 
-  Future<void> setGameStarted() async {
+  /// sets game_started and current_squad_id fields in room document
+  Future<void> startGame() async {
+    final firstSquadRef = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .add(Squad.init(1).toFirestore());
+
     final roomSnap =
         await _firestore.collection('rooms').doc(currentRoom.id).get();
-    roomSnap.reference.update({'game_started': true});
+
+    await roomSnap.reference.update({'current_squad_id': firstSquadRef.id});
+    await roomSnap.reference.update({'game_started': true});
   }
 
-  StreamSubscription<DocumentSnapshot>? _gameStartedSubscription;
+  StreamSubscription? _gameStartedSubscription;
 
-  void subscribeGameStartedWith(void Function(bool) doLogic) {
+  void subscribeGameStartedWith({required void Function(bool) doLogic}) {
     _gameStartedSubscription = _firestore
         .collection('rooms')
         .doc(currentRoom.id)
         .snapshots()
         .listen((snap) {
-      final gameStarted = Room.fromFirestore(snap).gameStarted;
-      doLogic(gameStarted);
+      doLogic(Room.fromFirestore(snap).gameStarted);
     });
   }
 
@@ -149,7 +164,8 @@ class DataRepository {
             list.docs.map((snap) => Player.fromFirestore(snap)).toList());
   }
 
-  Future<int> get numberOfPlayers async {
+// TODO change this to a field in Room
+  Future<int> get playersCount async {
     final playersSnap = await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
@@ -183,8 +199,25 @@ class DataRepository {
         .doc(currentRoom.id)
         .collection('players')
         .get();
+    await playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
+  }
 
-    playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
+  Future<void> nextLeader() async {
+    //find leader id, set false, find next id, set true, circling
+    final playersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players')
+        .get();
+
+    int leaderIndex = playersSnap.docs.indexWhere(
+      (playerSnap) => Player.fromFirestore(playerSnap).isLeader,
+    );
+    await playersSnap.docs[leaderIndex].reference.update({'is_leader': false});
+
+    final playersCount = await this.playersCount;
+    leaderIndex = (leaderIndex + 1) % playersCount;
+    await playersSnap.docs[leaderIndex].reference.update({'is_leader': true});
   }
 
   Future<void> removePlayer({required String playerId}) async {
@@ -200,15 +233,13 @@ class DataRepository {
         .delete();
   }
 
-  //--------------------------------squad-------------------------------------
-  // TODO differenciate squad by voting, not quest
-
-  Stream<List<Member>> streamMembersList({required int questNumber}) {
+  //--------------------------------squad members-------------------------------------
+  Stream<List<Member>> streamMembersList({required squadId}) {
     return _firestore
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(questNumber.toString())
+        .doc(squadId)
         .collection('members')
         .snapshots()
         .map((list) =>
@@ -225,7 +256,7 @@ class DataRepository {
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(questNumber.toString())
+        .doc(currentRoom.currentSquadId)
         .collection('members')
         .add(Member(playerId: playerId, nick: nick).toFirestore());
   }
@@ -239,25 +270,219 @@ class DataRepository {
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(questNumber.toString())
+        .doc(currentRoom.currentSquadId)
         .collection('members')
         .doc(memberId)
         .delete();
   }
 
-  /// remove all players from squad
-  Future<void> removeAllMembers({
-    required int questNumber,
-  }) async {
-    final snapshots = await _firestore
+  //--------------------------------squads-------------------------------------
+
+  Future<void> submitSquad() async {
+    final squadSnap = await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
         .collection('squads')
-        .doc(questNumber.toString())
+        .doc(currentRoom.currentSquadId)
+        .get();
+    squadSnap.reference.update({'is_submitted': true});
+  }
+
+  Future<void> updateSquadIsApproved({bool isApproved = true}) async {
+    final squadSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .get();
+    squadSnap.reference.update({'is_approved': isApproved});
+  }
+
+  /// creates new squad and sets new value for current_squad_id
+  Future<void> nextSquad({required int questNumber}) async {
+    final newSquadRef = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .add(Squad.init(questNumber).toFirestore());
+
+    final roomSnap =
+        await _firestore.collection('rooms').doc(currentRoom.id).get();
+
+    roomSnap.reference.update({'current_squad_id': newSquadRef.id});
+  }
+
+  StreamSubscription? _squadIsSubmittedSubscription;
+
+  void subscribeSquadIsSubmittedWith({
+    String squadId = '',
+    required void Function(Squad) doLogic,
+  }) async {
+    await refreshRoomCache();
+    if (squadId == '') {
+      squadId = currentRoom.currentSquadId;
+    }
+
+    _squadIsSubmittedSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(squadId)
+        .snapshots()
+        .listen(
+          (snap) => doLogic(Squad.fromFirestore(snap)),
+        );
+  }
+
+  void unsubscribeSquadIsSubmitted() => _squadIsSubmittedSubscription?.cancel();
+
+  StreamSubscription? _currentSquadIdSubscription;
+
+  String currentSquadId = ''; // TODO remove this (?)
+
+  void subscribeCurrentSquadIdWith({
+    required void Function(String) doLogic,
+  }) {
+    _currentSquadIdSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .snapshots()
+        .listen((snap) {
+      final newCurrentSquadId = Room.fromFirestore(snap).currentSquadId;
+      if (newCurrentSquadId == currentSquadId) return;
+      currentSquadId = newCurrentSquadId;
+      doLogic(newCurrentSquadId);
+    });
+  }
+
+  void unsubscribeCurrentSquadId() => _currentSquadIdSubscription?.cancel();
+
+  Stream<String> streamCurrentSquadId() {
+    return _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .snapshots()
+        .map((roomSnap) => Room.fromFirestore(roomSnap).currentSquadId);
+  }
+
+  //--------------------------------squad voting-------------------------------------
+
+  voteSquad(bool vote) {
+    _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .update({
+      'votes': FieldValue.arrayUnion([vote])
+    });
+  }
+
+  StreamSubscription? _squadVotesSubscription;
+
+  void subscribeSquadVotesWith({
+    required void Function(List<bool>) doLogic,
+  }) {
+    _squadVotesSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .snapshots()
+        .listen((snap) {
+      doLogic(List<bool>.from(snap['votes']));
+    });
+  }
+
+  void unsubscribeSquadVotes() => _squadVotesSubscription?.cancel();
+
+  Future<String?> _getMemberIdWith({required Player player}) async {
+    final memberQuerySnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .collection('members')
+        .where('player_id', isEqualTo: player.id)
+        .limit(1)
+        .get();
+    return memberQuerySnap.docs.isNotEmpty
+        ? memberQuerySnap.docs.first.id
+        : null;
+  }
+
+  //--------------------------------quest voting-------------------------------------
+
+  Future<bool> isCurrentPlayerAMember() async {
+    final memberId = await _getMemberIdWith(player: currentPlayer);
+    return memberId != null;
+  }
+
+  Future<void> voteQuest(bool vote) async {
+    final memberId = await _getMemberIdWith(player: currentPlayer);
+    _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .collection('members')
+        .doc(memberId)
+        .update({'vote': vote});
+  }
+
+  StreamSubscription? _questVotesSubscription;
+
+  void subscribeQuestVotesWith({
+    required void Function(List<bool?>) doLogic,
+  }) {
+    _questVotesSubscription = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .collection('members')
+        .snapshots()
+        .listen((snap) {
+      final votes = snap.docs.map((doc) => doc.data()['vote']);
+      doLogic(List<bool?>.from(votes));
+    });
+  }
+
+  void unsubscribeQuestVotes() => _questVotesSubscription?.cancel();
+
+  Future<void> updateSquadIsSuccessfull({bool isSuccessfull = true}) async {
+    final squadSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
+        .get();
+    squadSnap.reference.update({'is_successfull': isSuccessfull});
+  }
+
+//TODO add simillar stream for questTiles
+  Future<List<Squad>> getApprovedSquads() async {
+    final squadsSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .where('is_approved', isEqualTo: true)
+        .get();
+    return List<Squad>.from(
+        squadsSnap.docs.map((snap) => Squad.fromFirestore(snap)));
+  }
+
+// TODO change this to a field in squad
+  Future<int> get membersCount async {
+    final membersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(currentRoom.currentSquadId)
         .collection('members')
         .get();
-    for (var doc in snapshots.docs) {
-      await doc.reference.delete();
-    }
+    return membersSnap.size;
   }
+
+  // DataRepository
 }
