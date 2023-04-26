@@ -2,6 +2,7 @@ import 'package:data_repository/data_repository.dart';
 import 'package:fluttartur/game/cubit/game_cubit.dart';
 import 'package:fluttartur/game/view/quest_page.dart';
 import 'package:fluttartur/home/home.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,17 +28,24 @@ class GameForm extends StatelessWidget {
           Expanded(
             child: _TeamWrap(),
           ),
-          BlocBuilder<GameCubit, GameState>(
-              // TODO !!! remove this
-              buildWhen: (previous, current) =>
-                  previous.status != current.status,
-              builder: (context, state) {
-                return Text(state.status.name);
-              }),
+          _CurrentStatus(),
           _GameButtons(),
         ],
       ),
     );
+  }
+}
+
+class _CurrentStatus extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return !kDebugMode
+        ? const SizedBox.shrink()
+        : BlocBuilder<GameCubit, GameState>(
+            buildWhen: (previous, current) => previous.status != current.status,
+            builder: (context, state) {
+              return Text(state.status.name);
+            });
   }
 }
 
