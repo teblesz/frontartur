@@ -9,6 +9,7 @@ enum QuestStatus {
   defeat,
   ongoing,
   upcoming,
+  error,
 }
 
 class GameCubit extends Cubit<GameState> {
@@ -157,49 +158,22 @@ class GameCubit extends Cubit<GameState> {
     }
   }
 
-  //--------------------------------other logic-------------------------------------
-
-  // TODO Add method using nextSquad
-
-  //Subscribtion to isSubmitted
-  // state = squadVOting
-  // doLogic:
-  // Navigator.push(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => const MissionPage()),
-  //       );
-
-  //--------------
-
-  // bool isQuestResultUnknown({required int questNumber}) {
-  //   if (state.questNumber < questNumber) return true;
-  //   if (state.questNumber == questNumber &&
-  //       state.status != GameStatus.questResults) return true;
-  //   return false;
-  // } // TODO use above thing in quest results preferably
-  Stream<QuestStatus> streamQuestResult({required int questNumber}) {
-    //TODO trash this and rework
-    //TODO !!! exception for 4th
-    // return _dataRepository
-    //     .streamMembersList(questNumber: questNumber)
-    //     .map((members) {
-    //   if (members.isEmpty) return QuestStatus.upcoming;
-    //   if (members.any((member) => member.secretVote == null)) {
-    //     return QuestStatus.ongoing;
-    //   }
-    //   return members.any((member) => member.secretVote == false)
-    //       ? QuestStatus.defeat
-    //       : QuestStatus.success;
-    // });
-    return Stream.fromFuture(Future.value(QuestStatus.success));
-  }
-
-  void checkQuestInfo(int questNumber) {
-    //if quest.successfull ?? giveinfoAboutVotes()
-  }
-
   Future<bool> isCurrentPlayerAMember() async {
     return _dataRepository.isCurrentPlayerAMember();
+  }
+
+  //--------------------------------other logic-------------------------------------
+
+  Stream<QuestStatus> streamQuestResult({required int questNumber}) {
+    return _dataRepository
+        .streamLatestSquadWith(questNumber: questNumber)
+        .map((squad) {
+      if (squad == null) return QuestStatus.upcoming;
+      if (squad.isSuccessfull == null) return QuestStatus.ongoing;
+      if (squad.isSuccessfull == true) return QuestStatus.success;
+      if (squad.isSuccessfull == false) return QuestStatus.defeat;
+      return QuestStatus.error;
+    });
   }
 
 //--------------------------------game rules logic-------------------------------------

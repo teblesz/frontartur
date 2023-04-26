@@ -27,7 +27,7 @@ class _QuestTile extends StatelessWidget {
 
   final int questNumber;
 
-  Color questTileColor(QuestStatus? result) {
+  Color _questTileColor(QuestStatus? result) {
     switch (result) {
       case QuestStatus.success:
         return Colors.green.shade700;
@@ -37,12 +37,13 @@ class _QuestTile extends StatelessWidget {
         return const Color.fromARGB(255, 64, 134, 169);
       case QuestStatus.upcoming:
         return const Color.fromARGB(255, 13, 66, 110);
+      case QuestStatus.error:
       case null:
         return const Color.fromARGB(255, 35, 35, 35);
     }
   }
 
-  IconData questTileIconData(QuestStatus? result) {
+  IconData _questTileIconData(QuestStatus? result) {
     switch (result) {
       case QuestStatus.success:
         return Icons.done;
@@ -51,6 +52,7 @@ class _QuestTile extends StatelessWidget {
       case QuestStatus.ongoing:
       case QuestStatus.upcoming:
         return Icons.location_on;
+      case QuestStatus.error:
       case null:
         return Icons.error_outline;
     }
@@ -65,13 +67,13 @@ class _QuestTile extends StatelessWidget {
         var result = snapshot.data;
         return CircleAvatar(
           radius: 30,
-          backgroundColor: questTileColor(result),
+          backgroundColor: _questTileColor(result),
           child: IconButton(
             iconSize: 40,
             color: Colors.white,
-            icon: Icon(questTileIconData(result)),
+            icon: Icon(_questTileIconData(result)),
             onPressed: () {
-              // TODO quest info
+              // TODO !! quest info
             },
           ),
         );

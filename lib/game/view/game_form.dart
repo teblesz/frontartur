@@ -1,6 +1,7 @@
 import 'package:data_repository/data_repository.dart';
 import 'package:fluttartur/game/cubit/game_cubit.dart';
 import 'package:fluttartur/game/view/quest_page.dart';
+import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -63,7 +64,7 @@ Future<void> _showCharacterInfoDialog(BuildContext context) {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Quest results"),
+          title: const Text("Your character is:"),
           content: // TODO add button to unveil,
               Text(
             context.read<DataRepository>().currentPlayer.character ?? "error",
@@ -109,7 +110,7 @@ Future<void> _pushQuestResultsDialog(BuildContext context) {
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
-                // TODO emit state
+                context.read<GameCubit>().closeQuestResults();
               },
               child: const Text("Close result"),
             ),
@@ -148,7 +149,7 @@ Future<void> _pushGameResultsDialog(BuildContext context) {
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
-                // TODO leave game !
+                context.read<RoomCubit>().leaveRoom();
               },
               child: const Text("Exit Game"),
             ),

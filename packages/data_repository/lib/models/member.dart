@@ -9,13 +9,13 @@ class Member extends Equatable {
     this.id = '',
     required this.playerId,
     required this.nick,
-    this.secretVote,
+    this.vote,
   });
 
   final String id;
   final String playerId;
   final String nick;
-  final bool? secretVote;
+  final bool? vote;
 
   /// Empty member which represents that user is currently not in any member.
   static const empty = Member(id: '', playerId: '', nick: '');
@@ -27,7 +27,7 @@ class Member extends Equatable {
   bool get isNotEmpty => this != Member.empty;
 
   @override
-  List<Object?> get props => [id, playerId, nick, secretVote];
+  List<Object?> get props => [id, playerId, nick, vote];
 
   factory Member.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data();
@@ -35,7 +35,7 @@ class Member extends Equatable {
       id: doc.id,
       playerId: data?["player_id"],
       nick: data?['nick'],
-      secretVote: data?['secret_vote'],
+      vote: data?['secret_vote'],
     );
   }
 
@@ -43,7 +43,7 @@ class Member extends Equatable {
     return {
       "player_id": playerId,
       "nick": nick,
-      if (secretVote != null) "secret_vote": secretVote,
+      if (vote != null) "secret_vote": vote,
     };
   }
 }
