@@ -11,7 +11,8 @@ class _TeamWrap extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Court:", style: TextStyle(fontSize: 30)),
+                Text(AppLocalizations.of(context).court,
+                    style: TextStyle(fontSize: 30)),
                 Expanded(
                   child: SingleChildScrollView(
                     child: _PlayerListView(),
@@ -23,7 +24,8 @@ class _TeamWrap extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text("Squad:", style: TextStyle(fontSize: 30)),
+                Text(AppLocalizations.of(context).squad,
+                    style: TextStyle(fontSize: 30)),
                 Expanded(
                   child: SingleChildScrollView(
                     child: _SquadListView(),

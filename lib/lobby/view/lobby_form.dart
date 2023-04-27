@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:formz/formz.dart';
 import 'package:fluttartur/widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LobbyForm extends StatelessWidget {
   const LobbyForm({super.key});
@@ -24,7 +25,6 @@ class LobbyForm extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  //Text(AppLocalizations.of(context).helloWorld),
                   _UsersEmail(user: user),
                   const SizedBox(height: 8),
                   SizedBox(
@@ -72,9 +72,9 @@ class _RoomIdInput extends StatelessWidget {
     return TextField(
       onChanged: (roomId) => context.read<LobbyCubit>().roomIdChanged(roomId),
       //keyboardType: TextInputType.number,
-      decoration: const InputDecoration(
-        border: UnderlineInputBorder(),
-        labelText: 'room ID',
+      decoration: InputDecoration(
+        border: const UnderlineInputBorder(),
+        labelText: AppLocalizations.of(context).roomID,
         helperText: '',
         //errorText: state.roomId.invalid ? 'invalid room ID' : null, //TODO alike in login
         // TODO !! add onError to joinRoom below with dialog about room gamestarted
@@ -98,8 +98,6 @@ class _JoinRoomButton extends StatelessWidget {
                         state.statusOfCreate.isSubmissionInProgress
                     ? null
                     : () async {
-                        // context.read<LobbyCubit>().roomIdChanged(
-                        //     "mlMOv1XpSl1b4ETIVR94"); //TODO !!! remove this
                         // TODO  rework this thing
                         await context.read<LobbyCubit>().joinRoom();
                         if (state.statusOfJoin.isValidated) {
@@ -110,9 +108,10 @@ class _JoinRoomButton extends StatelessWidget {
                           //TODO push popup, or write info somwhere
                         }
                       },
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Join', style: TextStyle(fontSize: 25)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(AppLocalizations.of(context).join,
+                      style: const TextStyle(fontSize: 25)),
                 ),
               );
       },
@@ -137,9 +136,10 @@ class _CreateRoomButton extends StatelessWidget {
                         (_) => context.read<RoomCubit>().goToMatchup(),
                       );
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Create room', style: TextStyle(fontSize: 20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(AppLocalizations.of(context).createRoom,
+                      style: const TextStyle(fontSize: 20)),
                 ),
               );
       },

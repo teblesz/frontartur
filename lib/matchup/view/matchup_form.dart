@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // TODO zmiana kolejnosci graczy -> ma byc tak jak przy stole
 class MatchupForm extends StatelessWidget {
@@ -85,7 +86,7 @@ class _PlayerCard extends StatelessWidget {
             : PopupMenuButton(
                 itemBuilder: (context) => [
                   PopupMenuItem(
-                    child: const Text("Remove"),
+                    child: Text(AppLocalizations.of(context).remove),
                     onTap: () =>
                         context.read<MatchupCubit>().removePlayer(player),
                     // TODO !!! give the info about removal to the removed user's UI
@@ -121,7 +122,8 @@ class _StartGameButton extends StatelessWidget {
       onPressed: () {
         context.read<MatchupCubit>().initGame();
       },
-      child: const Text('Start game', style: TextStyle(fontSize: 20)),
+      child: Text(AppLocalizations.of(context).startGame,
+          style: const TextStyle(fontSize: 20)),
     );
   }
 }
@@ -131,7 +133,7 @@ class _RolesDefButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.tonal(
       onPressed: null, // TODO role def feature !!!
-      child: const Text('Define roles(W.I.P.)'),
+      child: Text(AppLocalizations.of(context).defineRoles),
     );
   }
 }
@@ -142,11 +144,11 @@ Future<void> _showNickDialog(BuildContext context) {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Enter your nick"),
+          title: Text(AppLocalizations.of(context).enterYourNick),
           content: TextField(
             onChanged: (nick) => context.read<MatchupCubit>().nickChanged(nick),
-            decoration: const InputDecoration(
-              labelText: 'Nick',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context).nick,
             ),
           ),
           actions: [
@@ -161,7 +163,7 @@ Future<void> _showNickDialog(BuildContext context) {
                 Navigator.of(dialogContext).pop();
                 context.read<RoomCubit>().subscribeToGameStarted();
               },
-              child: const Text("Confirm"),
+              child: Text(AppLocalizations.of(context).confirm),
             )
           ],
         );

@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/theme.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +71,7 @@ class _AppView extends StatelessWidget {
 }
 
 class LocaleNotifier extends ChangeNotifier {
-  Locale _locale = Locale("en");
+  Locale _locale = const Locale("en");
 
   Locale get locale => _locale;
 

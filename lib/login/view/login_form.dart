@@ -5,6 +5,7 @@ import 'package:fluttartur/sign_up/sign_up.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
 import 'package:fluttartur/widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -72,9 +73,11 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'email',
+            labelText: AppLocalizations.of(context).email,
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.invalid
+                ? AppLocalizations.of(context).invalidEmail
+                : null,
           ),
         );
       },
@@ -93,8 +96,8 @@ class _PasswordInput extends StatelessWidget {
           onChanged: (password) =>
               context.read<LoginCubit>().passwordChanged(password),
           obscureText: true,
-          decoration: const InputDecoration(
-            labelText: 'password',
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).password,
             helperText: '',
           ),
         );
@@ -116,9 +119,10 @@ class _LoginButton extends StatelessWidget {
                 onPressed: state.status.isValidated
                     ? () => context.read<LoginCubit>().logInWithCredentials()
                     : null,
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Log in', style: TextStyle(fontSize: 25)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(AppLocalizations.of(context).logIn,
+                      style: const TextStyle(fontSize: 25)),
                 ),
               );
       },
@@ -131,7 +135,8 @@ class _GoogleLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.icon(
       key: const Key('loginForm_googleLogin_raisedButton'),
-      label: const Text('Log in with Google', style: TextStyle(fontSize: 16)),
+      label: Text(AppLocalizations.of(context).logInWithGoogle,
+          style: const TextStyle(fontSize: 16)),
       icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
       onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
     );
@@ -144,7 +149,7 @@ class _SignUpButton extends StatelessWidget {
     return FilledButton.tonal(
       key: const Key('loginForm_createAccount_flatButton'),
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
-      child: const Text('Sign up'),
+      child: Text(AppLocalizations.of(context).signUp),
     );
   }
 }
