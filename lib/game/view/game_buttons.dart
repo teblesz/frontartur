@@ -34,7 +34,9 @@ class _SubmitSquadButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: FilledButton(
-        onPressed: context.read<GameCubit>().submitSquad,
+        onPressed: context.read<GameCubit>().state.isSquadRequiredSize
+            ? null
+            : context.read<GameCubit>().submitSquad,
         child: const Text("Submit squad", style: TextStyle(fontSize: 25)),
       ),
     );
