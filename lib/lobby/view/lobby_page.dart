@@ -1,9 +1,9 @@
-import 'package:fluttartur/lobby/cubit/lobby_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/lobby/lobby.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LobbyPage extends StatelessWidget {
   const LobbyPage({super.key});
@@ -44,7 +44,7 @@ class _LogOutButton extends StatelessWidget {
       onPressed: () {
         context.read<AppBloc>().add(const AppLogoutRequested());
       },
-      child: const Text("Log out"),
+      child: Text(AppLocalizations.of(context).logOut),
     );
   }
 }

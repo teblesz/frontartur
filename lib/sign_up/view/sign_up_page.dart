@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/sign_up/sign_up.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -23,7 +24,7 @@ class SignUpPage extends StatelessWidget {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(title: const Text('Sign Up')),
+          appBar: AppBar(title: Text(AppLocalizations.of(context).singup)),
           body: BlocProvider<SignUpCubit>(
             create: (_) =>
                 SignUpCubit(context.read<AuthenticationRepository>()),

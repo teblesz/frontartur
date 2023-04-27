@@ -30,6 +30,9 @@ jobs:
       # - name: Static code check   
       #   run: flutter analyze .
 
+      - name: Generate Localization files
+        run: flutter gen-l10n
+
       - name: Build app
         run: flutter build apk
       - uses: actions/upload-artifact@v1

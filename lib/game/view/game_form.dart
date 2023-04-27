@@ -6,6 +6,7 @@ import 'package:fluttartur/home/home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'quest_tiles.dart';
 part 'team_wrap.dart';
@@ -73,15 +74,16 @@ Future<void> pushCharacterInfoDialog(BuildContext context) {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title:
-              const Text("Your character is:", style: TextStyle(fontSize: 20)),
+          title: Text(AppLocalizations.of(context).yourCharacterIs,
+              style: const TextStyle(fontSize: 20)),
           content: _CharacterInfo(),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text("Close info", style: TextStyle(fontSize: 20)),
+              child: Text(AppLocalizations.of(context).closeInfo,
+                  style: const TextStyle(fontSize: 20)),
             ),
           ],
         );
@@ -110,8 +112,11 @@ class _CharacterInfoState extends State<_CharacterInfo> {
           return _characterHidden
               ? const SizedBox.shrink()
               : Text(
-                  context.read<DataRepository>().currentPlayer.character ??
-                      "error",
+                  (context.read<DataRepository>().currentPlayer.character ??
+                              "error") ==
+                          'good'
+                      ? AppLocalizations.of(context).good
+                      : AppLocalizations.of(context).evil,
                   style: const TextStyle(
                     fontSize: 25,
                   ),
@@ -125,7 +130,9 @@ class _CharacterInfoState extends State<_CharacterInfo> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              _characterHidden ? "Show" : "Hide",
+              _characterHidden
+                  ? AppLocalizations.of(context).show
+                  : AppLocalizations.of(context).hide,
               style: const TextStyle(fontSize: 30),
             ),
           ),
@@ -142,8 +149,8 @@ Future<void> _pushQuestResultsDialog(BuildContext context) {
       builder: (BuildContext dialogContext) {
         final outcome = context.read<GameCubit>().state.lastQuestOutcome;
         return AlertDialog(
-          title:
-              const Text("Quest results", style: const TextStyle(fontSize: 20)),
+          title: Text(AppLocalizations.of(context).questResults,
+              style: const TextStyle(fontSize: 20)),
           content: Card(
             color: outcome ? Colors.green.shade900 : Colors.red.shade900,
             child: Center(
@@ -151,7 +158,9 @@ Future<void> _pushQuestResultsDialog(BuildContext context) {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
-                  outcome ? "Success!" : "Fail",
+                  outcome
+                      ? AppLocalizations.of(context).success
+                      : AppLocalizations.of(context).fail,
                   style: const TextStyle(fontSize: 50),
                 ),
               ),
@@ -163,7 +172,8 @@ Future<void> _pushQuestResultsDialog(BuildContext context) {
                 Navigator.of(dialogContext).pop();
                 context.read<GameCubit>().closeQuestResults();
               },
-              child: const Text("Close result", style: TextStyle(fontSize: 20)),
+              child: Text(AppLocalizations.of(context).closeResult,
+                  style: const TextStyle(fontSize: 20)),
             ),
           ],
         );
@@ -180,7 +190,7 @@ Future<void> _pushGameResultsDialog(BuildContext context) {
       builder: (BuildContext dialogContext) {
         final outcome = context.read<GameCubit>().state.lastQuestOutcome;
         return AlertDialog(
-          title: const Text("Game results"),
+          title: Text(AppLocalizations.of(context).gameResults),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -197,15 +207,16 @@ Future<void> _pushGameResultsDialog(BuildContext context) {
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
                       outcome
-                          ? "Good team won!\nKingdom is saved."
-                          : "Evil team won!\nKigdom is lost.",
+                          ? AppLocalizations.of(context).goodTeamWon
+                          : AppLocalizations.of(context).evilTeamWon,
                       style: const TextStyle(fontSize: 30),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              const Text("Evil courtiers:", style: TextStyle(fontSize: 25)),
+              Text(AppLocalizations.of(context).evilCourtiers,
+                  style: const TextStyle(fontSize: 25)),
               FutureBuilder<List<Player>>(
                 future: context.read<GameCubit>().listOfEvilPlayers(),
                 builder: (context, snapshot) {
@@ -234,7 +245,8 @@ Future<void> _pushGameResultsDialog(BuildContext context) {
                 Navigator.of(dialogContext).pop();
                 context.read<RoomCubit>().leaveRoom();
               },
-              child: const Text("Exit Game", style: TextStyle(fontSize: 20)),
+              child: Text(AppLocalizations.of(context).exitGame,
+                  style: const TextStyle(fontSize: 20)),
             ),
           ],
         );
