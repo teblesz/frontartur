@@ -42,6 +42,7 @@ class GameCubit extends Cubit<GameState> {
   Future<void> addMember({required Player player}) async {
     if (!_dataRepository.currentPlayer.isLeader) return;
     if (state.status != GameStatus.squadChoice) return;
+    if (await isSquadRequiredSize()) return;
 
     await _dataRepository.addMember(
       questNumber: state.questNumber,
@@ -183,5 +184,42 @@ class GameCubit extends Cubit<GameState> {
     return null;
   }
 
+  static const List<List<int>> squadRequiredSizes = [
+    [2, 3, 2, 3, 3],
+    [2, 3, 4, 3, 4],
+    [2, 3, 3, 4, 4],
+    [3, 4, 4, 5, 5],
+    [3, 4, 4, 5, 5],
+    [3, 4, 4, 5, 5],
+  ];
+  int squadRequiredSize(int playersCount, int questNumber) =>
+      squadRequiredSizes[playersCount - 5][questNumber - 1];
+
+  Future<bool> isSquadRequiredSize() async {
+    // TODO move this to a field in squad
+    final membersCount = await _dataRepository.membersCount;
+    final playersCount = await _dataRepository.playersCount;
+    if (membersCount > squadRequiredSize(playersCount, state.questNumber)) {
+      throw const MembersLimitExceededFailure();
+    }
+    return membersCount == squadRequiredSize(playersCount, state.questNumber);
+  }
+
   // GameCubit
+}
+
+class MembersLimitExceededFailure implements Exception {
+  const MembersLimitExceededFailure(
+      [this.message = 'There shouldn\'t be that many members in squad']);
+
+  final String message;
+}
+
+class SquadMissingFieldOnResultsFailure implements Exception {
+  const SquadMissingFieldOnResultsFailure(
+      [this.message =
+          'Squad is approved but field is_successful field is missing, '
+              'while user displays quest results.']);
+
+  final String message;
 }
