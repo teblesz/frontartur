@@ -500,7 +500,7 @@ class DataRepository {
     await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
-        .set({'special_characters': specialCharacters});
+        .update({'special_characters': specialCharacters});
   }
   // DataRepository
 }

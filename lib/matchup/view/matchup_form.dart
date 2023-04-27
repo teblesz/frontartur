@@ -132,7 +132,7 @@ class _RolesDefButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
-      onPressed: null, // TODO role def feature !!!
+      onPressed: () => Navigator.push(context, CharactersPage.route()),
       child: Text(AppLocalizations.of(context).defineRoles),
     );
   }
