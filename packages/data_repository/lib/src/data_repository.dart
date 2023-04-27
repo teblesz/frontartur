@@ -71,10 +71,6 @@ class DataRepository {
     _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
   }
 
-  Future<void> updateRoomCharacters(List<String> characters) async {
-    //TODO this feature
-  }
-
   /// sets game_started and current_squad_id fields in room document
   Future<void> startGame() async {
     final firstSquadRef = await _firestore
@@ -492,5 +488,19 @@ class DataRepository {
     return membersSnap.size;
   }
 
+  //-----------------------------characters definition-------------------------------------
+
+  Future<List<String>> getCharacters() async {
+    final roomSnap =
+        await _firestore.collection('rooms').doc(currentRoom.id).get();
+    return Room.fromFirestore(roomSnap).specialCharacters;
+  }
+
+  Future<void> setCharacters(List<String> specialCharacters) async {
+    await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .set({'special_characters': specialCharacters});
+  }
   // DataRepository
 }
