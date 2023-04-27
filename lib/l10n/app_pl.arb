@@ -24,7 +24,7 @@
   "enterYourNick": "Wprowadź nick",
   "nick": "nick",
   "confirm": "Zatwierdź",
-  "defineRoles": "Zdefiniuj role",
+  "defineRoles": "Postacie",
   "startGame": "Rozpocznij grę",  
   "remove": "Wyrzuć",
 
@@ -57,6 +57,16 @@
   "fail": "Porażka",
   "court": "Dworzanie:",
   "squad": "Drużyna:",
+
+  "defineSpecialCharacters": "Postacie",
+  "goodColon": "Dobre:",
+  "evilColon": "Złe:",
+  "merlin": "Merlin",
+  "assassin": "Zabójca",
+  "percival": "Percival",
+  "morgana": "Morgana",
+  "addMerlinAndAssassin": "Dodaj Merlina i Zabójcę",
+  "addPercivalAndMorgana": "Dodaj Percivala i Morganę",
 
   "helloWorld": "Witaj Świecie"
 }

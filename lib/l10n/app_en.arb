@@ -24,7 +24,7 @@
   "enterYourNick": "Enter your nick",
   "nick": "nick",
   "confirm": "Confirm",
-  "defineRoles": "Define characters",
+  "defineRoles": "Special characters",
   "startGame": "Start game",  
   "remove": "Remove",
 
@@ -57,6 +57,18 @@
   "fail": "Fail",
   "court": "Court:",
   "squad": "Squad:",
+
+
+  "defineSpecialCharacters": "Define special characters",
+  "goodColon": "Good:",
+  "evilColon": "Evil:",
+  "merlin": "Merlin",
+  "assassin": "Assassin",
+  "percival": "Percival",
+  "morgana": "Morgana",
+  "addMerlinAndAssassin": "Add Merlin & Assassin",
+  "addPercivalAndMorgana": "Add Percival & Morgana",
+
 
   "helloWorld": "Hello World!",
   "@helloWorld": {
