@@ -4,6 +4,7 @@ import 'package:fluttartur/login/login.dart';
 import 'package:fluttartur/sign_up/sign_up.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
+import 'package:fluttartur/widgets/widgets.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -22,32 +23,39 @@ class LoginForm extends StatelessWidget {
             );
         }
       },
-      child: Align(
-        alignment: const Alignment(0, -2 / 3),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    children: [
-                      _EmailInput(),
-                      const SizedBox(height: 8),
-                      _PasswordInput(),
-                    ],
-                  ),
+      child: Column(
+        children: [
+          const LanguageChangeButton(),
+          Expanded(
+            child: Align(
+              alignment: const Alignment(0, -2 / 3),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          children: [
+                            _EmailInput(),
+                            const SizedBox(height: 8),
+                            _PasswordInput(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _LoginButton(),
+                    const SizedBox(height: 16),
+                    _GoogleLoginButton(),
+                    const SizedBox(height: 8),
+                    _SignUpButton(),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              _LoginButton(),
-              const SizedBox(height: 16),
-              _GoogleLoginButton(),
-              const SizedBox(height: 8),
-              _SignUpButton(),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:fluttartur/theme.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 // MAIN TODO's:
 // TODO move resources to some resources class
@@ -51,15 +52,32 @@ class _AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: theme,
-      home: FlowBuilder<AppStatus>(
-        state: context.select((AppBloc bloc) => bloc.state.status),
-        onGeneratePages: onGenerateAppViewPages,
-        observers: [HeroController()], // TODO not necessary now
-      ),
-    );
+    return ChangeNotifierProvider(
+        create: (context) => LocaleNotifier(),
+        builder: (context, child) {
+          final appLocaleProvider = Provider.of<LocaleNotifier>(context);
+          return MaterialApp(
+            locale: appLocaleProvider.locale,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            theme: theme,
+            home: FlowBuilder<AppStatus>(
+              state: context.select((AppBloc bloc) => bloc.state.status),
+              onGeneratePages: onGenerateAppViewPages,
+              observers: [HeroController()], // TODO not necessary now
+            ),
+          );
+        });
+  }
+}
+
+class LocaleNotifier extends ChangeNotifier {
+  Locale _locale = Locale("en");
+
+  Locale get locale => _locale;
+
+  void setLocale(Locale locale) async {
+    _locale = locale;
+    notifyListeners();
   }
 }
