@@ -55,12 +55,13 @@ class _QuestTile extends StatelessWidget {
   IconData _questTileIconData(QuestStatus? questStatus) {
     switch (questStatus) {
       case QuestStatus.success:
-        return Icons.done;
+        return FluttarturIcons.crown;
       case QuestStatus.fail:
-        return Icons.close;
+        return FluttarturIcons.crossed_swords;
       case QuestStatus.ongoing:
+        return FluttarturIcons.group;
       case QuestStatus.upcoming:
-        return Icons.location_on;
+        return FluttarturIcons.locked_fortress;
       case QuestStatus.error:
       case null:
         return Icons.error_outline;

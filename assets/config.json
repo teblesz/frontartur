@@ -1,0 +1,40 @@
+{
+  "name": "FluttarturIcons",
+  "css_prefix_text": "",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "1b16b101f385f8c1c265fadd23f1a7ea",
+      "css": "crown",
+      "code": 59775,
+      "src": "rpgawesome"
+    },
+    {
+      "uid": "acca5a333bcfe091982b3c7898ab626c",
+      "css": "crossed_swords",
+      "code": 59773,
+      "src": "rpgawesome"
+    },
+    {
+      "uid": "e5629ff2157219865b86e75f2b8ccab7",
+      "css": "locked_fortress",
+      "code": 59957,
+      "src": "rpgawesome"
+    },
+    {
+      "uid": "e36d581e4f2844db345bddc205d15dda",
+      "css": "group",
+      "code": 59392,
+      "src": "elusive"
+    },
+    {
+      "uid": "a97175fe63c4e19c1b71fff41a36cbfa",
+      "css": "crown-1",
+      "code": 62753,
+      "src": "fontawesome5"
+    }
+  ]
+}
