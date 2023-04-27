@@ -10,6 +10,7 @@ class Player extends Equatable {
     required this.nick,
     required this.isLeader,
     this.character,
+    this.specialCharacter,
   });
 
   final String id;
@@ -17,6 +18,7 @@ class Player extends Equatable {
   final String nick;
   final bool isLeader;
   final String? character;
+  final String? specialCharacter;
 
   /// Empty player which represents that user is currently not in any player.
   static const empty = Player(userId: '', nick: '', isLeader: false);
@@ -28,7 +30,8 @@ class Player extends Equatable {
   bool get isNotEmpty => this != Player.empty;
 
   @override
-  List<Object?> get props => [id, userId, nick, isLeader, character];
+  List<Object?> get props =>
+      [id, userId, nick, isLeader, character, specialCharacter];
 
   factory Player.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data();
@@ -38,6 +41,7 @@ class Player extends Equatable {
       nick: data?['nick'],
       isLeader: data?['is_leader'],
       character: data?['character'],
+      specialCharacter: data?['special_character'],
     );
   }
 
@@ -47,6 +51,7 @@ class Player extends Equatable {
       "nick": nick,
       'is_leader': isLeader,
       if (character != null) "character": character,
+      if (specialCharacter != null) "special_character": specialCharacter,
     };
   }
 }
