@@ -72,14 +72,15 @@ Future<void> showCharacterInfoDialog(BuildContext context) {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Your character is:"),
+          title:
+              const Text("Your character is:", style: TextStyle(fontSize: 20)),
           content: _CharacterInfo(),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text("Close info"),
+              child: const Text("Close info", style: TextStyle(fontSize: 20)),
             ),
           ],
         );
@@ -138,30 +139,30 @@ Future<void> _pushQuestResultsDialog(BuildContext context) {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext dialogContext) {
+        final outcome = context.read<GameCubit>().state.lastQuestOutcome;
         return AlertDialog(
-          title: const Text("Quest results"),
-          content: context.read<GameCubit>().state.lastQuestOutcome
-              ? Text(
-                  "Quest Successfull!",
-                  style: TextStyle(
-                    color: Colors.green.shade900,
-                    fontSize: 50,
-                  ),
-                )
-              : Text(
-                  "Quest Failed",
-                  style: TextStyle(
-                    color: Colors.red.shade900,
-                    fontSize: 50,
-                  ),
+          title:
+              const Text("Quest results", style: const TextStyle(fontSize: 20)),
+          content: Card(
+            color: outcome ? Colors.green.shade900 : Colors.red.shade900,
+            child: Center(
+              heightFactor: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  outcome ? "Success!" : "Fail",
+                  style: const TextStyle(fontSize: 50),
                 ),
+              ),
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<GameCubit>().closeQuestResults();
               },
-              child: const Text("Close result"),
+              child: const Text("Close result", style: TextStyle(fontSize: 20)),
             ),
           ],
         );
@@ -176,31 +177,32 @@ Future<void> _pushGameResultsDialog(BuildContext context) {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext dialogContext) {
+        final outcome = context.read<GameCubit>().state.lastQuestOutcome;
         return AlertDialog(
           title: const Text("Game results"),
-          content: context.read<GameCubit>().state.lastQuestOutcome
-              ? Text(
-                  "Game won by Good team!\nKingdom is saved.",
-                  style: TextStyle(
-                    color: Colors.green.shade900,
-                    fontSize: 30,
-                  ),
-                )
-              : Text(
-                  "Game won by Evil team!\nKigdom is lost.",
-                  style: TextStyle(
-                    color: Colors.red.shade900,
-                    fontSize: 30,
-                  ),
+          content: Card(
+            color: outcome ? Colors.green.shade900 : Colors.red.shade900,
+            child: Center(
+              heightFactor: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  outcome
+                      ? "Game won by Good team!\nKingdom is saved."
+                      : "Game won by Evil team!\nKigdom is lost.",
+                  style: const TextStyle(fontSize: 30),
                 ),
-          // TODO add more info here
+              ),
+            ),
+          ),
+          // TODO add more info here who is bad who is good
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<RoomCubit>().leaveRoom();
               },
-              child: const Text("Exit Game"),
+              child: const Text("Exit Game", style: TextStyle(fontSize: 20)),
             ),
           ],
         );

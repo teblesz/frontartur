@@ -35,12 +35,7 @@ class _SubmitSquadButton extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: FilledButton(
         onPressed: context.read<GameCubit>().submitSquad,
-        child: const Text(
-          "Submit squad",
-          style: TextStyle(
-            fontSize: 25,
-          ),
-        ),
+        child: const Text("Submit squad", style: TextStyle(fontSize: 25)),
       ),
     );
   }
@@ -67,10 +62,7 @@ class _VoteSquadPanelState extends State<_VoteSquadPanel> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          const Text(
-            'Vote for this squad',
-            style: TextStyle(fontSize: 30),
-          ),
+          const Text('Vote for this squad', style: TextStyle(fontSize: 30)),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -121,10 +113,8 @@ class _VoteSquadButton extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            isPositive ? "Accept" : "Reject",
-            style: const TextStyle(fontSize: 25),
-          ),
+          child: Text(isPositive ? "Accept" : "Reject",
+              style: const TextStyle(fontSize: 25)),
         ));
   }
 }
@@ -174,10 +164,8 @@ class _EmbarkmentCardState extends State<_EmbarkmentCard> {
             children: [
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'This squad was approved.',
-                  style: TextStyle(fontSize: 25),
-                ),
+                child: Text('This squad was approved.',
+                    style: TextStyle(fontSize: 25)),
               ),
               FilledButton(
                 onPressed: _isDisabled
@@ -186,12 +174,7 @@ class _EmbarkmentCardState extends State<_EmbarkmentCard> {
                         // of context?
                         context,
                         QuestPage.route(() => _updateIsDisabled(true))),
-                child: const Text(
-                  "Embark",
-                  style: TextStyle(
-                    fontSize: 25,
-                  ),
-                ),
+                child: const Text("Embark", style: TextStyle(fontSize: 30)),
               ),
               const SizedBox(height: 10),
             ],
