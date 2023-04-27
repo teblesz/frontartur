@@ -67,13 +67,12 @@ class GameCubit extends Cubit<GameState> {
     _dataRepository.subscribeSquadVotesWith(doLogic: _assessSquadVoteResults);
   }
 
-  Future<void> _assessSquadVoteResults(List<bool> votes) async {
+  Future<void> _assessSquadVoteResults(Map<String, bool> votes) async {
     final playersCount = await _dataRepository.playersCount;
     if (playersCount > votes.length) return;
 
     _dataRepository.unsubscribeSquadVotes();
-
-    final positiveVotesCount = votes.where((v) => v == true).length;
+    final positiveVotesCount = votes.values.where((v) => v == true).length;
     if (positiveVotesCount > votes.length / 2) {
       await _dataRepository.updateSquadIsApproved();
       _dataRepository.subscribeQuestVotesWith(doLogic: _assessQuestVoteResults);
@@ -159,6 +158,11 @@ class GameCubit extends Cubit<GameState> {
 
   Future<bool> isCurrentPlayerAMember() async {
     return _dataRepository.isCurrentPlayerAMember();
+  }
+
+  Future<List<Player>> listOfEvilPlayers() async {
+    final players = await _dataRepository.playersList();
+    return players.where((p) => p.character == 'evil').toList();
   }
 
 //--------------------------------game rules logic-------------------------------------

@@ -1,6 +1,7 @@
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/matchup/matchup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
@@ -29,13 +30,17 @@ class MatchupForm extends StatelessWidget {
 class _RoomID extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Room>(
-      stream: context.read<DataRepository>().streamRoom(),
-      builder: (context, snapshot) {
-        var data = snapshot.data;
-        return data == null ? const Text('<room is empty>') : Text(data.id);
-      },
-    );
+    return !kDebugMode
+        ? const SizedBox.shrink()
+        : StreamBuilder<Room>(
+            stream: context.read<DataRepository>().streamRoom(),
+            builder: (context, snapshot) {
+              var data = snapshot.data;
+              return data == null
+                  ? const Text('<room is empty>')
+                  : Text(data.id);
+            },
+          );
   }
 }
 

@@ -164,6 +164,16 @@ class DataRepository {
             list.docs.map((snap) => Player.fromFirestore(snap)).toList());
   }
 
+  /// player list stream getter
+  Future<List<Player>> playersList() async {
+    final playersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players')
+        .get();
+    return playersSnap.docs.map((doc) => Player.fromFirestore(doc)).toList();
+  }
+
 // TODO change this to a field in Room
   Future<int> get playersCount async {
     final playersSnap = await _firestore
@@ -373,15 +383,13 @@ class DataRepository {
         .doc(currentRoom.id)
         .collection('squads')
         .doc(currentRoom.currentSquadId)
-        .update({
-      'votes': FieldValue.arrayUnion([vote])
-    });
+        .update({'votes.${currentPlayer.id}': vote});
   }
 
   StreamSubscription? _squadVotesSubscription;
 
   void subscribeSquadVotesWith({
-    required void Function(List<bool>) doLogic,
+    required void Function(Map<String, bool>) doLogic,
   }) {
     _squadVotesSubscription = _firestore
         .collection('rooms')
@@ -390,7 +398,7 @@ class DataRepository {
         .doc(currentRoom.currentSquadId)
         .snapshots()
         .listen((snap) {
-      doLogic(List<bool>.from(snap['votes']));
+      doLogic(Map<String, bool>.from(snap['votes']));
     });
   }
 

@@ -29,9 +29,13 @@ class GamePage extends StatelessWidget {
               PopupMenuButton(
                 itemBuilder: (_) => [
                   PopupMenuItem(
+                    child: const Text("Forgot character?"),
+                    onTap: () => pushCharacterInfoDialog(context),
+                  ),
+                  PopupMenuItem(
                     child: const Text("Leave room"),
                     onTap: () => context.read<RoomCubit>().leaveRoom(),
-                  )
+                  ),
                 ],
               ),
             ],

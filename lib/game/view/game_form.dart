@@ -1,7 +1,9 @@
 import 'package:data_repository/data_repository.dart';
+import 'package:fluttartur/fluttartur_icons_icons.dart';
 import 'package:fluttartur/game/cubit/game_cubit.dart';
 import 'package:fluttartur/game/view/quest_page.dart';
 import 'package:fluttartur/home/home.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +18,7 @@ class GameForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO change this to duration.zero (must get fresh player, cache gives old)
     Future.delayed(
-        const Duration(seconds: 1), () => _showCharacterInfoDialog(context));
+        const Duration(seconds: 1), () => pushCharacterInfoDialog(context));
     return BlocListener<GameCubit, GameState>(
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) => listenGameCubit(context, state),
@@ -27,17 +29,24 @@ class GameForm extends StatelessWidget {
           Expanded(
             child: _TeamWrap(),
           ),
-          BlocBuilder<GameCubit, GameState>(
-              // TODO !!! remove this
-              buildWhen: (previous, current) =>
-                  previous.status != current.status,
-              builder: (context, state) {
-                return Text(state.status.name);
-              }),
+          _CurrentStatus(),
           _GameButtons(),
         ],
       ),
     );
+  }
+}
+
+class _CurrentStatus extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return !kDebugMode
+        ? const SizedBox.shrink()
+        : BlocBuilder<GameCubit, GameState>(
+            buildWhen: (previous, current) => previous.status != current.status,
+            builder: (context, state) {
+              return Text(state.status.name);
+            });
   }
 }
 
@@ -58,30 +67,72 @@ void listenGameCubit(context, state) {
   }
 }
 
-Future<void> _showCharacterInfoDialog(BuildContext context) {
+Future<void> pushCharacterInfoDialog(BuildContext context) {
   return showDialog<void>(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Your character is:"),
-          content: // TODO add button to unveil,
-              Text(
-            context.read<DataRepository>().currentPlayer.character ?? "error",
-            style: const TextStyle(
-              fontSize: 25,
-            ),
-          ),
+          title:
+              const Text("Your character is:", style: TextStyle(fontSize: 20)),
+          content: _CharacterInfo(),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text("Close info"),
+              child: const Text("Close info", style: TextStyle(fontSize: 20)),
             ),
           ],
         );
       });
+}
+
+class _CharacterInfo extends StatefulWidget {
+  @override
+  State<_CharacterInfo> createState() => _CharacterInfoState();
+}
+
+class _CharacterInfoState extends State<_CharacterInfo> {
+  bool _characterHidden = true;
+  void showHideCharacter() {
+    setState(() {
+      _characterHidden = !_characterHidden;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Builder(builder: (context) {
+          return _characterHidden
+              ? const SizedBox.shrink()
+              : Text(
+                  context.read<DataRepository>().currentPlayer.character ??
+                      "error",
+                  style: const TextStyle(
+                    fontSize: 25,
+                  ),
+                );
+        }),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: () => setState(() {
+            _characterHidden = !_characterHidden;
+          }),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              _characterHidden ? "Show" : "Hide",
+              style: const TextStyle(fontSize: 30),
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
 
 Future<void> _pushQuestResultsDialog(BuildContext context) {
@@ -89,30 +140,30 @@ Future<void> _pushQuestResultsDialog(BuildContext context) {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext dialogContext) {
+        final outcome = context.read<GameCubit>().state.lastQuestOutcome;
         return AlertDialog(
-          title: const Text("Quest results"),
-          content: context.read<GameCubit>().state.lastQuestOutcome
-              ? Text(
-                  "Quest Successfull!",
-                  style: TextStyle(
-                    color: Colors.green.shade900,
-                    fontSize: 50,
-                  ),
-                )
-              : Text(
-                  "Quest Failed",
-                  style: TextStyle(
-                    color: Colors.red.shade900,
-                    fontSize: 50,
-                  ),
+          title:
+              const Text("Quest results", style: const TextStyle(fontSize: 20)),
+          content: Card(
+            color: outcome ? Colors.green.shade900 : Colors.red.shade900,
+            child: Center(
+              heightFactor: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  outcome ? "Success!" : "Fail",
+                  style: const TextStyle(fontSize: 50),
                 ),
+              ),
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<GameCubit>().closeQuestResults();
               },
-              child: const Text("Close result"),
+              child: const Text("Close result", style: TextStyle(fontSize: 20)),
             ),
           ],
         );
@@ -127,31 +178,63 @@ Future<void> _pushGameResultsDialog(BuildContext context) {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext dialogContext) {
+        final outcome = context.read<GameCubit>().state.lastQuestOutcome;
         return AlertDialog(
           title: const Text("Game results"),
-          content: context.read<GameCubit>().state.lastQuestOutcome
-              ? Text(
-                  "Game won by Good team!\nKingdom is saved.",
-                  style: TextStyle(
-                    color: Colors.green.shade900,
-                    fontSize: 30,
-                  ),
-                )
-              : Text(
-                  "Game won by Evil team!\nKigdom is lost.",
-                  style: TextStyle(
-                    color: Colors.red.shade900,
-                    fontSize: 30,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                  outcome
+                      ? FluttarturIcons.crown
+                      : FluttarturIcons.crossed_swords,
+                  size: 120),
+              Card(
+                color: outcome ? Colors.green.shade900 : Colors.red.shade900,
+                child: Center(
+                  heightFactor: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      outcome
+                          ? "Good team won!\nKingdom is saved."
+                          : "Evil team won!\nKigdom is lost.",
+                      style: const TextStyle(fontSize: 30),
+                    ),
                   ),
                 ),
-          // TODO add more info here
+              ),
+              const SizedBox(height: 10),
+              const Text("Evil courtiers:", style: TextStyle(fontSize: 25)),
+              FutureBuilder<List<Player>>(
+                future: context.read<GameCubit>().listOfEvilPlayers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  List<Player> evilPlayers = snapshot.data ?? List.empty();
+                  return Column(
+                    children: <Widget>[
+                      ...evilPlayers.map(
+                        (player) => Text(player.nick,
+                            style: const TextStyle(fontSize: 20)),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<RoomCubit>().leaveRoom();
               },
-              child: const Text("Exit Game"),
+              child: const Text("Exit Game", style: TextStyle(fontSize: 20)),
             ),
           ],
         );

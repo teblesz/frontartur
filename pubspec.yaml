@@ -108,6 +108,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+      - family: FluttarturIcons
+        fonts:
+          - asset: fonts/FluttarturIcons.ttf
 
 dependency_overrides:
   bloc: ^8.1.0
