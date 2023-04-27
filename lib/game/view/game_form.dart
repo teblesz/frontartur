@@ -18,7 +18,7 @@ class GameForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO change this to duration.zero (must get fresh player, cache gives old)
     Future.delayed(
-        const Duration(seconds: 1), () => showCharacterInfoDialog(context));
+        const Duration(seconds: 1), () => _pushGameResultsDialog(context));
     return BlocListener<GameCubit, GameState>(
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) => listenGameCubit(context, state),
@@ -181,22 +181,53 @@ Future<void> _pushGameResultsDialog(BuildContext context) {
         final outcome = context.read<GameCubit>().state.lastQuestOutcome;
         return AlertDialog(
           title: const Text("Game results"),
-          content: Card(
-            color: outcome ? Colors.green.shade900 : Colors.red.shade900,
-            child: Center(
-              heightFactor: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
                   outcome
-                      ? "Game won by Good team!\nKingdom is saved."
-                      : "Game won by Evil team!\nKigdom is lost.",
-                  style: const TextStyle(fontSize: 30),
+                      ? FluttarturIcons.crown
+                      : FluttarturIcons.crossed_swords,
+                  size: 120),
+              Card(
+                color: outcome ? Colors.green.shade900 : Colors.red.shade900,
+                child: Center(
+                  heightFactor: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      outcome
+                          ? "Good team won!\nKingdom is saved."
+                          : "Evil team won!\nKigdom is lost.",
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(height: 10),
+              const Text("Evil courtiers:", style: TextStyle(fontSize: 25)),
+              FutureBuilder<List<Player>>(
+                future: context.read<GameCubit>().listOfEvilPlayers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  List<Player> evilPlayers = snapshot.data ?? List.empty();
+                  return Column(
+                    children: <Widget>[
+                      ...evilPlayers.map(
+                        (player) => Text(player.nick,
+                            style: const TextStyle(fontSize: 20)),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
           ),
-          // TODO add more info here who is bad who is good
           actions: [
             TextButton(
               onPressed: () {

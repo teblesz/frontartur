@@ -164,6 +164,16 @@ class DataRepository {
             list.docs.map((snap) => Player.fromFirestore(snap)).toList());
   }
 
+  /// player list stream getter
+  Future<List<Player>> playersList() async {
+    final playersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players')
+        .get();
+    return playersSnap.docs.map((doc) => Player.fromFirestore(doc)).toList();
+  }
+
 // TODO change this to a field in Room
   Future<int> get playersCount async {
     final playersSnap = await _firestore
