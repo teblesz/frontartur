@@ -18,7 +18,7 @@ class GameForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO change this to duration.zero (must get fresh player, cache gives old)
     Future.delayed(
-        const Duration(seconds: 1), () => _pushGameResultsDialog(context));
+        const Duration(seconds: 1), () => pushCharacterInfoDialog(context));
     return BlocListener<GameCubit, GameState>(
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) => listenGameCubit(context, state),
@@ -67,7 +67,7 @@ void listenGameCubit(context, state) {
   }
 }
 
-Future<void> showCharacterInfoDialog(BuildContext context) {
+Future<void> pushCharacterInfoDialog(BuildContext context) {
   return showDialog<void>(
       barrierDismissible: false,
       context: context,
