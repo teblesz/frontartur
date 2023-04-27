@@ -28,7 +28,7 @@ class CharactersPage extends StatelessWidget {
           appBar: AppBar(
             title: Text(AppLocalizations.of(context).defineSpecialCharacters),
           ),
-          body: _CharactersView(),
+          body: const _CharactersView(),
         ),
       ],
     );
@@ -65,12 +65,12 @@ class _CharactersViewState extends State<_CharactersView> {
   Future<void> updateSpecialCharacters() async {
     final List<String> characters = [];
     if (hasMerlinAndAssassin) {
-      characters.add('merlin');
-      characters.add('assassin');
+      characters.add('good_merlin');
+      characters.add('evil_assassin');
     }
     if (hasPercivalAndMorgana) {
-      characters.add('percival');
-      characters.add('morgana');
+      characters.add('good_percival');
+      characters.add('evil_morgana');
     }
     await context.read<DataRepository>().setCharacters(characters);
   }

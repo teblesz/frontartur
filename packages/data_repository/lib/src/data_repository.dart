@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/models/member.dart';
 import 'package:data_repository/models/models.dart';
 import 'package:cache/cache.dart';
+import 'package:flutter/material.dart';
 
 part 'data_failures.dart';
 // TODO unique room name (kahoot-like) https://stackoverflow.com/questions/47543251/firestore-unique-index-or-unique-constraint
@@ -196,6 +197,23 @@ class DataRepository {
     for (int i = 0; i < players.length; i++) {
       batch.update(players[i].reference, {'character': characters[i]});
     }
+    await batch.commit();
+  }
+
+  Future<void> assignSpecialCharacters(
+    Map<String, Player> map, // <special character, player>
+  ) async {
+    final batch = FirebaseFirestore.instance.batch();
+    final playersRef = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players');
+
+    for (var specialCharacter in map.keys) {
+      final playerRef = playersRef.doc(map[specialCharacter]!.id);
+      batch.update(playerRef, {'special_character': specialCharacter});
+    }
+
     await batch.commit();
   }
 
