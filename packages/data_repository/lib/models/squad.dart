@@ -7,7 +7,7 @@ class Squad extends Equatable {
   final bool isSubmitted;
   final bool? isApproved;
   final bool? isSuccessfull;
-  final List<bool> votes;
+  final Map<String, bool> votes; // atributed by playerId
 
   const Squad({
     required this.id,
@@ -23,7 +23,7 @@ class Squad extends Equatable {
         isSubmitted = false,
         isApproved = null,
         isSuccessfull = null,
-        votes = <bool>[];
+        votes = <String, bool>{};
 
   /// Empty Squad
   static const empty = Squad(
@@ -32,7 +32,7 @@ class Squad extends Equatable {
     isSubmitted: false,
     isApproved: null,
     isSuccessfull: null,
-    votes: <bool>[],
+    votes: <String, bool>{},
   );
 
   /// Convenience getter to determine whether the current Squad is empty.
@@ -53,7 +53,7 @@ class Squad extends Equatable {
       isSubmitted: data?['is_submitted'],
       isApproved: data?['is_approved'],
       isSuccessfull: data?['is_successfull'],
-      votes: List.from(data?['votes']),
+      votes: Map.from(data?['votes']),
     );
   }
 

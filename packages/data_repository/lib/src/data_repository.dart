@@ -373,15 +373,13 @@ class DataRepository {
         .doc(currentRoom.id)
         .collection('squads')
         .doc(currentRoom.currentSquadId)
-        .update({
-      'votes': FieldValue.arrayUnion([vote])
-    });
+        .update({'votes.${currentPlayer.id}': vote});
   }
 
   StreamSubscription? _squadVotesSubscription;
 
   void subscribeSquadVotesWith({
-    required void Function(List<bool>) doLogic,
+    required void Function(Map<String, bool>) doLogic,
   }) {
     _squadVotesSubscription = _firestore
         .collection('rooms')
@@ -390,7 +388,7 @@ class DataRepository {
         .doc(currentRoom.currentSquadId)
         .snapshots()
         .listen((snap) {
-      doLogic(List<bool>.from(snap['votes']));
+      doLogic(Map<String, bool>.from(snap['votes']));
     });
   }
 
