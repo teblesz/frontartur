@@ -37,6 +37,7 @@ class GameState extends Equatable {
       QuestStatus.upcoming,
       QuestStatus.upcoming,
     ],
+    this.winningTeam = true,
     this.isSquadRequiredSize = false,
   });
 
@@ -44,6 +45,7 @@ class GameState extends Equatable {
   final int questNumber;
   final bool lastQuestOutcome;
   final List<QuestStatus> questStatuses;
+  final bool winningTeam;
   final bool isSquadRequiredSize;
 
   @override
@@ -52,6 +54,7 @@ class GameState extends Equatable {
         questNumber,
         lastQuestOutcome,
         questStatuses,
+        winningTeam,
         isSquadRequiredSize,
       ];
 
@@ -60,6 +63,7 @@ class GameState extends Equatable {
     int? questNumber,
     bool? lastQuestOutcome,
     List<QuestStatus>? questStatuses,
+    bool? winningTeam,
     bool? isSquadRequiredSize,
   }) {
     return GameState(
@@ -67,6 +71,7 @@ class GameState extends Equatable {
       questNumber: questNumber ?? this.questNumber,
       lastQuestOutcome: lastQuestOutcome ?? this.lastQuestOutcome,
       questStatuses: questStatuses ?? this.questStatuses,
+      winningTeam: winningTeam ?? this.winningTeam,
       isSquadRequiredSize: isSquadRequiredSize ?? this.isSquadRequiredSize,
     );
   }

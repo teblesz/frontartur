@@ -37,7 +37,8 @@ class _SubmitSquadButton extends StatelessWidget {
         onPressed: context.read<GameCubit>().state.isSquadRequiredSize
             ? null
             : context.read<GameCubit>().submitSquad,
-        child: const Text("Submit squad", style: TextStyle(fontSize: 25)),
+        child: Text(AppLocalizations.of(context).submitSquad,
+            style: const TextStyle(fontSize: 25)),
       ),
     );
   }
@@ -64,7 +65,8 @@ class _VoteSquadPanelState extends State<_VoteSquadPanel> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          const Text('Vote for this squad', style: TextStyle(fontSize: 30)),
+          Text(AppLocalizations.of(context).voteForThisSquad,
+              style: const TextStyle(fontSize: 30)),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,7 +117,10 @@ class _VoteSquadButton extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(isPositive ? "Accept" : "Reject",
+          child: Text(
+              isPositive
+                  ? AppLocalizations.of(context).accept
+                  : AppLocalizations.of(context).reject,
               style: const TextStyle(fontSize: 25)),
         ));
   }
@@ -164,10 +169,10 @@ class _EmbarkmentCardState extends State<_EmbarkmentCard> {
         children: [
           Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('This squad was approved.',
-                    style: TextStyle(fontSize: 25)),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(AppLocalizations.of(context).thisSquadWasApproved,
+                    style: const TextStyle(fontSize: 25)),
               ),
               FilledButton(
                 onPressed: _isDisabled
@@ -176,7 +181,8 @@ class _EmbarkmentCardState extends State<_EmbarkmentCard> {
                         // of context?
                         context,
                         QuestPage.route(() => _updateIsDisabled(true))),
-                child: const Text("Embark", style: TextStyle(fontSize: 30)),
+                child: Text(AppLocalizations.of(context).embark,
+                    style: const TextStyle(fontSize: 30)),
               ),
               const SizedBox(height: 10),
             ],

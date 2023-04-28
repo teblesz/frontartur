@@ -7,6 +7,8 @@ class Room extends Equatable {
   final bool gameStarted;
   final String currentSquadId;
   final List<String> characters;
+  final List<String> specialCharacters;
+  final bool? merlinKilled;
 
   const Room({
     required this.id,
@@ -14,13 +16,17 @@ class Room extends Equatable {
     required this.gameStarted,
     required this.currentSquadId,
     required this.characters,
+    required this.specialCharacters,
+    this.merlinKilled,
   });
 
   Room.init({required this.hostUserId})
       : id = '',
         gameStarted = false,
         currentSquadId = '',
-        characters = <String>[];
+        characters = <String>[],
+        specialCharacters = <String>[],
+        merlinKilled = null;
 
   /// Empty room which represents that user is currently not in any room.
   static const empty = Room(
@@ -29,6 +35,8 @@ class Room extends Equatable {
     gameStarted: false,
     currentSquadId: '',
     characters: <String>[],
+    specialCharacters: <String>[],
+    merlinKilled: null,
   );
 
   /// Convenience getter to determine whether the current room is empty.
@@ -38,8 +46,15 @@ class Room extends Equatable {
   bool get isNotEmpty => this != Room.empty;
 
   @override
-  List<Object?> get props =>
-      [id, hostUserId, gameStarted, currentSquadId, characters];
+  List<Object?> get props => [
+        id,
+        hostUserId,
+        gameStarted,
+        currentSquadId,
+        characters,
+        specialCharacters,
+        merlinKilled,
+      ];
 
   factory Room.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data();
@@ -51,6 +66,10 @@ class Room extends Equatable {
       characters: data?['characters'] is Iterable
           ? List.from(data?['characters'])
           : List.empty(),
+      specialCharacters: data?['special_characters'] is Iterable
+          ? List.from(data?['special_characters'])
+          : List.empty(),
+      merlinKilled: data?['merlin_killed'],
     );
   }
 
@@ -60,6 +79,8 @@ class Room extends Equatable {
       'game_started': gameStarted,
       'current_squad_id': currentSquadId,
       'characters': characters,
+      'special_characters': specialCharacters,
+      'merlin_killed': merlinKilled,
     };
   }
 }

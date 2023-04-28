@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/sign_up/sign_up.dart';
 import 'package:formz/formz.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({super.key});
@@ -57,13 +58,14 @@ class _EmailInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextField(
-          key: const Key('signUpForm_emailInput_textField'),
           onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'email',
+            labelText: AppLocalizations.of(context).email,
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.invalid
+                ? AppLocalizations.of(context).invalidEmail
+                : null,
           ),
         );
       },
@@ -78,14 +80,15 @@ class _PasswordInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextField(
-          key: const Key('signUpForm_passwordInput_textField'),
           onChanged: (password) =>
               context.read<SignUpCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
+            labelText: AppLocalizations.of(context).password,
             helperText: '',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.invalid
+                ? AppLocalizations.of(context).invalidPassword
+                : null,
           ),
         );
       },
@@ -108,10 +111,10 @@ class _ConfirmPasswordInput extends StatelessWidget {
               .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'confirm password',
+            labelText: AppLocalizations.of(context).confirmPassword,
             helperText: '',
             errorText: state.confirmedPassword.invalid
-                ? 'passwords do not match'
+                ? AppLocalizations.of(context).passwordsDoNotMatch
                 : null,
           ),
         );
@@ -133,9 +136,10 @@ class _SignUpButton extends StatelessWidget {
                 onPressed: state.status.isValidated
                     ? () => context.read<SignUpCubit>().signUpFormSubmitted()
                     : null,
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Stwórz konto', style: TextStyle(fontSize: 20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(AppLocalizations.of(context).signUp,
+                      style: const TextStyle(fontSize: 20)),
                 ),
               );
       },

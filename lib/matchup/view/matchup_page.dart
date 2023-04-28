@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // tutaj zostały stracone 3 godziny na dojście co jest nie tak z Hero.
 // nie działał zupełnie bo w app.dart nie było observera
@@ -28,7 +29,7 @@ class MatchupPage extends StatelessWidget {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: const Text('Matchup'),
+            title: Text(AppLocalizations.of(context).matchup),
             actions: <Widget>[_MatchupAppBarActions()],
           ),
           body: BlocProvider(
@@ -47,14 +48,14 @@ class _MatchupAppBarActions extends StatelessWidget {
     return PopupMenuButton(
       itemBuilder: (_) => [
         PopupMenuItem(
-          child: const Text("Copy room's ID"),
+          child: Text(AppLocalizations.of(context).copyRoomsId),
           onTap: () async {
             final roomId = context.read<DataRepository>().currentRoom.id;
             await Clipboard.setData(ClipboardData(text: roomId));
           },
         ),
         PopupMenuItem(
-          child: const Text("Leave room"),
+          child: Text(AppLocalizations.of(context).leaveRoom),
           onTap: () => context.read<RoomCubit>().leaveRoom(),
         ),
       ],

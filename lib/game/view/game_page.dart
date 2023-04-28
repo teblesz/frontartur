@@ -4,6 +4,7 @@ import 'package:fluttartur/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -29,11 +30,11 @@ class GamePage extends StatelessWidget {
               PopupMenuButton(
                 itemBuilder: (_) => [
                   PopupMenuItem(
-                    child: const Text("Forgot character?"),
-                    onTap: () => showCharacterInfoDialog(context),
+                    child: Text(AppLocalizations.of(context).forgotCharacter),
+                    onTap: () => pushCharacterInfoDialog(context),
                   ),
                   PopupMenuItem(
-                    child: const Text("Leave room"),
+                    child: Text(AppLocalizations.of(context).leaveRoom),
                     onTap: () => context.read<RoomCubit>().leaveRoom(),
                   ),
                 ],

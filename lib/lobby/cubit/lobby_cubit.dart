@@ -25,7 +25,6 @@ class LobbyCubit extends Cubit<LobbyState> {
     if (!state.statusOfJoin.isValidated) return;
     emit(state.copyWith(statusOfJoin: FormzStatus.submissionInProgress));
     try {
-      await Future.delayed(Duration(seconds: 1)); //TODO remove delay
       await _dataRepository.joinRoom(roomId: state.roomId.value);
       emit(state.copyWith(statusOfJoin: FormzStatus.submissionSuccess));
     }
@@ -42,7 +41,6 @@ class LobbyCubit extends Cubit<LobbyState> {
   Future<void> createRoom({required String userId}) async {
     emit(state.copyWith(statusOfCreate: FormzStatus.submissionInProgress));
     try {
-      await Future.delayed(Duration(seconds: 1)); //TODO remove delay
       await _dataRepository.createRoom(userId: userId);
       emit(state.copyWith(statusOfCreate: FormzStatus.submissionSuccess));
     } catch (_) {
