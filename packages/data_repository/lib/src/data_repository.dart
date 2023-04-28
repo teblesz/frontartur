@@ -282,7 +282,8 @@ class DataRepository {
         .collection('squads')
         .doc(currentRoom.currentSquadId)
         .collection('members')
-        .add(Member(playerId: playerId, nick: nick).toFirestore());
+        .doc(playerId) // no duplicates
+        .set(Member(playerId: playerId, nick: nick).toFirestore());
   }
 
   /// remove player from squad
