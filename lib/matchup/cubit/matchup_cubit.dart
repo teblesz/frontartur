@@ -44,6 +44,7 @@ class MatchupCubit extends Cubit<MatchupState> {
   Future<void> initGame() async {
     await _assignLeader();
     await _assignCharacters();
+    await _assignSpecialCharacters();
     await _dataRepository.startGame();
   }
 
@@ -55,9 +56,7 @@ class MatchupCubit extends Cubit<MatchupState> {
 
   Future<void> _assignCharacters() async {
     final numberOfPlayers = await _dataRepository.playersCount;
-    final characters = _dataRepository.currentRoom.characters.isNotEmpty
-        ? [..._dataRepository.currentRoom.characters] // clone
-        : defaultCharacters(numberOfPlayers);
+    final characters = defaultCharacters(numberOfPlayers);
     characters.shuffle();
     await _dataRepository.assignCharacters(characters);
   }
@@ -68,5 +67,35 @@ class MatchupCubit extends Cubit<MatchupState> {
       numberOfPlayers,
       (index) => index < numberOfEvils ? 'evil' : 'good',
     );
+  }
+
+  Future<void> _assignSpecialCharacters() async {
+    final specialCharacters = _dataRepository.currentRoom.specialCharacters;
+    if (specialCharacters.isEmpty) return;
+    final players = await _dataRepository.playersList();
+
+    final goodCharacters = specialCharacters.where((c) => c.startsWith('good'));
+    final goodPlayers = players.where((p) => p.character == 'good').toList();
+    goodPlayers.shuffle();
+    final goodMap = Map.fromIterables(
+        goodCharacters, goodPlayers.take(goodCharacters.length));
+
+    final evilCharacters = specialCharacters.where((c) => c.startsWith('evil'));
+    final evilPlayers = players.where((p) => p.character == 'evil').toList();
+    evilPlayers.shuffle();
+    final evilMap = Map.fromIterables(
+        evilCharacters, evilPlayers.take(evilCharacters.length));
+
+    await _dataRepository.assignSpecialCharacters({...goodMap, ...evilMap});
+  }
+
+  // debug only
+  Future<void> add_Players_debug(int count) async {
+    for (int i = 0; i < count; i++) {
+      await _dataRepository.addPlayer(
+        nick: "player_$i",
+        userId: "${i * 100}",
+      );
+    }
   }
 }

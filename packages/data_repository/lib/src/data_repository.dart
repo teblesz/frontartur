@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/models/member.dart';
 import 'package:data_repository/models/models.dart';
 import 'package:cache/cache.dart';
+import 'package:flutter/material.dart';
 
 part 'data_failures.dart';
 // TODO unique room name (kahoot-like) https://stackoverflow.com/questions/47543251/firestore-unique-index-or-unique-constraint
@@ -69,10 +70,6 @@ class DataRepository {
     }
 
     _cache.write(key: roomCacheKey, value: Room.fromFirestore(roomSnap));
-  }
-
-  Future<void> updateRoomCharacters(List<String> characters) async {
-    //TODO this feature
   }
 
   /// sets game_started and current_squad_id fields in room document
@@ -200,6 +197,23 @@ class DataRepository {
     for (int i = 0; i < players.length; i++) {
       batch.update(players[i].reference, {'character': characters[i]});
     }
+    await batch.commit();
+  }
+
+  Future<void> assignSpecialCharacters(
+    Map<String, Player> map, // <special character, player>
+  ) async {
+    final batch = FirebaseFirestore.instance.batch();
+    final playersRef = _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('players');
+
+    for (var specialCharacter in map.keys) {
+      final playerRef = playersRef.doc(map[specialCharacter]!.id);
+      batch.update(playerRef, {'special_character': specialCharacter});
+    }
+
     await batch.commit();
   }
 
@@ -492,5 +506,36 @@ class DataRepository {
     return membersSnap.size;
   }
 
+  //-----------------------------characters definition-------------------------------------
+
+  Future<List<String>> getSpecialCharacters() async {
+    final roomSnap =
+        await _firestore.collection('rooms').doc(currentRoom.id).get();
+    return Room.fromFirestore(roomSnap).specialCharacters;
+  }
+
+  Future<void> setSpecialCharacters(List<String> specialCharacters) async {
+    await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .update({'special_characters': specialCharacters});
+  }
+
+  //-----------------------------killing merlin-------------------------------------
+
+  Stream<bool?> streamMerlinKilled() {
+    return _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .snapshots()
+        .map((roomSnap) => Room.fromFirestore(roomSnap).merlinKilled);
+  }
+
+  Future<void> updateMerlinKilled(bool merlinKilled) async {
+    await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .update({'merlin_killed': merlinKilled});
+  }
   // DataRepository
 }

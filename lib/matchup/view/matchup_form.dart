@@ -18,6 +18,7 @@ class MatchupForm extends StatelessWidget {
     return Column(
       children: [
         _RoomID(),
+        _Add5PlayerButton(),
         Expanded(
           child: _PlayerListView(),
         ),
@@ -41,6 +42,18 @@ class _RoomID extends StatelessWidget {
                   ? const Text('<room is empty>')
                   : Text(data.id);
             },
+          );
+  }
+}
+
+class _Add5PlayerButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return !kDebugMode
+        ? const SizedBox.shrink()
+        : ElevatedButton(
+            onPressed: () => context.read<MatchupCubit>().add_Players_debug(6),
+            child: const Text('Add players'),
           );
   }
 }
@@ -132,7 +145,7 @@ class _RolesDefButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.tonal(
-      onPressed: null, // TODO role def feature !!!
+      onPressed: () => Navigator.push(context, CharactersPage.route()),
       child: Text(AppLocalizations.of(context).defineRoles),
     );
   }

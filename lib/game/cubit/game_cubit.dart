@@ -147,12 +147,13 @@ class GameCubit extends Cubit<GameState> {
   }
 
   Future<void> closeQuestResults() async {
-    final winningTeam = await winningTeamIs();
+    final winningTeam = await _winningTeamIs();
     if (winningTeam == null) {
       emit(state.copyWith(status: GameStatus.squadChoice));
       emit(state.copyWith(
           questStatuses: state.insertToQuestStatuses(QuestStatus.ongoing)));
     } else {
+      emit(state.copyWith(gameIsWon: winningTeam));
       emit(state.copyWith(status: GameStatus.gameResults));
     }
   }
@@ -170,7 +171,7 @@ class GameCubit extends Cubit<GameState> {
   bool _isTwoFailsQuest(int playersCount, int questNumber) =>
       playersCount >= 7 && questNumber == 4;
 
-  Future<bool?> winningTeamIs() async {
+  Future<bool?> _winningTeamIs() async {
     final approvedSquads = await _dataRepository.getApprovedSquads();
 
     int successCount = 0, failCount = 0;
@@ -187,6 +188,28 @@ class GameCubit extends Cubit<GameState> {
     if (successCount >= 3) return true;
     if (failCount >= 3) return false;
     return null;
+  }
+
+  //--------------------------------merlin killing logic-------------------------------------
+
+  bool assassinPresent() =>
+      _dataRepository.currentRoom.specialCharacters.contains("evil_assassin");
+
+  bool isAssassin() =>
+      _dataRepository.currentPlayer.specialCharacter == "evil_assassin";
+
+  Stream<bool?> streamMerlinKilled() {
+    return _dataRepository.streamMerlinKilled();
+  }
+
+  Future<void> killPlayer({required Player player}) async {
+    await _dataRepository
+        .updateMerlinKilled(player.specialCharacter == "good_merlin");
+  }
+
+  Future<List<Player>> listOfGoodPlayers() async {
+    final players = await _dataRepository.playersList();
+    return players.where((p) => p.character == 'good').toList();
   }
 
   // GameCubit

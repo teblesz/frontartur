@@ -24,7 +24,7 @@
   "enterYourNick": "Enter your nick",
   "nick": "nick",
   "confirm": "Confirm",
-  "defineRoles": "Define roles (NA)",
+  "defineRoles": "Special characters",
   "startGame": "Start game",  
   "remove": "Remove",
 
@@ -57,6 +57,22 @@
   "fail": "Fail",
   "court": "Court:",
   "squad": "Squad:",
+
+
+  "defineSpecialCharacters": "Define special characters",
+  "goodColon": "Good:",
+  "evilColon": "Evil:",
+  "merlin": "Merlin",
+  "assassin": "Assassin",
+  "percival": "Percival",
+  "morgana": "Morgana",
+  "addMerlinAndAssassin": "Merlin & Assassin",
+  "addPercivalAndMorgana": "Percival & Morgana",
+
+  "assassinChooses": "Assassin chooses his victim.\nIf he kills Merlin, evil wins.",
+  "killMerlin": "Kill one of good courtiers.\nIf you kill Merlin, evil wins.",
+  "merlinSafe": "Merlin is safe!",
+  "merlinDead": "Merlin was killed.\n Evil wins.",
 
   "helloWorld": "Hello World!",
   "@helloWorld": {
