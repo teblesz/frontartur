@@ -41,7 +41,7 @@ final theme = ThemeData(
   ),
 
   cardTheme: const CardTheme(
-    color: Color.fromARGB(180, 50, 50, 50),
+    color: Color.fromARGB(210, 50, 50, 50),
   ),
 
   inputDecorationTheme: const InputDecorationTheme(

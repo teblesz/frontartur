@@ -258,8 +258,8 @@ Future<void> _pushGameResultsDialog(BuildContext gameContext) {
                   return Wrap(
                     children: <Widget>[
                       ...evilPlayers.map(
-                        (player) => Text(" ${player.nick} ",
-                            style: const TextStyle(fontSize: 15)),
+                        (player) => Text("${player.nick}, ",
+                            style: const TextStyle(fontSize: 18)),
                       ),
                     ],
                   );
@@ -298,9 +298,14 @@ class _AssassinBox extends StatelessWidget {
         stream: gameContext.read<GameCubit>().streamMerlinKilled(),
         builder: (context, snapshot) {
           final merlinKilled = snapshot.data;
-          return merlinKilled == null
-              ? _KillingMerlinBox(gameContext: gameContext)
-              : _MerlinKilledResult(merlinKilled: merlinKilled);
+          return Column(
+            children: [
+              const SizedBox(height: 10),
+              merlinKilled == null
+                  ? _KillingMerlinBox(gameContext: gameContext)
+                  : _MerlinKilledResult(merlinKilled: merlinKilled),
+            ],
+          );
         });
   }
 }
@@ -317,23 +322,23 @@ class _KillingMerlinBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final isAssassin = gameContext.read<GameCubit>().isAssassin();
     return Card(
-      color: Color.fromARGB(255, 0, 0, 0),
+      color: const Color.fromARGB(118, 0, 0, 0),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: !isAssassin
             ? Column(
                 children: [
-                  Text("Assassin chooses his victim.",
+                  Text(AppLocalizations.of(context).assassinChooses,
                       style: const TextStyle(fontSize: 20)),
-                  Text("If he kills Merlin game is lost.",
-                      style: const TextStyle(fontSize: 20)),
+                  const Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: CircularProgressIndicator(),
+                  ),
                 ],
               )
             : Column(
                 children: [
-                  Text("Merlin can be killed.",
-                      style: const TextStyle(fontSize: 20)),
-                  Text("Choose who to kill.",
+                  Text(AppLocalizations.of(context).killMerlin,
                       style: const TextStyle(fontSize: 20)),
                   const SizedBox(height: 10),
                   FutureBuilder<List<Player>>(
@@ -396,15 +401,15 @@ class _MerlinKilledResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: !merlinKilled ? Colors.green.shade800 : Colors.red.shade800,
+      color: !merlinKilled ? Colors.green.shade900 : Colors.red.shade900,
       child: Center(
         heightFactor: 1,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
             !merlinKilled
-                ? AppLocalizations.of(context).goodTeamWon
-                : AppLocalizations.of(context).evilTeamWon,
+                ? AppLocalizations.of(context).merlinSafe
+                : AppLocalizations.of(context).merlinDead,
             style: const TextStyle(fontSize: 30),
           ),
         ),

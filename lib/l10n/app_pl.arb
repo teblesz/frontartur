@@ -68,5 +68,11 @@
   "addMerlinAndAssassin": "Merlin i Zabójca",
   "addPercivalAndMorgana": "Percival i Morgana",
 
+  "assassinChooses": "Zabójca wybiera ofiarę.\nJeśli zabije Merlina, zło wygra",
+  "killMerlin": "Zabij jednego z dobrych..\nJeśli zabijesz Merlina, zło wygra",
+  "merlinSafe": "Merlin ocalony",
+  "merlinDead": "Merlin zabity.\nZło wygrywa",
+
+
   "helloWorld": "Witaj Świecie"
 }
