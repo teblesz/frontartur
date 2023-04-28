@@ -12,14 +12,14 @@ class MatchupCubit extends Cubit<MatchupState> {
 
   final DataRepository _dataRepository;
 
+  void playerCountChanged(List<Player>? players) {
+    if (players == null) return;
+    emit(state.copyWith(playersCount: players.length));
+  }
+
   void nickChanged(String value) {
     final nick = Nick.dirty(value);
-    emit(
-      state.copyWith(
-        nick: nick,
-        status: Formz.validate([nick]),
-      ),
-    );
+    emit(state.copyWith(nick: nick, status: Formz.validate([nick])));
   }
 
   Future<void> writeinPlayerWithUserId(String userId) async {
@@ -88,6 +88,9 @@ class MatchupCubit extends Cubit<MatchupState> {
 
     await _dataRepository.assignSpecialCharacters({...goodMap, ...evilMap});
   }
+
+  bool isPlayerCountValid() =>
+      state.playersCount >= 5 && state.playersCount <= 10;
 
   // debug only
   Future<void> add_Players_debug(int count) async {

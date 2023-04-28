@@ -38,6 +38,7 @@ class GameState extends Equatable {
       QuestStatus.upcoming,
     ],
     this.winningTeam = true,
+    this.isSquadRequiredSize = false,
   });
 
   final GameStatus status;
@@ -45,24 +46,33 @@ class GameState extends Equatable {
   final bool lastQuestOutcome;
   final List<QuestStatus> questStatuses;
   final bool winningTeam;
+  final bool isSquadRequiredSize;
 
   @override
-  List<Object> get props =>
-      [status, questNumber, lastQuestOutcome, questStatuses, winningTeam];
+  List<Object> get props => [
+        status,
+        questNumber,
+        lastQuestOutcome,
+        questStatuses,
+        winningTeam,
+        isSquadRequiredSize,
+      ];
 
   GameState copyWith({
     GameStatus? status,
     int? questNumber,
     bool? lastQuestOutcome,
     List<QuestStatus>? questStatuses,
-    bool? gameIsWon,
+    bool? winningTeam,
+    bool? isSquadRequiredSize,
   }) {
     return GameState(
       status: status ?? this.status,
       questNumber: questNumber ?? this.questNumber,
       lastQuestOutcome: lastQuestOutcome ?? this.lastQuestOutcome,
       questStatuses: questStatuses ?? this.questStatuses,
-      winningTeam: gameIsWon ?? this.winningTeam,
+      winningTeam: winningTeam ?? this.winningTeam,
+      isSquadRequiredSize: isSquadRequiredSize ?? this.isSquadRequiredSize,
     );
   }
 
@@ -71,13 +81,4 @@ class GameState extends Equatable {
     statuses[questNumber - 1] = status;
     return statuses;
   }
-}
-
-class SquadMissingFieldOnResultsFailure implements Exception {
-  const SquadMissingFieldOnResultsFailure(
-      [this.message =
-          'Squad is approved but field is_successful field is missing, '
-              'while user displays quest results.']);
-
-  final String message;
 }
