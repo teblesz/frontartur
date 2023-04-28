@@ -3,6 +3,7 @@ import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/matchup/matchup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
 import 'package:data_repository/data_repository.dart';
@@ -65,6 +66,7 @@ class _PlayerListView extends StatelessWidget {
       stream: context.read<DataRepository>().streamPlayersList(),
       builder: (context, snapshot) {
         var players = snapshot.data;
+        context.read<MatchupCubit>().playerCountChanged(players);
         return players == null
             ? const SizedBox.expand()
             : ListView(
@@ -131,13 +133,20 @@ class _HostButtons extends StatelessWidget {
 class _StartGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: () {
-        context.read<MatchupCubit>().initGame();
-      },
-      child: Text(AppLocalizations.of(context).startGame,
-          style: const TextStyle(fontSize: 20)),
-    );
+    return BlocBuilder<MatchupCubit, MatchupState>(
+        buildWhen: (previous, current) =>
+            previous.playersCount != current.playersCount,
+        builder: (context, state) {
+          return FilledButton(
+            onPressed: !context.read<MatchupCubit>().isPlayerCountValid()
+                ? null
+                : () {
+                    context.read<MatchupCubit>().initGame();
+                  },
+            child: Text(AppLocalizations.of(context).startGame,
+                style: const TextStyle(fontSize: 20)),
+          );
+        });
   }
 }
 
