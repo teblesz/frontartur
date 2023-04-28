@@ -105,21 +105,35 @@ class _CharacterInfoState extends State<_CharacterInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final player = context.read<DataRepository>().currentPlayer;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Builder(builder: (context) {
           return _characterHidden
               ? const SizedBox.shrink()
-              : Text(
-                  (context.read<DataRepository>().currentPlayer.character ??
-                              "error") ==
-                          'good'
-                      ? AppLocalizations.of(context).good
-                      : AppLocalizations.of(context).evil,
-                  style: const TextStyle(
-                    fontSize: 25,
-                  ),
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      (player.character ?? "error") == 'good'
+                          ? AppLocalizations.of(context).good
+                          : AppLocalizations.of(context).evil,
+                      style: const TextStyle(
+                        fontSize: 25,
+                      ),
+                    ),
+                    player.specialCharacter == null
+                        ? const SizedBox.shrink()
+                        : const SizedBox(width: 8),
+                    player.specialCharacter == null
+                        ? const SizedBox.shrink()
+                        : Text(
+                            specialCharacterToText(
+                                player.specialCharacter!, context),
+                            style: const TextStyle(fontSize: 25),
+                          ),
+                  ],
                 );
         }),
         const SizedBox(height: 10),
@@ -139,6 +153,22 @@ class _CharacterInfoState extends State<_CharacterInfo> {
         )
       ],
     );
+  }
+}
+
+// TODO replace this with value class for character and enum
+String specialCharacterToText(String specialCharacter, BuildContext context) {
+  switch (specialCharacter) {
+    case 'good_merlin':
+      return AppLocalizations.of(context).merlin;
+    case 'evil_assassin':
+      return AppLocalizations.of(context).assassin;
+    case 'good_percival':
+      return AppLocalizations.of(context).percival;
+    case 'evil_morgana':
+      return AppLocalizations.of(context).morgana;
+    default:
+      return 'error';
   }
 }
 
