@@ -44,15 +44,16 @@ class GameCubit extends Cubit<GameState> {
     if (!_dataRepository.currentPlayer.isLeader) return;
     if (state.status != GameStatus.squadChoice) return;
 
-    final isSquadRequiredSize = await this.isSquadRequiredSize();
-    if (isSquadRequiredSize) return;
-    emit(state.copyWith(isSquadRequiredSize: isSquadRequiredSize));
+    if (state.isSquadFull) return;
 
     await _dataRepository.addMember(
       questNumber: state.questNumber,
       playerId: player.id,
       nick: player.nick,
     );
+
+    final isSquadFull = await this.isSquadFull();
+    emit(state.copyWith(isSquadFull: isSquadFull));
   }
 
   /// remove player from squad
@@ -64,9 +65,13 @@ class GameCubit extends Cubit<GameState> {
       questNumber: state.questNumber,
       memberId: member.id,
     );
+
+    emit(state.copyWith(isSquadFull: false));
   }
 
   Future<void> submitSquad() async {
+    final isSquadRequiredSize = await this.isSquadFull();
+    if (!isSquadRequiredSize) return;
     await _dataRepository.submitSquad();
     // leader counts squad votes
     _dataRepository.subscribeSquadVotesWith(doLogic: _assessSquadVoteResults);
@@ -202,17 +207,18 @@ class GameCubit extends Cubit<GameState> {
     [3, 4, 4, 5, 5],
     [3, 4, 4, 5, 5],
   ];
-  int squadRequiredSize(int playersCount, int questNumber) =>
+
+  int squadFullSize(int playersCount, int questNumber) =>
       squadRequiredSizes[playersCount - 5][questNumber - 1];
 
-  Future<bool> isSquadRequiredSize() async {
+  Future<bool> isSquadFull() async {
     // TODO move this to a field in squad
     final membersCount = await _dataRepository.membersCount;
     final playersCount = await _dataRepository.playersCount;
-    if (membersCount > squadRequiredSize(playersCount, state.questNumber)) {
+    if (membersCount > squadFullSize(playersCount, state.questNumber)) {
       throw const MembersLimitExceededFailure();
     }
-    return membersCount == squadRequiredSize(playersCount, state.questNumber);
+    return membersCount == squadFullSize(playersCount, state.questNumber);
   }
 
   //--------------------------------merlin killing logic-------------------------------------

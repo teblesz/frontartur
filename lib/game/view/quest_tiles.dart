@@ -71,17 +71,41 @@ class _QuestTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final questStatus = gameState.questStatuses[questNumber - 1];
-    return CircleAvatar(
-      radius: 30,
-      backgroundColor: _questTileColor(questStatus),
-      child: IconButton(
-        iconSize: 40,
-        color: Colors.white,
-        icon: Icon(_questTileIconData(questStatus)),
-        onPressed: () {
-          // TODO !! quest info
-        },
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: _questTileColor(questStatus),
+          child: IconButton(
+            iconSize: 40,
+            color: Colors.white,
+            icon: Icon(_questTileIconData(questStatus)),
+            onPressed: () {
+              // TODO !! quest info
+            },
+          ),
+        ),
+        FutureBuilder<int>(
+          future: context.read<DataRepository>().playersCount,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            final playersCount = snapshot.data ?? 5;
+            return Text(
+                "${context.read<GameCubit>().squadFullSize(
+                      playersCount,
+                      questNumber,
+                    )}",
+                style: const TextStyle(fontSize: 18));
+          },
+        ),
+      ],
     );
   }
 }

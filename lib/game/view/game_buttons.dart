@@ -10,7 +10,6 @@ class _GameButtons extends StatelessWidget {
         builder: (context, snapshot) {
           var player = snapshot.data ?? Player.empty;
           return BlocBuilder<GameCubit, GameState>(
-              // TODO remove this
               buildWhen: (previous, current) =>
                   previous.status != current.status,
               builder: (context, state) {
@@ -31,16 +30,21 @@ class _GameButtons extends StatelessWidget {
 class _SubmitSquadButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: FilledButton(
-        onPressed: context.read<GameCubit>().state.isSquadRequiredSize
-            ? null
-            : context.read<GameCubit>().submitSquad,
-        child: Text(AppLocalizations.of(context).submitSquad,
-            style: const TextStyle(fontSize: 25)),
-      ),
-    );
+    return BlocBuilder<GameCubit, GameState>(
+        buildWhen: (previous, current) =>
+            previous.isSquadFull != current.isSquadFull,
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: FilledButton(
+              onPressed: !state.isSquadFull
+                  ? null
+                  : () => context.read<GameCubit>().submitSquad,
+              child: Text(AppLocalizations.of(context).submitSquad,
+                  style: const TextStyle(fontSize: 25)),
+            ),
+          );
+        });
   }
 }
 
