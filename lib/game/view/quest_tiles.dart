@@ -71,41 +71,66 @@ class _QuestTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final questStatus = gameState.questStatuses[questNumber - 1];
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: _questTileColor(questStatus),
-          child: IconButton(
-            iconSize: 40,
-            color: Colors.white,
-            icon: Icon(_questTileIconData(questStatus)),
-            onPressed: () {
-              // TODO !! quest info
-            },
-          ),
-        ),
-        FutureBuilder<int>(
-          future: context.read<DataRepository>().playersCount,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            final playersCount = snapshot.data ?? 5;
-            return Text(
-                "${context.read<GameCubit>().squadFullSize(
-                      playersCount,
-                      questNumber,
-                    )}",
-                style: const TextStyle(fontSize: 18));
-          },
-        ),
-      ],
+    return FutureBuilder<int>(
+      future: context.read<DataRepository>().playersCount,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        final playersCount = snapshot.data ?? 5;
+        final squadFullSize =
+            context.read<GameCubit>().squadFullSize(playersCount, questNumber);
+        final isTwoFailsQuest = context
+            .read<GameCubit>()
+            .isTwoFailsQuest(playersCount, questNumber);
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            isTwoFailsQuest
+                ? CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: _questTileColor(questStatus),
+                      child: IconButton(
+                        iconSize: 40,
+                        color: Colors.white,
+                        icon: Icon(_questTileIconData(questStatus)),
+                        onPressed: () {
+                          // TODO !! quest info
+                        },
+                      ),
+                    ),
+                  )
+                : CircleAvatar(
+                    radius: 30,
+                    backgroundColor: _questTileColor(questStatus),
+                    child: IconButton(
+                      iconSize: 40,
+                      color: Colors.white,
+                      icon: Icon(_questTileIconData(questStatus)),
+                      onPressed: () {
+                        // TODO !! quest info
+                      },
+                    ),
+                  ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(isTwoFailsQuest ? "Ⅱ" : "",
+                    style: const TextStyle(fontSize: 18)),
+                Text("$squadFullSize", style: const TextStyle(fontSize: 20)),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

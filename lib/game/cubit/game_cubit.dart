@@ -102,7 +102,8 @@ class GameCubit extends Cubit<GameState> {
     _dataRepository.unsubscribeQuestVotes();
 
     final playersCount = await _dataRepository.playersCount;
-    final isTwoFailsQuest = _isTwoFailsQuest(playersCount, state.questNumber);
+    final isTwoFailsQuest =
+        this.isTwoFailsQuest(playersCount, state.questNumber);
 
     final negativeVotesCount = votes.where((v) => v == false).length;
     if ((isTwoFailsQuest && negativeVotesCount >= 2) ||
@@ -177,7 +178,7 @@ class GameCubit extends Cubit<GameState> {
   }
 
 //--------------------------------game rules logic-------------------------------------
-  bool _isTwoFailsQuest(int playersCount, int questNumber) =>
+  bool isTwoFailsQuest(int playersCount, int questNumber) =>
       playersCount >= 7 && questNumber == 4;
 
   Future<bool?> _winningTeamIs() async {
