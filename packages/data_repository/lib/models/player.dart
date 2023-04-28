@@ -17,7 +17,7 @@ class Player extends Equatable {
   final String userId;
   final String nick;
   final bool isLeader;
-  final String? character;
+  final String? character; // TODO Change to boolean
   final String? specialCharacter;
 
   /// Empty player which represents that user is currently not in any player.

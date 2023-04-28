@@ -508,17 +508,34 @@ class DataRepository {
 
   //-----------------------------characters definition-------------------------------------
 
-  Future<List<String>> getCharacters() async {
+  Future<List<String>> getSpecialCharacters() async {
     final roomSnap =
         await _firestore.collection('rooms').doc(currentRoom.id).get();
     return Room.fromFirestore(roomSnap).specialCharacters;
   }
 
-  Future<void> setCharacters(List<String> specialCharacters) async {
+  Future<void> setSpecialCharacters(List<String> specialCharacters) async {
     await _firestore
         .collection('rooms')
         .doc(currentRoom.id)
         .update({'special_characters': specialCharacters});
+  }
+
+  //-----------------------------killing merlin-------------------------------------
+
+  Stream<bool?> streamMerlinKilled() {
+    return _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .snapshots()
+        .map((roomSnap) => Room.fromFirestore(roomSnap).merlinKilled);
+  }
+
+  Future<void> updateMerlinKilled(bool merlinKilled) async {
+    await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .update({'merlin_killed': merlinKilled});
   }
   // DataRepository
 }

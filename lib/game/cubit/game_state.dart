@@ -37,28 +37,32 @@ class GameState extends Equatable {
       QuestStatus.upcoming,
       QuestStatus.upcoming,
     ],
+    this.winningTeam = true,
   });
 
   final GameStatus status;
   final int questNumber;
   final bool lastQuestOutcome;
   final List<QuestStatus> questStatuses;
+  final bool winningTeam;
 
   @override
   List<Object> get props =>
-      [status, questNumber, lastQuestOutcome, questStatuses];
+      [status, questNumber, lastQuestOutcome, questStatuses, winningTeam];
 
   GameState copyWith({
     GameStatus? status,
     int? questNumber,
     bool? lastQuestOutcome,
     List<QuestStatus>? questStatuses,
+    bool? gameIsWon,
   }) {
     return GameState(
       status: status ?? this.status,
       questNumber: questNumber ?? this.questNumber,
       lastQuestOutcome: lastQuestOutcome ?? this.lastQuestOutcome,
       questStatuses: questStatuses ?? this.questStatuses,
+      winningTeam: gameIsWon ?? this.winningTeam,
     );
   }
 

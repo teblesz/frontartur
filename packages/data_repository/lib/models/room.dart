@@ -8,6 +8,7 @@ class Room extends Equatable {
   final String currentSquadId;
   final List<String> characters;
   final List<String> specialCharacters;
+  final bool? merlinKilled;
 
   const Room({
     required this.id,
@@ -16,6 +17,7 @@ class Room extends Equatable {
     required this.currentSquadId,
     required this.characters,
     required this.specialCharacters,
+    this.merlinKilled,
   });
 
   Room.init({required this.hostUserId})
@@ -23,7 +25,8 @@ class Room extends Equatable {
         gameStarted = false,
         currentSquadId = '',
         characters = <String>[],
-        specialCharacters = <String>[];
+        specialCharacters = <String>[],
+        merlinKilled = null;
 
   /// Empty room which represents that user is currently not in any room.
   static const empty = Room(
@@ -33,6 +36,7 @@ class Room extends Equatable {
     currentSquadId: '',
     characters: <String>[],
     specialCharacters: <String>[],
+    merlinKilled: null,
   );
 
   /// Convenience getter to determine whether the current room is empty.
@@ -48,7 +52,8 @@ class Room extends Equatable {
         gameStarted,
         currentSquadId,
         characters,
-        specialCharacters
+        specialCharacters,
+        merlinKilled,
       ];
 
   factory Room.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -64,6 +69,7 @@ class Room extends Equatable {
       specialCharacters: data?['special_characters'] is Iterable
           ? List.from(data?['special_characters'])
           : List.empty(),
+      merlinKilled: data?['merlin_killed'],
     );
   }
 
@@ -74,6 +80,7 @@ class Room extends Equatable {
       'current_squad_id': currentSquadId,
       'characters': characters,
       'special_characters': specialCharacters,
+      'merlin_killed': merlinKilled,
     };
   }
 }

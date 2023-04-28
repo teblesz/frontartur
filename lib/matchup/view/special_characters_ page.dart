@@ -72,7 +72,15 @@ class _CharactersViewState extends State<_CharactersView> {
       characters.add('good_percival');
       characters.add('evil_morgana');
     }
-    await context.read<DataRepository>().setCharacters(characters);
+    await context.read<DataRepository>().setSpecialCharacters(characters);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final list = context.read<DataRepository>().currentRoom.specialCharacters;
+    if (list.contains("good_merlin")) hasMerlinAndAssassin = true;
+    if (list.contains("good_percival")) hasPercivalAndMorgana = true;
   }
 
   @override
@@ -127,7 +135,6 @@ class _CharactersViewState extends State<_CharactersView> {
         ElevatedButton(
           onPressed: () {
             updateSpecialCharacters();
-
             Navigator.of(context).pop();
           },
           child: Padding(
@@ -141,6 +148,7 @@ class _CharactersViewState extends State<_CharactersView> {
         const SizedBox(height: 20),
       ],
     );
+    ;
   }
 }
 

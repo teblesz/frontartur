@@ -52,8 +52,8 @@ class _Add5PlayerButton extends StatelessWidget {
     return !kDebugMode
         ? const SizedBox.shrink()
         : ElevatedButton(
-            onPressed: () => context.read<MatchupCubit>().add5Players(),
-            child: const Text('Add 5 players'),
+            onPressed: () => context.read<MatchupCubit>().add_Players_debug(6),
+            child: const Text('Add players'),
           );
   }
 }

@@ -90,8 +90,8 @@ class MatchupCubit extends Cubit<MatchupState> {
   }
 
   // debug only
-  Future<void> add5Players() async {
-    for (int i = 0; i < 5; i++) {
+  Future<void> add_Players_debug(int count) async {
+    for (int i = 0; i < count; i++) {
       await _dataRepository.addPlayer(
         nick: "player_$i",
         userId: "${i * 100}",
