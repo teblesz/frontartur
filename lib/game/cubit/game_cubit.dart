@@ -216,6 +216,8 @@ class GameCubit extends Cubit<GameState> {
     // TODO move this to a field in squad
     final membersCount = await _dataRepository.membersCount;
     final playersCount = await _dataRepository.playersCount;
+    // TODO remove line below (LIMITS!!!)
+    if (playersCount < 5) return true;
     if (membersCount > squadFullSize(playersCount, state.questNumber)) {
       throw const MembersLimitExceededFailure();
     }

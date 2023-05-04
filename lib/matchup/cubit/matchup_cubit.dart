@@ -40,6 +40,11 @@ class MatchupCubit extends Cubit<MatchupState> {
     _dataRepository.removePlayer(playerId: player.id);
   }
 
+  bool isPlayerCountValid() {
+    return true; // TODO remove this line (LIMITS!!!)
+    return state.playersCount >= 5 && state.playersCount <= 10;
+  }
+
   /// handles starting game logic
   Future<void> initGame() async {
     await _assignLeader();
@@ -88,9 +93,6 @@ class MatchupCubit extends Cubit<MatchupState> {
 
     await _dataRepository.assignSpecialCharacters({...goodMap, ...evilMap});
   }
-
-  bool isPlayerCountValid() =>
-      state.playersCount >= 5 && state.playersCount <= 10;
 
   // debug only
   Future<void> add_Players_debug(int count) async {
