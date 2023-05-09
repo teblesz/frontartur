@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
 import 'dart:math';
@@ -41,7 +42,7 @@ class MatchupCubit extends Cubit<MatchupState> {
   }
 
   bool isPlayerCountValid() {
-    return true; // TODO remove this line (LIMITS!!!)
+    if (kDebugMode) return true;
     return state.playersCount >= 5 && state.playersCount <= 10;
   }
 

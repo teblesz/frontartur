@@ -64,6 +64,8 @@ class LoginCubit extends Cubit<LoginState> {
           status: FormzStatus.submissionFailure,
         ),
       );
+    } on StateError catch (_) {
+      // this catch fixed logging in with google issues, even thouth it never catches
     } catch (_) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }

@@ -1,7 +1,7 @@
 import 'package:data_repository/data_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/foundation.dart';
 
 part 'game_state.dart';
 
@@ -162,6 +162,7 @@ class GameCubit extends Cubit<GameState> {
       emit(state.copyWith(status: GameStatus.squadChoice));
       emit(state.copyWith(
           questStatuses: state.insertToQuestStatuses(QuestStatus.ongoing)));
+      emit(state.copyWith(isSquadFull: false));
     } else {
       emit(state.copyWith(winningTeam: winningTeam));
       emit(state.copyWith(status: GameStatus.gameResults));
@@ -209,15 +210,17 @@ class GameCubit extends Cubit<GameState> {
     [3, 4, 4, 5, 5],
   ];
 
-  int squadFullSize(int playersCount, int questNumber) =>
-      squadRequiredSizes[playersCount - 5][questNumber - 1];
+  int squadFullSize(int playersCount, int questNumber) {
+    if (kDebugMode && (playersCount < 5 || playersCount > 10)) {
+      return playersCount < 2 ? playersCount : 2;
+    }
+    return squadRequiredSizes[playersCount - 5][questNumber - 1];
+  }
 
   Future<bool> isSquadFull() async {
     // TODO move this to a field in squad
     final membersCount = await _dataRepository.membersCount;
     final playersCount = await _dataRepository.playersCount;
-    // TODO remove line below (LIMITS!!!)
-    if (playersCount < 5) return true;
     if (membersCount > squadFullSize(playersCount, state.questNumber)) {
       throw const MembersLimitExceededFailure();
     }
