@@ -211,9 +211,8 @@ class GameCubit extends Cubit<GameState> {
   ];
 
   int squadFullSize(int playersCount, int questNumber) {
-    // TODO remove try below (LIMITS!!!)
     if (kDebugMode && (playersCount < 5 || playersCount > 10)) {
-      return playersCount;
+      return playersCount < 2 ? playersCount : 2;
     }
     return squadRequiredSizes[playersCount - 5][questNumber - 1];
   }
