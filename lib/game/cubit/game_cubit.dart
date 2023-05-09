@@ -1,7 +1,7 @@
 import 'package:data_repository/data_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/foundation.dart';
 
 part 'game_state.dart';
 
@@ -162,6 +162,7 @@ class GameCubit extends Cubit<GameState> {
       emit(state.copyWith(status: GameStatus.squadChoice));
       emit(state.copyWith(
           questStatuses: state.insertToQuestStatuses(QuestStatus.ongoing)));
+      emit(state.copyWith(isSquadFull: false));
     } else {
       emit(state.copyWith(winningTeam: winningTeam));
       emit(state.copyWith(status: GameStatus.gameResults));
@@ -211,11 +212,10 @@ class GameCubit extends Cubit<GameState> {
 
   int squadFullSize(int playersCount, int questNumber) {
     // TODO remove try below (LIMITS!!!)
-    try {
-      return squadRequiredSizes[playersCount - 5][questNumber - 1];
-    } on RangeError catch (_) {
+    if (kDebugMode && (playersCount < 5 || playersCount > 10)) {
       return playersCount;
     }
+    return squadRequiredSizes[playersCount - 5][questNumber - 1];
   }
 
   Future<bool> isSquadFull() async {
