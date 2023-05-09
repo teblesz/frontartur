@@ -209,15 +209,19 @@ class GameCubit extends Cubit<GameState> {
     [3, 4, 4, 5, 5],
   ];
 
-  int squadFullSize(int playersCount, int questNumber) =>
-      squadRequiredSizes[playersCount - 5][questNumber - 1];
+  int squadFullSize(int playersCount, int questNumber) {
+    // TODO remove try below (LIMITS!!!)
+    try {
+      return squadRequiredSizes[playersCount - 5][questNumber - 1];
+    } on RangeError catch (_) {
+      return playersCount;
+    }
+  }
 
   Future<bool> isSquadFull() async {
     // TODO move this to a field in squad
     final membersCount = await _dataRepository.membersCount;
     final playersCount = await _dataRepository.playersCount;
-    // TODO remove line below (LIMITS!!!)
-    if (playersCount < 5) return true;
     if (membersCount > squadFullSize(playersCount, state.questNumber)) {
       throw const MembersLimitExceededFailure();
     }
