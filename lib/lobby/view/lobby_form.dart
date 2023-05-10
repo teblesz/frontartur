@@ -1,7 +1,5 @@
-import 'package:authentication_repository/src/models/user.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/lobby/cubit/lobby_cubit.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttartur/app/app.dart';
@@ -25,7 +23,6 @@ class LobbyForm extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  _UsersEmail(user: user),
                   const SizedBox(height: 8),
                   SizedBox(
                     width: 250,
@@ -47,22 +44,6 @@ class LobbyForm extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class _UsersEmail extends StatelessWidget {
-  const _UsersEmail({
-    super.key,
-    required this.user,
-  });
-
-  final User user;
-
-  @override
-  Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      return !kDebugMode ? const SizedBox.shrink() : Text(user.email ?? '');
-    });
   }
 }
 
