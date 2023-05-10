@@ -520,6 +520,7 @@ class DataRepository {
         .collection('rooms')
         .doc(currentRoom.id)
         .update({'special_characters': specialCharacters});
+    await refreshRoomCache();
   }
 
   //-----------------------------killing merlin-------------------------------------

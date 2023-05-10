@@ -135,7 +135,6 @@ class _CharactersViewState extends State<_CharactersView> {
         ElevatedButton(
           onPressed: () {
             updateSpecialCharacters();
-            context.read<DataRepository>().refreshRoomCache();
             Navigator.of(context).pop();
           },
           child: Padding(
