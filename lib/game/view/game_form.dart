@@ -30,24 +30,10 @@ class GameForm extends StatelessWidget {
           Expanded(
             child: _TeamWrap(),
           ),
-          _CurrentStatus(),
           _GameButtons(),
         ],
       ),
     );
-  }
-}
-
-class _CurrentStatus extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return !kDebugMode
-        ? const SizedBox.shrink()
-        : BlocBuilder<GameCubit, GameState>(
-            buildWhen: (previous, current) => previous.status != current.status,
-            builder: (context, state) {
-              return Text(state.status.name);
-            });
   }
 }
 
