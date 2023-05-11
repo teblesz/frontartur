@@ -1,6 +1,7 @@
 import 'package:fluttartur/app/app.dart';
 import 'package:fluttartur/home/home.dart';
 import 'package:fluttartur/matchup/matchup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -16,6 +17,7 @@ class MatchupForm extends StatelessWidget {
     Future.delayed(Duration.zero, () => _showNickDialog(context));
     return Column(
       children: [
+        __AddPlayerButtonDebug(),
         Expanded(
           child: _PlayerListView(),
         ),
@@ -23,6 +25,18 @@ class MatchupForm extends StatelessWidget {
         const SizedBox(height: 16)
       ],
     );
+  }
+}
+
+class __AddPlayerButtonDebug extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return !kDebugMode
+        ? const SizedBox.shrink()
+        : ElevatedButton(
+            onPressed: () => context.read<MatchupCubit>().add_Players_debug(1),
+            child: const Text('Add player'),
+          );
   }
 }
 
