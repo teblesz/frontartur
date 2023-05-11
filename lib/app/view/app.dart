@@ -56,6 +56,7 @@ class _AppView extends StatelessWidget {
         builder: (context, child) {
           final appLocaleProvider = Provider.of<LocaleNotifier>(context);
           return MaterialApp(
+            title: "fluttartur",
             locale: appLocaleProvider.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
