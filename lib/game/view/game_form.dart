@@ -3,6 +3,7 @@ import 'package:fluttartur/fluttartur_icons_icons.dart';
 import 'package:fluttartur/game/cubit/game_cubit.dart';
 import 'package:fluttartur/game/view/quest_page.dart';
 import 'package:fluttartur/home/home.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -29,10 +30,24 @@ class GameForm extends StatelessWidget {
           Expanded(
             child: _TeamWrap(),
           ),
+          _CurrentStatus(),
           _GameButtons(),
         ],
       ),
     );
+  }
+}
+
+class _CurrentStatus extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return !kDebugMode
+        ? const SizedBox.shrink()
+        : BlocBuilder<GameCubit, GameState>(
+            buildWhen: (previous, current) => previous.status != current.status,
+            builder: (context, state) {
+              return Text(state.status.name);
+            });
   }
 }
 
@@ -53,21 +68,21 @@ void listenGameCubit(context, state) {
   }
 }
 
-Future<void> pushCharacterInfoDialog(BuildContext context) {
+Future<void> pushCharacterInfoDialog(BuildContext gameContext) {
   return showDialog<void>(
       barrierDismissible: false,
-      context: context,
+      context: gameContext,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).yourCharacterIs,
+          title: Text(AppLocalizations.of(gameContext).yourCharacterIs,
               style: const TextStyle(fontSize: 20)),
-          content: _CharacterInfo(),
+          content: _CharacterInfo(gameContext: gameContext),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: Text(AppLocalizations.of(context).closeInfo,
+              child: Text(AppLocalizations.of(gameContext).closeInfo,
                   style: const TextStyle(fontSize: 20)),
             ),
           ],
@@ -76,6 +91,9 @@ Future<void> pushCharacterInfoDialog(BuildContext context) {
 }
 
 class _CharacterInfo extends StatefulWidget {
+  const _CharacterInfo({required this.gameContext});
+  final BuildContext gameContext;
+
   @override
   State<_CharacterInfo> createState() => _CharacterInfoState();
 }
@@ -97,25 +115,62 @@ class _CharacterInfoState extends State<_CharacterInfo> {
         Builder(builder: (context) {
           return _characterHidden
               ? const SizedBox.shrink()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              : Column(
                   children: [
-                    Text(
-                      (player.character ?? "error") == 'good'
-                          ? AppLocalizations.of(context).good
-                          : AppLocalizations.of(context).evil,
-                      style: const TextStyle(fontSize: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          (player.character ?? "error") == 'good'
+                              ? AppLocalizations.of(context).good
+                              : AppLocalizations.of(context).evil,
+                          style: const TextStyle(fontSize: 30),
+                        ),
+                        player.specialCharacter == null
+                            ? const SizedBox.shrink()
+                            : const Text(" - ",
+                                style: const TextStyle(fontSize: 30)),
+                        player.specialCharacter == null
+                            ? const SizedBox.shrink()
+                            : Text(
+                                specialCharacterToText(
+                                    player.specialCharacter!, context),
+                                style: const TextStyle(fontSize: 30),
+                              ),
+                      ],
                     ),
-                    player.specialCharacter == null
-                        ? const SizedBox.shrink()
-                        : const Text(" - ",
-                            style: const TextStyle(fontSize: 25)),
-                    player.specialCharacter == null
+                    const SizedBox(height: 10),
+                    player.character != "evil"
                         ? const SizedBox.shrink()
                         : Text(
-                            specialCharacterToText(
-                                player.specialCharacter!, context),
-                            style: const TextStyle(fontSize: 25),
+                            AppLocalizations.of(widget.gameContext)
+                                .evilCourtiers,
+                            style: const TextStyle(fontSize: 15)),
+                    player.character != "evil"
+                        ? const SizedBox.shrink()
+                        : FutureBuilder<List<Player>>(
+                            future: widget.gameContext
+                                .read<GameCubit>()
+                                .listOfEvilPlayers(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              }
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              }
+                              List<Player> evilPlayers =
+                                  snapshot.data ?? List.empty();
+                              return Wrap(
+                                children: <Widget>[
+                                  ...evilPlayers.map(
+                                    (player) => Text("${player.nick}, ",
+                                        style: const TextStyle(fontSize: 13)),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                   ],
                 );
