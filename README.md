@@ -8,4 +8,4 @@ Fluttartur is avalable on:
 
 Known issues:
 * removing players doesn't update removed players UI to lobby
-* apk from gh Actions has errors when logging in with Google: apk built locally works. available at http://bitly.pl/chcUC
+* apk from gh Actions has errors when logging in with Google: apk built locally works.
