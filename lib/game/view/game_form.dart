@@ -127,14 +127,14 @@ class _CharacterInfoState extends State<_CharacterInfo> {
                     ),
                     const SizedBox(height: 10),
                     !(player.character == "evil" ||
-                            player.character == 'good_merlin')
+                            player.specialCharacter == 'good_merlin')
                         ? const SizedBox.shrink()
                         : Text(
                             AppLocalizations.of(widget.gameContext)
                                 .evilCourtiers,
                             style: const TextStyle(fontSize: 15)),
                     !(player.character == "evil" ||
-                            player.character == 'good_merlin')
+                            player.specialCharacter == 'good_merlin')
                         ? const SizedBox.shrink()
                         : FutureBuilder<List<Player>>(
                             future: widget.gameContext
