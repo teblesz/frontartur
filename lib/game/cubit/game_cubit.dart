@@ -178,6 +178,15 @@ class GameCubit extends Cubit<GameState> {
     return players.where((p) => p.character == 'evil').toList();
   }
 
+  Future<List<Player>> listOfMerlinMorganaPlayers() async {
+    final players = await _dataRepository.playersList();
+    return players
+        .where((p) =>
+            p.specialCharacter == 'evil_morgana' ||
+            p.specialCharacter == 'good_merlin')
+        .toList();
+  }
+
 //--------------------------------game rules logic-------------------------------------
   bool isTwoFailsQuest(int playersCount, int questNumber) =>
       playersCount >= 7 && questNumber == 4;

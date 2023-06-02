@@ -129,36 +129,73 @@ class _CharacterInfoState extends State<_CharacterInfo> {
                     !(player.character == "evil" ||
                             player.specialCharacter == 'good_merlin')
                         ? const SizedBox.shrink()
-                        : Text(
-                            AppLocalizations.of(widget.gameContext)
-                                .evilCourtiers,
-                            style: const TextStyle(fontSize: 15)),
-                    !(player.character == "evil" ||
-                            player.specialCharacter == 'good_merlin')
+                        : Column(
+                            children: [
+                              Text(
+                                  AppLocalizations.of(widget.gameContext)
+                                      .evilCourtiers,
+                                  style: const TextStyle(fontSize: 15)),
+                              FutureBuilder<List<Player>>(
+                                future: widget.gameContext
+                                    .read<GameCubit>()
+                                    .listOfEvilPlayers(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+                                  List<Player> evilPlayers =
+                                      snapshot.data ?? List.empty();
+                                  return Wrap(
+                                    children: <Widget>[
+                                      ...evilPlayers.map(
+                                        (player) => Text("${player.nick}, ",
+                                            style:
+                                                const TextStyle(fontSize: 13)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                    !(player.specialCharacter == 'good_percival')
                         ? const SizedBox.shrink()
-                        : FutureBuilder<List<Player>>(
-                            future: widget.gameContext
-                                .read<GameCubit>()
-                                .listOfEvilPlayers(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              }
-                              if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              }
-                              List<Player> evilPlayers =
-                                  snapshot.data ?? List.empty();
-                              return Wrap(
-                                children: <Widget>[
-                                  ...evilPlayers.map(
-                                    (player) => Text("${player.nick}, ",
-                                        style: const TextStyle(fontSize: 13)),
-                                  ),
-                                ],
-                              );
-                            },
+                        : Column(
+                            children: [
+                              Text(
+                                  AppLocalizations.of(widget.gameContext)
+                                      .merlinAndMorgana,
+                                  style: const TextStyle(fontSize: 15)),
+                              FutureBuilder<List<Player>>(
+                                future: widget.gameContext
+                                    .read<GameCubit>()
+                                    .listOfMerlinMorganaPlayers(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+                                  List<Player> evilPlayers =
+                                      snapshot.data ?? List.empty();
+                                  return Wrap(
+                                    children: <Widget>[
+                                      ...evilPlayers.map(
+                                        (player) => Text("${player.nick}, ",
+                                            style:
+                                                const TextStyle(fontSize: 13)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                   ],
                 );
