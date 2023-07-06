@@ -103,6 +103,10 @@ class LogInWithGoogleFailure implements Exception {
     this.message = 'An unknown exception occurred.',
   ]);
 
+  LogInWithGoogleFailure.withMessage([
+    this.message = 'An unknown exception occurred.',
+  ]);
+
   /// Create an authentication message
   /// from a firebase authentication exception code.
   factory LogInWithGoogleFailure.fromCode(String code) {
@@ -237,8 +241,8 @@ class AuthenticationRepository {
       await _firebaseAuth.signInWithCredential(credential);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithGoogleFailure.fromCode(e.code);
-    } catch (_) {
-      throw const LogInWithGoogleFailure();
+    } catch (e) {
+      throw LogInWithGoogleFailure.withMessage(e.toString());
     }
   }
 
