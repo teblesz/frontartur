@@ -37,7 +37,7 @@ class GameCubit extends Cubit<GameState> {
     return _dataRepository.streamMembersList(squadId: squadId);
   }
 
-  //--------------------------------leader's logic-------------------------------------
+  //--------------------------------leader's logic------------------------------
 
   /// add player to squad
   Future<void> addMember({required Player player}) async {
@@ -116,7 +116,7 @@ class GameCubit extends Cubit<GameState> {
     await _dataRepository.nextLeader();
     await _dataRepository.nextSquad(questNumber: state.questNumber + 1);
   }
-  //--------------------------------players's logic-------------------------------------
+  //--------------------------------players's logic-----------------------------
 
   Future<void> voteSquad(bool vote) async {
     await _dataRepository.voteSquad(vote);
@@ -187,7 +187,7 @@ class GameCubit extends Cubit<GameState> {
         .toList();
   }
 
-//--------------------------------game rules logic-------------------------------------
+//--------------------------------game rules logic------------------------------
   bool isTwoFailsQuest(int playersCount, int questNumber) =>
       playersCount >= 7 && questNumber == 4;
 
@@ -236,7 +236,7 @@ class GameCubit extends Cubit<GameState> {
     return membersCount == squadFullSize(playersCount, state.questNumber);
   }
 
-  //--------------------------------merlin killing logic-------------------------------------
+  //--------------------------------merlin killing logic------------------------
 
   bool assassinPresent() =>
       _dataRepository.currentRoom.specialCharacters.contains("evil_assassin");
@@ -256,6 +256,16 @@ class GameCubit extends Cubit<GameState> {
   Future<List<Player>> listOfGoodPlayers() async {
     final players = await _dataRepository.playersList();
     return players.where((p) => p.character == 'good').toList();
+  }
+
+  //--------------------------------quest info logic----------------------------
+
+  Future<List<bool>>? questVotesInfo(int questNumber) async {
+    final questStatus = state.questStatuses[questNumber - 1];
+    if (questStatus != QuestStatus.success && questStatus != QuestStatus.fail) {
+      return List<bool>.empty();
+    }
+    return await _dataRepository.questVotesInfo(questNumber);
   }
 
   // GameCubit

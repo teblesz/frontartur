@@ -257,7 +257,7 @@ class DataRepository {
         .delete();
   }
 
-  //--------------------------------squad members-------------------------------------
+  //--------------------------------squad members-------------------------------
   Stream<List<Member>> streamMembersList({required squadId}) {
     return _firestore
         .collection('rooms')
@@ -390,7 +390,7 @@ class DataRepository {
         .map((roomSnap) => Room.fromFirestore(roomSnap).currentSquadId);
   }
 
-  //--------------------------------squad voting-------------------------------------
+  //--------------------------------squad voting--------------------------------
 
   voteSquad(bool vote) {
     _firestore
@@ -434,7 +434,7 @@ class DataRepository {
         : null;
   }
 
-  //--------------------------------quest voting-------------------------------------
+  //--------------------------------quest voting--------------------------------
 
   Future<bool> isCurrentPlayerAMember() async {
     final memberId = await _getMemberIdWith(player: currentPlayer);
@@ -507,7 +507,7 @@ class DataRepository {
     return membersSnap.size;
   }
 
-  //-----------------------------characters definition-------------------------------------
+  //-----------------------------characters definition--------------------------
 
   Future<List<String>> getSpecialCharacters() async {
     final roomSnap =
@@ -523,7 +523,7 @@ class DataRepository {
     await refreshRoomCache();
   }
 
-  //-----------------------------killing merlin-------------------------------------
+  //-----------------------------killing merlin---------------------------------
 
   Stream<bool?> streamMerlinKilled() {
     return _firestore
@@ -539,5 +539,32 @@ class DataRepository {
         .doc(currentRoom.id)
         .update({'merlin_killed': merlinKilled});
   }
+
+  //-----------------------------quest info-------------------------------------
+
+  Future<List<bool>> questVotesInfo(int questNumber) async {
+    final squadsSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .where('quest_number', isEqualTo: questNumber)
+        .get();
+    final squads = List<Squad>.from(
+        squadsSnap.docs.map((snap) => Squad.fromFirestore(snap)));
+
+    final questSquadId = squads.singleWhere((s) => s.isSuccessfull != null).id;
+
+    final mebersSnap = await _firestore
+        .collection('rooms')
+        .doc(currentRoom.id)
+        .collection('squads')
+        .doc(questSquadId)
+        .collection('members')
+        .get();
+    final members = List<Member>.from(
+        mebersSnap.docs.map((snap) => Member.fromFirestore(snap)));
+    return List<bool>.from(members.map((m) => m.vote));
+  }
+
   // DataRepository
 }

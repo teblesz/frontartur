@@ -102,7 +102,7 @@ class _QuestTile extends StatelessWidget {
                         color: Colors.white,
                         icon: Icon(_questTileIconData(questStatus)),
                         onPressed: () {
-                          // TODO !! quest info
+                          context.read<GameCubit>().questVotesInfo(questNumber);
                         },
                       ),
                     ),
