@@ -3,38 +3,34 @@ part of 'game_form.dart';
 class _TeamWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Center(
-        child: Row(
-          children: [
-            Column(
+    return Expanded(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(AppLocalizations.of(context).court,
-                    style: TextStyle(fontSize: 30)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: _PlayerListView(),
-                  ),
+                    style: const TextStyle(fontSize: 30)),
+                SingleChildScrollView(
+                  child: _PlayerListView(),
                 ),
               ],
             ),
-            const Spacer(),
-            Column(
+          ),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(AppLocalizations.of(context).squad,
-                    style: TextStyle(fontSize: 30)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: _SquadListView(),
-                  ),
+                    style: const TextStyle(fontSize: 30)),
+                SingleChildScrollView(
+                  child: _SquadListView(),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -79,18 +75,21 @@ class _PlayerCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               player.isLeader
                   ? const Icon(Icons.star)
                   : const SizedBox.shrink(),
-              Text(
-                player.nick,
-                style: TextStyle(
-                  fontSize: 23,
-                  fontWeight: player.id ==
-                          context.read<DataRepository>().currentPlayer.id
-                      ? FontWeight.bold
-                      : null,
+              Flexible(
+                child: Text(
+                  player.nick,
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: player.id ==
+                            context.read<DataRepository>().currentPlayer.id
+                        ? FontWeight.bold
+                        : null,
+                  ),
                 ),
               ),
             ],
@@ -150,14 +149,16 @@ class _MemberCard extends StatelessWidget {
         margin: const EdgeInsets.all(1.0),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            member.nick,
-            style: TextStyle(
-              fontSize: 23,
-              fontWeight: member.playerId ==
-                      context.read<DataRepository>().currentPlayer.id
-                  ? FontWeight.bold
-                  : null,
+          child: Flexible(
+            child: Text(
+              member.nick,
+              style: TextStyle(
+                fontSize: 23,
+                fontWeight: member.playerId ==
+                        context.read<DataRepository>().currentPlayer.id
+                    ? FontWeight.bold
+                    : null,
+              ),
             ),
           ),
         ),
