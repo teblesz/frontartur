@@ -92,13 +92,13 @@ class _QuestTile extends StatelessWidget {
           children: [
             isTwoFailsQuest
                 ? CircleAvatar(
-                    radius: 30,
+                    radius: 27,
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
-                      radius: 28,
+                      radius: 25,
                       backgroundColor: _questTileColor(questStatus),
                       child: IconButton(
-                        iconSize: 40,
+                        iconSize: 36,
                         color: Colors.white,
                         icon: Icon(_questTileIconData(questStatus)),
                         onPressed: () {
