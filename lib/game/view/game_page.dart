@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttartur/game/view/game_dialogs/game_dialogs.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
