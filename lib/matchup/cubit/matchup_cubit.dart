@@ -19,6 +19,7 @@ class MatchupCubit extends Cubit<MatchupState> {
   }
 
   void nickChanged(String value) {
+    value = value.trim();
     final nick = Nick.dirty(value);
     emit(state.copyWith(nick: nick, status: Formz.validate([nick])));
   }
