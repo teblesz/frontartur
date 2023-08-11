@@ -29,7 +29,7 @@ jobs:
           git config --global user.email mteblesz@gmail.com
           git config --global user.name teblesz
           git status
-          git remote add origin https://${{secrets.commit_secret}}@github.com/teblesz/fluttartur.git
+          git remote add origin https://${{secrets.commit_secret}}@github.com/teblesz/frontartur.git
           git checkout -b gh-pages
           git add --all
           git commit -m "update"
